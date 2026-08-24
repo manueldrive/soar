@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOAR Cards - Literary Heritage Edition</title>
+  <!-- Google Fonts: Newsreader (Editorial Serif) & Inter (Clean Structural Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,700;0,6..72,800;1,6..72,700;1,6..72,800&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    @page {
+      size: 11in 8.5in landscape;
+      margin: 0;
+    }
+
+    body {
+      background-color: #cbd5e1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    /* 
+      MATHEMATICALLY BALANCED CUT MARGINS
+      Page: 11" x 8.5"
+      Outer Left & Right Margins: 0.375" (3/8")
+      Middle Gap: 0.75" (3/4") -> When cut at 5.5", inner margin is exactly 0.375"
+    */
+    .sheet {
+      width: 11in;
+      height: 8.5in;
+      max-width: 11in;
+      max-height: 8.5in;
+      background: #ffffff;
+      padding: 0.35in 0.375in;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 0.75in;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      position: relative;
+    }
+
+    /* Subtle Center Cut Guide */
+    .sheet::before {
+      content: "";
+      position: absolute;
+      top: 0.15in;
+      bottom: 0.15in;
+      left: 5.5in;
+      width: 1px;
+      border-left: 1px dashed #cbd5e1;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 2;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+      padding: 0 2px;
+    }
+
+    .soar-hero-header {
+      font-family: 'Newsreader', serif;
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: #000000;
+      line-height: 0.85;
+    }
+
+    .name-field-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .name-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10.5px;
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #000000;
+    }
+
+    .name-line {
+      border-bottom: 1.5px solid #000000;
+      width: 130px;
+      height: 12px;
+    }
+
+    /* Canvas Boxes */
+    .box-top {
+      border: 3px solid #000000;
+      background: #ffffff;
+      height: 3.45in;
+      border-radius: 18px;
+      box-shadow: 4px 4px 0 #000000;
+      position: relative;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .box-bottom {
+      border: 3px solid #000000;
+      background: #ffffff;
+      height: 3.55in;
+      border-radius: 18px;
+      box-shadow: 4px 4px 0 #000000;
+      position: relative;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .free-area {
+      flex-grow: 1;
+      width: 100%;
+    }
+
+    /* Hanging Bookmark Tabs with Clean Inter Sans */
+    .bookmark-tab-left {
+      position: absolute;
+      top: -2px;
+      left: 20px;
+      background: #000000;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      padding: 3px 14px;
+      border-radius: 0 0 6px 6px;
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    .bookmark-tab-right {
+      position: absolute;
+      bottom: -2px;
+      right: 20px;
+      background: #000000;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      padding: 3px 14px;
+      border-radius: 6px 6px 0 0;
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    /* Central Focal Circle */
+    .center-circle {
+      position: absolute;
+      top: 54.5%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 195px;
+      height: 195px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3.5px solid #000000;
+      box-shadow: 4px 4px 0 #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 22px 16px 16px 16px;
+      z-index: 10;
+    }
+
+    .circle-title {
+      font-family: 'Newsreader', serif;
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #000000;
+      margin-bottom: auto;
+    }
+
+    .circle-write-space {
+      width: 100%;
+      flex-grow: 1;
+    }
+
+    @media print {
+      html, body {
+        width: 11in !important;
+        height: 8.5in !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        overflow: hidden !important;
+      }
+
+      .sheet {
+        width: 11in !important;
+        height: 8.5in !important;
+        padding: 0.35in 0.375in !important;
+        column-gap: 0.75in !important;
+        box-shadow: none !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sheet">
+
+    <!-- CARD 1 (LEFT HALF) -->
+    <div class="card-container">
+      <div>
+        <div class="top-bar">
+          <div class="soar-hero-header">SOAR</div>
+          <div class="name-field-wrap">
+            <span class="name-label">Name:</span>
+            <div class="name-line"></div>
+          </div>
+        </div>
+
+        <div class="box-top">
+          <div class="bookmark-tab-left">Scripture &amp; Observation</div>
+          <div class="free-area"></div>
+        </div>
+      </div>
+
+      <div class="center-circle">
+        <div class="circle-title">God is...</div>
+        <div class="circle-write-space"></div>
+      </div>
+
+      <div class="box-bottom">
+        <div class="free-area"></div>
+        <div class="bookmark-tab-right">Application &amp; Reflection</div>
+      </div>
+    </div>
+
+    <!-- CARD 2 (RIGHT HALF) -->
+    <div class="card-container">
+      <div>
+        <div class="top-bar">
+          <div class="soar-hero-header">SOAR</div>
+          <div class="name-field-wrap">
+            <span class="name-label">Name:</span>
+            <div class="name-line"></div>
+          </div>
+        </div>
+
+        <div class="box-top">
+          <div class="bookmark-tab-left">Scripture &amp; Observation</div>
+          <div class="free-area"></div>
+        </div>
+      </div>
+
+      <div class="center-circle">
+        <div class="circle-title">God is...</div>
+        <div class="circle-write-space"></div>
+      </div>
+
+      <div class="box-bottom">
+        <div class="free-area"></div>
+        <div class="bookmark-tab-right">Application &amp; Reflection</div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
