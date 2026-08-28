@@ -1,306 +1,3045 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOAR Cards - Literary Heritage Edition</title>
-  <!-- Google Fonts: Newsreader (Editorial Serif) & Inter (Clean Structural Sans) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,700;0,6..72,800;1,6..72,700;1,6..72,800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Dwell Guide — Mark 3</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0D0D0D;
+    --paper:#FFFFFF;
+    --cream:#EAE6DF;
+    --lime:#C3F53C;
+    --pink:#F43F5E;
+    --blue:#38BDF8;
+    --yellow:#FFC72C;
+    --purple:#A855F7;
+    --green:#22C55E;
+
+    --bg-lime: linear-gradient(145deg, #d2f860 0%, #a2e014 100%);
+    --bg-purple: linear-gradient(145deg, #b862f8 0%, #7e22ce 100%);
+    --bg-pink: linear-gradient(145deg, #fb5672 0%, #be123c 100%);
+    --bg-dark: linear-gradient(145deg, #262626 0%, #050505 100%);
+    --bg-cream: linear-gradient(145deg, #f4f0e8 0%, #d8d2c7 100%);
+    --bg-yellow: linear-gradient(145deg, #ffd452 0%, #eab308 100%);
+
+    --bg-discover:  linear-gradient(145deg, #d2f860 0%, #a2e014 100%);
+    --bg-wordwork:  linear-gradient(145deg, #fb5672 0%, #be123c 100%);
+    --bg-expand:    linear-gradient(145deg, #e0f2fe 0%, #bae6fd 100%);
+    --bg-learn:     linear-gradient(145deg, #ffd452 0%, #eab308 100%);
+    --bg-live:      linear-gradient(145deg, #262626 0%, #050505 100%);
+
+    --bg-terracotta: linear-gradient(145deg, #e48d75 0%, #a15844 100%);
+    --bg-orange: linear-gradient(145deg, #f6af77 0%, #b07546 100%);
+    --bg-leather: linear-gradient(160deg, #7a4a2c 0%, #452817 100%);
+  }
+
+  *{box-sizing:border-box;}
   
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
+  html, body { 
+    margin:0; 
+    padding:0; 
+    width:100%; 
+    height:100%; 
+    background:var(--ink); 
+    font-family:'Inter', sans-serif; 
+    -webkit-tap-highlight-color: transparent; 
+    overscroll-behavior:none; 
+    overflow:hidden;
+  }
 
-    @page {
-      size: 11in 8.5in landscape;
-      margin: 0;
-    }
+  .app-viewport {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: var(--bg-cream);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background .4s ease;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
 
-    body {
-      background-color: #cbd5e1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+  .app-viewport.grain-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 55;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 140px 140px;
+    mix-blend-mode: overlay;
+    opacity: 0.4;
+    transition: opacity .3s ease;
+  }
 
-    /* 
-      MATHEMATICALLY BALANCED CUT MARGINS
-      Page: 11" x 8.5"
-      Outer Left & Right Margins: 0.375" (3/8")
-      Middle Gap: 0.75" (3/4") -> When cut at 5.5", inner margin is exactly 0.375"
-    */
-    .sheet {
-      width: 11in;
-      height: 8.5in;
-      max-width: 11in;
-      max-height: 8.5in;
-      background: #ffffff;
-      padding: 0.35in 0.375in;
+  .fs-toggle-btn {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    z-index: 100;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    color: #FFF;
+    border: none;
+    border-radius: 9px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  @media (max-width: 767px) {
+    .fs-toggle-btn { display: none !important; }
+  }
+
+  .persistent-nav-shell {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(14px, 2.5vh, 22px);
+    z-index: 90;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 clamp(16px, 4vw, 40px);
+    pointer-events: none;
+  }
+  .minimal-arrow-btn {
+    pointer-events: auto;
+    background: none;
+    border: none;
+    padding: 10px 14px;
+    color: var(--ink);
+    font-size: clamp(22px, 3vh, 28px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.55;
+    transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+  }
+  .app-viewport.tx-light .minimal-arrow-btn {
+    color: #FFFFFF;
+  }
+  .minimal-arrow-btn.disabled {
+    opacity: 0.15;
+    pointer-events: none;
+  }
+  .minimal-arrow-btn.ready {
+    opacity: 1;
+    animation: chevronPulse 1.6s infinite ease-in-out;
+  }
+  @keyframes chevronPulse {
+    0%, 100% { transform: translateX(0) scale(1); opacity: 0.8; }
+    50% { transform: translateX(5px) scale(1.22); opacity: 1; }
+  }
+  .minimal-arrow-btn.shake-warn {
+    animation: shakeX 0.45s !important;
+    opacity: 1;
+  }
+
+  .gate-nav-hint{
+    position: absolute;
+    left: 50%;
+    bottom: clamp(14px, 2.5vh, 22px);
+    transform: translateX(-50%);
+    z-index: 91;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 7px;
+    pointer-events: none;
+    text-align: center;
+    opacity: 0;
+  }
+  .gate-nav-hint.light{ color: #FFFFFF; }
+  .gate-nav-hint.dark{ color: #0D0D0D; }
+  .gate-nav-hint.visible{ animation: hintShakeIn 0.5s ease forwards; }
+  @keyframes hintShakeIn{
+    0%   { opacity: 0; transform: translateX(calc(-50% - 14px)); }
+    20%  { opacity: 1; transform: translateX(calc(-50% + 10px)); }
+    40%  { transform: translateX(calc(-50% - 7px)); }
+    60%  { transform: translateX(calc(-50% + 4px)); }
+    80%  { transform: translateX(calc(-50% - 2px)); }
+    100% { opacity: 1; transform: translateX(-50%); }
+  }
+  .gate-nav-hint i{ font-size: 15px; }
+  .gate-nav-hint span{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  @media (min-width: 1024px) {
+    .gate-nav-hint i{ font-size: 19px; }
+    .gate-nav-hint span{ font-size: 13px; }
+  }
+
+  .floating-context-island {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(14px, 2.5vh, 22px);
+    transform: translateX(-50%);
+    z-index: 95;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto;
+  }
+
+  .vocab-color-rail{
+    position: absolute;
+    right: clamp(10px, 3vw, 20px);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 95;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    pointer-events: auto;
+  }
+  .rail-swatch-btn{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2.5px solid var(--ink);
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .rail-swatch-btn[data-color="lime"]{ background: var(--lime); }
+  .rail-swatch-btn[data-color="purple"]{ background: var(--purple); }
+  .rail-swatch-btn[data-color="yellow"]{ background: var(--yellow); }
+  .rail-swatch-btn[data-color="pink"]{ background: var(--pink); }
+  .rail-swatch-btn:focus-visible,
+  .rail-swatch-btn.active{ transform: scale(1.18); }
+  .rail-swatch-btn[data-color="lime"]:focus-visible,
+  .rail-swatch-btn[data-color="lime"].active{ box-shadow: 0 0 0 4px rgba(195,245,60,0.45); }
+  .rail-swatch-btn[data-color="purple"]:focus-visible,
+  .rail-swatch-btn[data-color="purple"].active{ box-shadow: 0 0 0 4px rgba(168,85,247,0.4); }
+  .rail-swatch-btn[data-color="yellow"]:focus-visible,
+  .rail-swatch-btn[data-color="yellow"].active{ box-shadow: 0 0 0 4px rgba(255,199,44,0.45); }
+  .rail-swatch-btn[data-color="pink"]:focus-visible,
+  .rail-swatch-btn[data-color="pink"].active{ box-shadow: 0 0 0 4px rgba(244,63,94,0.4); }
+
+  .rail-font-btn{
+    width: auto;
+    height: auto;
+    border: none;
+    background: none;
+    color: var(--ink);
+    padding: 4px 6px;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1;
+    opacity: 0.65;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+  .rail-font-btn:active{ transform: scale(0.9); opacity: 1; }
+  .rail-font-btn:disabled{ opacity: 0.2; cursor: default; }
+  .rail-font-btn:disabled:active{ transform: none; }
+  @media (max-width: 767px) {
+    .rail-swatch-btn[data-color="lime"],
+    .rail-swatch-btn[data-color="purple"],
+    .rail-font-btn { display: none; }
+  }
+  @media (min-width: 1024px) {
+    .vocab-color-rail{ gap: 20px; }
+    .rail-swatch-btn{ width: 38px; height: 38px; border-width: 3px; }
+    .rail-font-btn{ font-size: 22px; }
+  }
+
+  .action-gate-pill {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    background: #FFF;
+    color: var(--ink);
+    border: 3px solid var(--ink);
+    border-radius: 100px;
+    padding: 10px 20px;
+    cursor: pointer;
+    box-shadow: 3.5px 3.5px 0 var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .action-gate-pill:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  .action-gate-pill.ready {
+    background: var(--yellow) !important;
+    color: var(--ink) !important;
+    animation: gentlePulse 2s infinite ease-in-out;
+  }
+  .action-gate-pill.shake-warn {
+    animation: shakeX 0.45s !important;
+    background: var(--yellow) !important;
+    color: var(--ink) !important;
+  }
+
+  @keyframes gentlePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+  @keyframes shakeX{ 10%,90%{transform:translateX(-3px);} 20%,80%{transform:translateX(5px);} 30%,50%{transform:translateX(-8px);} 40%,60%{transform:translateX(8px);} }
+
+  .hud-header{ 
+    position:relative; 
+    z-index:50; 
+    padding: clamp(14px, 2.5vh, 22px) clamp(20px, 4vw, 60px) 6px; 
+    width: 100%;
+    margin: 0 auto;
+    display:flex; 
+    flex-direction:column; 
+    gap:8px; 
+  }
+
+  .progress-container{ position:relative; width:100%; height:7px; background:rgba(13,13,29,0.18); border-radius:100px; }
+  .tx-light .progress-container{ background:rgba(255,255,255,0.25); }
+  .progress-bar-fill{ position:absolute; left:0; top:0; bottom:0; width:0%; background:var(--ink); border-radius:100px; transition:width .3s cubic-bezier(.2,.8,.25,1); }
+  .tx-light .progress-bar-fill{ background:#FFF; }
+  
+  .notches-layer{ position:absolute; inset:0; pointer-events:none; }
+  .prog-notch{ position:absolute; top:50%; transform:translate(-50%, -50%); width:9px; height:9px; border-radius:50%; background:rgba(13,13,29,0.3); border:1.5px solid rgba(255,255,255,0.6); transition:all .25s ease; }
+  .tx-light .prog-notch{ background:rgba(255,255,255,0.4); border-color:rgba(0,0,0,0.3); }
+  .prog-notch.passed{
+    width:9px; height:9px;
+    background: var(--lime);
+    border-color: var(--ink);
+  }
+  .tx-light .prog-notch.passed{ background:var(--lime); border-color:var(--ink); }
+  .prog-notch.active{ width:13px; height:13px; border-radius:50%; background:var(--yellow); border-color:var(--ink); box-shadow:0 0 8px rgba(0,0,0,0.3); animation:notchPulse 1.2s infinite ease-in-out; }
+  @keyframes notchPulse{ 0%,100%{ transform:translate(-50%, -50%) scale(1); } 50%{ transform:translate(-50%, -50%) scale(1.25); } }
+
+  .story-meta{ display:flex; align-items:center; justify-content:space-between; font-family:'Space Grotesk', sans-serif; font-size:12px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; opacity:.85; padding-right: 16px; }
+  @media (max-width: 767px) {
+    .story-meta { padding-right: 0; }
+  }
+  .story-meta .meta-link-btn{
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    opacity: 0.9;
+  }
+
+  .stage{ 
+    position:relative; 
+    flex:1; 
+    overflow:hidden; 
+    z-index:1; 
+    perspective:1400px; 
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .beat{ 
+    --beat-pad-x: clamp(20px, 4vw, 60px);
+    position:absolute; 
+    inset:0; 
+    display:flex; 
+    flex-direction:column; 
+    padding: clamp(10px, 2vh, 24px) var(--beat-pad-x) clamp(70px, 10vh, 85px); 
+    opacity:0; 
+    transform:translateY(10px) scale(0.98); 
+    transition:opacity .25s ease, transform .25s ease; 
+    pointer-events:none; 
+    z-index:1; 
+    background: transparent !important;
+  }
+  .beat.active{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; z-index:2; }
+  .tx-dark{ color:var(--ink); }
+  .tx-light{ color:#FFF; }
+
+  .sketch-lead-title {
+    font-family:'Space Grotesk', sans-serif;
+    font-size: clamp(24px, 3.8vw, 42px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    margin-bottom: clamp(10px, 1.8vh, 24px);
+    text-align: left;
+    width: 100%;
+  }
+
+  .locator-emphasis{
+    display: inline-block;
+    background: var(--ink);
+    color: #FFF;
+    padding: 0 10px;
+    border-radius: 8px;
+    transform: rotate(-2deg);
+  }
+  .tx-light .locator-emphasis{ background: #FFF; color: var(--ink); }
+
+  /* ==================== LOCATOR QUEST GAME STYLES ==================== */
+  .bookmap-wrap { gap:clamp(8px, 1.5vh, 14px); }
+  .bookmap-prompt { font-family:'Space Grotesk', sans-serif; font-weight:800; font-size:clamp(24px, 5.4vw, 36px); text-align:center; flex-shrink:0; }
+  .bookmap-prompt .locator-emphasis { display:inline-block; }
+
+  .tp-card { position:absolute; box-sizing:border-box; background:var(--tp-color); border:2.5px solid var(--ink); border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:24px; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:transform .12s ease, opacity .5s ease, filter .5s ease; }
+  .tp-card:active { transform:scale(.98); }
+  .tp-card.shake { animation: shakeX .45s; }
+  .tp-card.found { border-color:#FFF; box-shadow:0 0 0 3px var(--ink); }
+  .tp-card.dimmed { opacity:.4; pointer-events:none; filter:grayscale(.3); }
+  .tp-check { position:absolute; top:14px; right:14px; width:30px; height:30px; border-radius:50%; background:#FFF; color:var(--ink); display:none; align-items:center; justify-content:center; font-size:15px; }
+  .tp-card.found .tp-check { display:flex; }
+  .tp-badge { font-family:'Inter', sans-serif; font-weight:700; color:#FFF; background:rgba(0,0,0,.25); padding:5px 12px; border-radius:100px; font-size:clamp(11px, 1.4vw, 14px); }
+  .tp-name { font-family:'Space Grotesk', sans-serif; font-weight:800; color:#FFF; font-size:clamp(24px, 4vw, 38px); text-align:center; text-shadow:0 1px 3px rgba(0,0,0,.35); }
+  .tp-desc { font-family:'Inter', sans-serif; font-weight:600; color:#FFF; font-size:clamp(13px, 1.6vw, 16px); text-align:center; opacity:.92; max-width:80%; line-height:1.4; }
+
+  .sec-tile { position:absolute; box-sizing:border-box; cursor:pointer; background:var(--sec-color); border:2.5px solid var(--ink); border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px; -webkit-tap-highlight-color:transparent; transition:transform .12s ease; }
+  .sec-tile.unveil-in { opacity:0; transform:scale(.82); }
+  .sec-tile.unveil-in.show { opacity:1; transform:scale(1); transition:opacity .4s ease, transform .4s cubic-bezier(.34,1.56,.64,1); }
+  .sec-tile.collapsing { opacity:0; transform:scale(.8); transition:opacity .35s ease, transform .35s ease; pointer-events:none; }
+  .sec-tile:active { transform:scale(.97); }
+  .sec-tile.shake { animation: shakeX .45s; }
+  .sec-tile.found { border-color:#FFF; box-shadow:0 0 0 3px var(--ink); }
+  .sec-name { font-family:'Space Grotesk', sans-serif; font-weight:800; color:#FFF; font-size:clamp(16px, 2.4vw, 27px); text-align:center; line-height:1.15; text-shadow:0 1px 3px rgba(0,0,0,.35); }
+  .sec-desc { font-family:'Inter', sans-serif; font-weight:600; color:#FFF; font-size:clamp(10px, 1.3vw, 14px); text-align:center; opacity:.92; margin-top:6px; line-height:1.35; max-width:92%; }
+  .testament-side-label { position:absolute; left:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+  .testament-side-label span { writing-mode:vertical-rl; transform:rotate(180deg); font-family:'Space Grotesk', sans-serif; font-weight:800; font-size:clamp(9px, 1.1vw, 12px); text-transform:uppercase; letter-spacing:1px; color:var(--ink); opacity:.65; white-space:nowrap; }
+
+  .sec-tile.celebrate { animation: tileBounceFlat .55s cubic-bezier(.34,1.56,.64,1), glowPulse .7s ease-out; }
+  @keyframes tileBounceFlat {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.06); }
+    60% { transform: scale(0.97); }
+    100% { transform: scale(1); }
+  }
+  @keyframes glowPulse {
+    0% { box-shadow: 0 0 0 0 rgba(195,245,60,.95), 0 0 0 2px #FFF; }
+    45% { box-shadow: 0 0 0 12px rgba(195,245,60,.4), 0 0 0 2px #FFF; }
+    100% { box-shadow: 0 0 0 26px rgba(195,245,60,0), 0 0 0 2px #FFF; }
+  }
+  .confetti-bit { position:fixed; width:8px; height:8px; border-radius:2px; pointer-events:none; z-index:9999; top:0; left:0; transform:translate(-50%,-50%); animation: confettiPop .7s ease-out forwards; }
+  @keyframes confettiPop {
+    0% { transform:translate(-50%,-50%) rotate(0deg) scale(1); opacity:1; }
+    100% { transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--rot)) scale(.4); opacity:0; }
+  }
+
+  .book-pill-wrap { position:absolute; box-sizing:border-box; display:flex; flex-wrap:wrap; align-content:flex-start; align-items:flex-start; gap:6px; padding:8px; overflow:hidden; border:2px dashed var(--sec-color); border-radius:14px; }
+  .book-pill { flex:0 0 auto; background:var(--sec-color); border:2px solid var(--ink); border-radius:100px; padding:5px 12px; display:flex; align-items:center; gap:5px; font-family:'Space Grotesk', sans-serif; font-weight:800; color:#FFF; font-size:clamp(10px, 1.3vw, 14px); white-space:nowrap; text-shadow:0 1px 2px rgba(0,0,0,.35); opacity:0; transform:scale(.65); transition:opacity .3s ease, transform .35s cubic-bezier(.34,1.56,.64,1); }
+  .book-pill.show { opacity:1; transform:scale(1); }
+  .book-pill.quest-found { background:#FFF; color:var(--ink); text-shadow:none; box-shadow:0 0 0 2px var(--ink), 0 0 10px 2px rgba(195,245,60,.6); font-weight:900; }
+  .book-pill.quest-found i { font-size:.85em; }
+  @media (min-width: 768px) {
+    .book-pill { font-size:clamp(12px, 1vw, 16px); padding:6px 14px; }
+  }
+
+  .mosaic-frame { flex:1; min-height:0; width:100%; display:flex; align-items:center; justify-content:center; }
+  .mosaic-canvas { position:relative; margin:0 auto; }
+
+  .intro-top-title{ font-family:'Space Grotesk', sans-serif; font-size:16px; font-weight:700; letter-spacing:2px; text-transform:uppercase; opacity:.85; margin-bottom:12px; }
+  .intro-duration{ font-family:'Space Grotesk', sans-serif; font-size:13.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; opacity:.6; margin-top:16px; display:flex; align-items:center; gap:8px; }
+  @media (min-width: 768px) {
+    .intro-duration { display: none; }
+  }
+  .hero-wrap{ flex:1; display:flex; flex-direction:column; justify-content:center; position:relative; z-index:2; width:100%; max-width:800px; margin:0 auto; }
+
+  .kline{ overflow:hidden; margin-bottom:2px; }
+  .kline:last-child{ margin-bottom:0; }
+  .kword{ display:inline-block; opacity:0; transform:translateY(16px) scale(0.92); font-family:'Space Grotesk', sans-serif; font-weight:700; letter-spacing:-0.3px; text-transform:uppercase; }
+  .beat.active .kword{ animation:kwIn .5s cubic-bezier(.2,.85,.25,1) forwards; }
+  @keyframes kwIn{ to{ opacity:1; transform:translateY(0) scale(1); } }
+  .hero-title.xl .kword{ font-size:clamp(42px, 8vw, 76px); line-height:1.05; }
+  .emoji{ font-size:42px; line-height:1; margin-bottom:6px; position:relative; z-index:2; }
+  @media (min-width: 768px) {
+    .hero-wrap{ max-width:960px; }
+    .hero-title.xl .kword{ font-size:clamp(56px, 8vw, 140px); }
+    .intro-top-title{ font-size:19px; letter-spacing:3px; }
+    .emoji{ font-size:56px; margin-bottom:10px; }
+  }
+
+  .recap-context-grid {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    gap: clamp(18px, 3vh, 36px);
+    align-items: center;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  @media (min-width: 768px) {
+    .recap-context-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: 0.75in;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      position: relative;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: clamp(32px, 4vw, 56px);
     }
+  }
 
-    /* Subtle Center Cut Guide */
-    .sheet::before {
-      content: "";
-      position: absolute;
-      top: 0.15in;
-      bottom: 0.15in;
-      left: 5.5in;
-      width: 1px;
-      border-left: 1px dashed #cbd5e1;
-      pointer-events: none;
-      z-index: 1;
+  .recap-free-flow {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 2.2vh, 20px);
+    width: 100%;
+  }
+  .recap-item-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(13.5px, 1.8vh, 16px);
+    font-weight: 700;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+  .recap-tag {
+    align-self: flex-start;
+    display: inline-block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: #FFF;
+    border-radius: 6px;
+    padding: 3px 10px;
+    margin-bottom: 2px;
+  }
+  @media (min-width: 1024px) {
+    .recap-free-flow { gap: 26px; }
+    .recap-item-block { font-size: 20px; line-height: 1.5; }
+    .recap-tag { font-size: 13px; padding: 5px 12px; }
+  }
+
+  .book-meta-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: clamp(14px, 3vw, 28px);
+    width: 100%;
+  }
+  .book-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    flex: 0 1 auto;
+  }
+  .book-meta-item:last-child {
+    flex: 1 1 auto;
+  }
+  .book-meta-item .bm-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .book-meta-item .bm-value {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(13.5px, 1.8vh, 16px);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+  @media (min-width: 1024px) {
+    .book-meta-row { gap: 24px; }
+    .book-meta-item .bm-value { font-size: 19px; }
+  }
+
+  /* ==================== TRI-FOCAL SYNTHESIS (SUBSTANTIALLY LOWERED ANCHOR) ==================== */
+  #beat-5 {
+    padding-bottom: 0 !important;
+    overflow: hidden !important;
+  }
+  .synthesis-stage {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  .synthesis-split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(16px, 2.5vw, 28px);
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    margin-bottom: clamp(120px, 18vh, 180px);
+  }
+  @media (max-width: 767px) {
+    .synthesis-split-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 130px;
     }
+  }
+  .synthesis-panel {
+    background: #FFF;
+    border: 4px solid var(--ink);
+    border-radius: 22px;
+    box-shadow: 5px 5px 0 var(--ink);
+    padding: clamp(18px, 3vh, 32px) clamp(18px, 2.5vw, 32px);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .synthesis-panel-header {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(16px, 2.4vh, 24px);
+    font-weight: 800;
+    line-height: 1.3;
+    color: var(--ink);
+    border-bottom: 3px dashed rgba(13,13,13,0.2);
+    padding-bottom: 12px;
+    margin-bottom: clamp(14px, 2.2vh, 24px);
+    flex-shrink: 0;
+  }
+  .synthesis-panel-body {
+    flex: 1;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .synthesis-stacked-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 2.2vh, 20px);
+    width: 100%;
+  }
+  .synthesis-stat-row {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(20px, 3.2vh, 32px);
+    font-weight: 800;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .synthesis-stat-row .s-label {
+    color: var(--purple);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-size: 0.8em;
+    min-width: clamp(95px, 13vw, 140px);
+    flex-shrink: 0;
+  }
+  .synthesis-stat-row .s-val {
+    color: var(--ink);
+    font-weight: 900;
+  }
+  .synthesis-obs-kicker {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(12px, 1.7vh, 16px);
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #synthesisHighlightCloud .research-pill {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(15px, 2.2vh, 22px) !important;
+    font-weight: 800 !important;
+    padding: clamp(8px, 1.4vh, 12px) clamp(16px, 2vw, 24px) !important;
+    background: var(--ink) !important;
+    color: #FFF !important;
+    border: 2.5px solid var(--ink);
+    border-radius: 100px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.25);
+  }
 
-    .card-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      z-index: 2;
+  /* ==================== ANCHOR POSITIONED SO <40% IS VISIBLE ==================== */
+  .synthesis-bottom-anchor {
+    position: absolute;
+    bottom: clamp(-500px, -52vw, -360px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(560px, 72vw, 900px);
+    height: clamp(560px, 72vw, 900px);
+    border-radius: 50%;
+    background: #FFF;
+    border: 5px solid var(--ink);
+    box-shadow: 0 0 0 8px rgba(255, 199, 44, 0.55), 0 -8px 0 var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: clamp(20px, 3vh, 36px);
+    z-index: 10;
+    pointer-events: none;
+    animation: anchorGlowPulse 2.4s infinite ease-in-out;
+  }
+  @keyframes anchorGlowPulse {
+    0%, 100% { box-shadow: 0 0 0 6px rgba(255, 199, 44, 0.4), 0 -8px 0 var(--ink); }
+    50% { box-shadow: 0 0 0 14px rgba(255, 199, 44, 0.8), 0 -8px 0 var(--ink); }
+  }
+  .synthesis-bottom-anchor .anchor-arc-kicker {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(11px, 1.5vh, 14px);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: #FFF;
+    background: var(--purple);
+    padding: 4px 14px;
+    border-radius: 100px;
+    border: 2px solid var(--ink);
+    margin-bottom: 6px;
+  }
+  .synthesis-bottom-anchor .anchor-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 900;
+    font-size: clamp(28px, 4.2vh, 42px);
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    line-height: 1;
+  }
+
+  /* GOD SHOT CIRCLE DESIGN */
+  .circle-hero-container{ position:relative; z-index:2; flex-shrink:0; display:flex; justify-content:center; align-items:center; }
+  .circle-hero{ width: clamp(160px, 22vh, 220px); height: clamp(160px, 22vh, 220px); border-radius:50%; background:#FFF; color:var(--ink); border:3.5px solid var(--ink); box-shadow:4px 4px 0 var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:12px; flex-shrink:0; }
+  .circle-hero .arc-stem-text{ font-family:'Space Grotesk', sans-serif; font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:1px; opacity:.65; margin-bottom:4px; }
+  .circle-hero .label-god-is{ font-family:'Space Grotesk', sans-serif; font-weight:800; font-size:clamp(17px, 2.4vh, 22px); letter-spacing:-.5px; text-transform:uppercase; line-height:1; margin-bottom:6px; }
+  .circle-hero .static-trait{ font-family:'Inter', sans-serif; font-size:clamp(16px, 2.2vh, 22px); font-weight:900; color:var(--purple); text-transform:capitalize; border-bottom:3px solid var(--ink); padding:2px 12px; margin-bottom:4px; }
+  .blank-input{ width:88%; max-width:88%; border:none; border-bottom:3.5px solid var(--ink); background:transparent; font-family:'Inter', sans-serif; font-size:clamp(16px, 2.2vh, 20px); font-weight:800; text-align:center; outline:none; color:var(--purple); padding:2px 0; }
+
+  #beat-2 .circle-hero {
+    width: clamp(200px, 28vh, 280px);
+    height: clamp(200px, 28vh, 280px);
+    padding: 16px;
+    border-width: 4px;
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+  #beat-2 .circle-hero .arc-stem-text {
+    font-size: 11px;
+    letter-spacing: 1.1px;
+    margin-bottom: 6px;
+  }
+  #beat-2 .circle-hero .label-god-is {
+    font-size: clamp(20px, 3vh, 28px);
+    margin-bottom: 8px;
+  }
+  #beat-2 .circle-hero .static-trait {
+    font-size: clamp(20px, 2.8vh, 28px);
+    border-bottom-width: 3.5px;
+    padding: 3px 14px;
+  }
+
+  @media (max-width: 767px) {
+    .circle-hero.coaching-circle{ width:clamp(190px, 32vh, 240px); height:clamp(190px, 32vh, 240px); padding:16px; }
+    .circle-hero.coaching-circle .arc-stem-text{ font-size:10px; margin-bottom:5px; }
+    .circle-hero.coaching-circle .label-god-is{ font-size:clamp(19px, 3vh, 25px); margin-bottom:8px; }
+    .circle-hero.coaching-circle .blank-input{ font-size:clamp(17px, 2.6vh, 21px); }
+  }
+  
+  @media (min-width: 768px) {
+    .circle-hero{ width: clamp(230px, 32vh, 300px); height: clamp(230px, 32vh, 300px); padding:20px; border-width:4px; box-shadow:6px 6px 0 var(--ink); }
+    .circle-hero .arc-stem-text{ font-size:11px; margin-bottom:6px; }
+    .circle-hero .label-god-is{ font-size:clamp(22px, 3vh, 28px); margin-bottom:8px; }
+    .circle-hero .static-trait{ font-size:clamp(20px, 2.6vh, 26px); padding:2px 14px; margin-bottom:6px; }
+
+    #beat-2 .circle-hero {
+      width: clamp(280px, 38vh, 360px);
+      height: clamp(280px, 38vh, 360px);
+      padding: 24px;
+      border-width: 5px;
+      box-shadow: 7px 7px 0 var(--ink);
     }
+    #beat-2 .circle-hero .arc-stem-text { font-size: 13px; margin-bottom: 8px; }
+    #beat-2 .circle-hero .label-god-is { font-size: clamp(26px, 3.8vh, 34px); margin-bottom: 10px; }
+    #beat-2 .circle-hero .static-trait { font-size: clamp(24px, 3.2vh, 32px); border-bottom-width: 4px; padding: 4px 18px; }
+  }
+  @media (min-width: 1024px) {
+    .circle-hero{ width: clamp(340px, 46vh, 460px); height: clamp(340px, 46vh, 460px); padding:36px; border-width:5px; box-shadow:8px 8px 0 var(--ink); }
+    .circle-hero .arc-stem-text{ font-size:15px; letter-spacing:1.4px; margin-bottom:12px; }
+    .circle-hero .label-god-is{ font-size:clamp(34px, 4.4vh, 44px); margin-bottom:14px; }
+    .circle-hero .static-trait{ font-size:clamp(30px, 3.8vh, 38px); border-bottom-width:4px; padding:4px 18px; }
+    .blank-input{ font-size:clamp(24px, 3.2vh, 32px); border-bottom-width:4px; }
 
-    /* Top Bar */
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 6px;
-      padding: 0 2px;
+    #beat-2 .circle-hero{ 
+      width: clamp(400px, 54vh, 520px); 
+      height: clamp(400px, 54vh, 520px); 
+      padding:44px; 
+      border-width:6px;
+      box-shadow:9px 9px 0 var(--ink);
     }
+    #beat-2 .circle-hero .label-god-is{ font-size:clamp(40px, 5vh, 52px); margin-bottom:16px; }
+    #beat-2 .circle-hero .static-trait{ font-size:clamp(34px, 4.4vh, 44px); border-bottom-width:5px; padding:6px 22px; }
+    #beat-2 .circle-hero .arc-stem-text{ font-size:17px; letter-spacing:1.6px; margin-bottom:14px; }
+  }
 
-    .soar-hero-header {
-      font-family: 'Newsreader', serif;
-      font-size: 38px;
-      font-weight: 800;
-      letter-spacing: 3.5px;
-      text-transform: uppercase;
-      color: #000000;
-      line-height: 0.85;
-    }
+  .breath-visual{ position:relative; width: clamp(200px, 30vh, 300px); height: clamp(200px, 30vh, 300px); margin: 0 auto; flex-shrink:0; }
+  .breath-circle{ position:absolute; inset:0; border-radius:50%; background:#C9B8E8; border:4px solid var(--ink); box-shadow:0 0 26px rgba(168,85,247,0.25); transform:scale(0.8); z-index:2; }
+  .beat.active .breath-circle{ animation:breathe 9s ease-in-out infinite; }
+  @keyframes breathe{ 0%,100%{ transform:scale(0.8); background:#C9B8E8; } 50%{ transform:scale(1.2); background:#DCEFA0; } }
+  .prayer-subtext{ font-family:'Inter', sans-serif; font-weight:700; font-size:clamp(14px, 1.9vh, 17px); line-height:1.4; opacity:.75; color:var(--ink); text-align:center; max-width:280px; }
+  @media (min-width: 768px) {
+    .breath-visual{ width: clamp(260px, 34vh, 360px); height: clamp(260px, 34vh, 360px); }
+    .prayer-subtext{ font-size:clamp(16px, 2vh, 19px); max-width:340px; }
+  }
+  @media (min-width: 1100px) {
+    .breath-visual{ width: clamp(340px, 42vh, 480px); height: clamp(340px, 42vh, 480px); }
+    .prayer-subtext{ font-size:clamp(19px, 2.4vh, 23px); max-width:420px; }
+  }
 
-    .name-field-wrap {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      margin-bottom: 2px;
-    }
+  .passage-scroll-wrap{ 
+    flex:1; 
+    position:relative; 
+    min-height:0; 
+    display:flex; 
+    width:100%; 
+    justify-content:center;
+    mask-image: linear-gradient(to bottom, black calc(100% - 40px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 40px), transparent 100%);
+  }
+  .passage-scroll{ 
+    overflow-y:auto; 
+    -webkit-overflow-scrolling:touch; 
+    flex:1; 
+    padding:6px 20px 30px 0; 
+    color:var(--ink); 
+    width:100%; 
+    max-width:820px; 
+  }
+  .flow-para{ 
+    margin:0 0 20px 0; 
+    font-size:calc(clamp(18px, 2.3vh, 22px) * var(--passage-font-scale, 1)); 
+    line-height:1.75; 
+    font-family:'Inter',sans-serif; 
+    font-weight:400; 
+    max-width:820px; 
+  }
+  @media (min-width: 768px) {
+    .passage-scroll{ max-width:960px; padding-bottom:36px; }
+    .flow-para{ font-size:calc(clamp(22px, 2.4vw, 26px) * var(--passage-font-scale, 1)); line-height:1.8; max-width:960px; margin-bottom:26px; }
+  }
+  @media (min-width: 1200px) {
+    .passage-scroll{ max-width:1300px; }
+    .flow-para{ font-size:calc(clamp(25px, 2vw, 32px) * var(--passage-font-scale, 1)); line-height:1.85; max-width:1300px; }
+  }
+  .verse-num-inline{ font-family:'Space Grotesk', sans-serif; font-weight:700; color:var(--purple); font-size:.65em; vertical-align:super; margin:0 2px 0 6px; }
+  
+  .w{ 
+    cursor:pointer; 
+    padding:2px 4px; 
+    border-radius:6px; 
+    transition:background .15s ease, color .15s ease; 
+  }
 
-    .name-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 10.5px;
-      font-weight: 900;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: #000000;
-    }
+  .w.flagged,
+  .w.hl-yellow{ background: rgba(255, 199, 44, 0.55); font-weight: 700; }
+  .w.hl-lime{ background: rgba(195, 245, 60, 0.5); font-weight: 700; }
+  .w.hl-purple{ background: rgba(168, 85, 247, 0.35); font-weight: 700; }
+  .w.hl-pink{ background: rgba(244, 63, 94, 0.40); font-weight: 700; }
 
-    .name-line {
-      border-bottom: 1.5px solid #000000;
-      width: 130px;
-      height: 12px;
-    }
+  .verse-pick-list{ 
+    overflow-y:auto; 
+    -webkit-overflow-scrolling:touch; 
+    flex:1; 
+    min-height:0; 
+    position:relative; 
+    z-index:2; 
+    padding:4px 12px 30px 0; 
+    width:100%; 
+    max-width:860px; 
+    margin:0 auto; 
+  }
+  .verse-tile{ display:flex; gap:16px; align-items:flex-start; padding:14px 16px; cursor:pointer; transition:background .13s ease; color:var(--ink); border-radius:16px; width:100%; }
+  .verse-tile.selected{ background:var(--lime); }
+  .verse-tile .vnum{ font-family:'Space Grotesk', sans-serif; font-weight:800; color:var(--purple); flex-shrink:0; width:34px; font-size:calc(clamp(18px, 2.2vh, 22px) * var(--char-font-scale, 1)); }
+  .verse-tile .vtext{ font-size:calc(clamp(18px, 2.3vh, 22px) * var(--char-font-scale, 1)); line-height:1.75; font-family:'Inter',sans-serif; font-weight:400; }
+  @media (min-width: 768px) {
+    .verse-pick-list{ max-width:960px; }
+    .verse-tile{ padding:18px 22px; gap:20px; }
+    .verse-tile .vnum{ font-size:calc(24px * var(--char-font-scale, 1)); width:40px; }
+    .verse-tile .vtext{ font-size:calc(clamp(22px, 2.4vw, 26px) * var(--char-font-scale, 1)); line-height:1.8; }
+  }
+  @media (min-width: 1200px) {
+    .verse-pick-list{ max-width:1300px; }
+    .verse-tile .vnum{ font-size:calc(28px * var(--char-font-scale, 1)); width:48px; }
+    .verse-tile .vtext{ font-size:calc(clamp(25px, 2vw, 32px) * var(--char-font-scale, 1)); line-height:1.85; }
+  }
 
-    /* Canvas Boxes */
-    .box-top {
-      border: 3px solid #000000;
-      background: #ffffff;
-      height: 3.45in;
-      border-radius: 18px;
-      box-shadow: 4px 4px 0 #000000;
-      position: relative;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-    }
+  .review-section-header{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    background:var(--ink);
+    color:#FFF;
+    border-radius:100px;
+    padding:5px 12px;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    margin:0 0 10px 0;
+  }
+  .pill-cloud{ display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+  .research-pill{ font-family:'Space Grotesk', sans-serif; font-size:13px; font-weight:700; background:var(--ink); color:#FFF; padding:7px 14px; border-radius:100px; text-transform:capitalize; }
 
-    .box-bottom {
-      border: 3px solid #000000;
-      background: #ffffff;
-      height: 3.55in;
-      border-radius: 18px;
-      box-shadow: 4px 4px 0 #000000;
-      position: relative;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-    }
+  .glossary-drawer{ display: none; }
+  @media (min-width: 768px) {
+    .glossary-drawer.gd-visible{ display: block; }
+  }
+  .glossary-tab{
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 130;
+    background: var(--yellow);
+    color: var(--ink);
+    border: 3px solid var(--ink);
+    border-left: none;
+    border-radius: 0 14px 14px 0;
+    padding: 16px 9px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: left .3s ease, transform .15s ease;
+  }
+  .glossary-tab span{ writing-mode: vertical-rl; transform: rotate(180deg); }
+  .glossary-tab i{ font-size: 15px; }
+  .glossary-tab:active{ transform: translateY(-50%) scale(0.96); }
+  .glossary-drawer.open .glossary-tab{ left: min(360px, 84vw); }
+  .glossary-drawer-scrim{
+    position: fixed; inset: 0; z-index: 105;
+    background: rgba(13,13,29,0.28);
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  .glossary-drawer.open .glossary-drawer-scrim{ opacity: 1; pointer-events: auto; }
+  .glossary-drawer-panel{
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: min(360px, 84vw);
+    background: #FFF;
+    border-right: 4px solid var(--ink);
+    box-shadow: 8px 0 0 rgba(0,0,0,0.12);
+    transform: translateX(-100%);
+    transition: transform .3s ease;
+    z-index: 110;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 20px;
+    gap: 14px;
+  }
+  .glossary-drawer.open .glossary-drawer-panel{ transform: translateX(0); }
+  .glossary-drawer-header{
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 20px; text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .glossary-drawer-close{ 
+    background:none; border:none; font-size:24px; cursor:pointer; 
+    color:var(--ink); padding:6px; line-height:1; display:flex; align-items:center; justify-content:center;
+  }
+  .glossary-drawer-body{ flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; gap: 8px; }
+  .gd-empty{ font-family:'Inter', sans-serif; font-size:14px; opacity:.6; line-height:1.5; }
+  .gd-row{ border: 2.5px solid var(--ink); border-radius: 12px; overflow: hidden; flex-shrink: 0; }
+  .gd-row-term{
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 14px; cursor: pointer; border: none;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 13.5px;
+    background: #FFF; color: var(--ink); text-align: left;
+    transition: background .15s ease, color .15s ease;
+  }
+  .gd-row.revealed .gd-row-term{ background: var(--ink); color: #FFF; }
+  .gd-row-term i{ transition: transform .2s ease; opacity: .6; }
+  .gd-row.revealed .gd-row-term i{ transform: rotate(180deg); }
+  .gd-row-def{
+    max-height: 0; overflow: hidden; transition: max-height .25s ease;
+    font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.45; color: var(--ink);
+    padding: 0 14px;
+  }
+  .gd-row.revealed .gd-row-def{ max-height: 240px; padding: 10px 14px 14px; }
 
-    .free-area {
-      flex-grow: 1;
-      width: 100%;
-    }
+  .video-drawer{ display: none; }
+  @media (min-width: 768px) {
+    .video-drawer.vd-visible{ display: block; }
+  }
+  .video-tab{
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 130;
+    background: var(--pink);
+    color: #FFF;
+    border: 3px solid var(--ink);
+    border-right: none;
+    border-radius: 14px 0 0 14px;
+    padding: 16px 9px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: -4px 4px 0 var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: right .3s ease, transform .15s ease;
+  }
+  .video-tab span{ writing-mode: vertical-rl; }
+  .video-tab i{ font-size: 15px; }
+  .video-tab:active{ transform: translateY(-50%) scale(0.96); }
+  .video-drawer.open .video-tab{ right: min(360px, 84vw); }
+  .video-drawer-scrim{
+    position: fixed; inset: 0; z-index: 105;
+    background: rgba(13,13,29,0.28);
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  .video-drawer.open .video-drawer-scrim{ opacity: 1; pointer-events: auto; }
+  .video-drawer-panel{
+    position: fixed;
+    right: 0; top: 0; bottom: 0;
+    width: min(360px, 84vw);
+    background: #FFF;
+    border-left: 4px solid var(--ink);
+    box-shadow: -8px 0 0 rgba(0,0,0,0.12);
+    transform: translateX(100%);
+    transition: transform .3s ease;
+    z-index: 110;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 20px;
+    gap: 14px;
+  }
+  .video-drawer.open .video-drawer-panel{ transform: translateX(0); }
+  .video-drawer-header{
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 17px; text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .video-drawer-close{ background:none; border:none; font-size:20px; cursor:pointer; color:var(--ink); padding:4px; line-height:1; }
+  .video-drawer-body{ flex: 1; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+  .video-embed-wrap{ position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; border: 2.5px solid var(--ink); background: #000; flex-shrink: 0; }
+  .video-embed-wrap iframe{ position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-drawer-link{
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 12.5px; text-transform: uppercase; letter-spacing: .4px;
+    color: var(--ink); text-decoration: none;
+    border: 2.5px solid var(--ink); border-radius: 100px; padding: 11px 16px;
+    transition: background .15s ease;
+  }
+  .video-drawer-link:active{ background: rgba(0,0,0,0.06); }
+  @media (min-width: 768px) {
+    .video-drawer-panel{ padding: 26px; }
+    .video-drawer-header{ font-size: 19px; }
+  }
 
-    /* Hanging Bookmark Tabs with Clean Inter Sans */
-    .bookmark-tab-left {
-      position: absolute;
-      top: -2px;
-      left: 20px;
-      background: #000000;
-      color: #ffffff;
-      font-family: 'Inter', sans-serif;
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      padding: 3px 14px;
-      border-radius: 0 0 6px 6px;
-      white-space: nowrap;
-      z-index: 2;
-    }
-
-    .bookmark-tab-right {
-      position: absolute;
-      bottom: -2px;
-      right: 20px;
-      background: #000000;
-      color: #ffffff;
-      font-family: 'Inter', sans-serif;
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      padding: 3px 14px;
-      border-radius: 6px 6px 0 0;
-      white-space: nowrap;
-      z-index: 2;
-    }
-
-    /* Central Focal Circle */
-    .center-circle {
-      position: absolute;
-      top: 54.5%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 195px;
-      height: 195px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 3.5px solid #000000;
-      box-shadow: 4px 4px 0 #000000;
-      display: flex;
-      flex-direction: column;
+  .coaching-scene {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    gap: 14px;
+    align-items: center;
+    justify-content: center;
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  @media (min-width: 600px) {
+    .coaching-scene {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: clamp(20px, 3vw, 48px);
       align-items: center;
-      padding: 22px 16px 16px 16px;
-      z-index: 10;
     }
+  }
 
-    .circle-title {
-      font-family: 'Newsreader', serif;
-      font-size: 21px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #000000;
-      margin-bottom: auto;
-    }
+  .dark-scripture-card{ background:var(--ink); color:#FFF; border:3.5px solid var(--ink); border-radius:20px; padding:clamp(16px, 2.4vh, 28px) clamp(18px, 2.5vw, 32px); box-shadow:4px 4px 0 rgba(0,0,0,0.25); position:relative; z-index:2; width:100%; }
+  .dark-scripture-card .ref{ font-family:'Space Grotesk', sans-serif; font-size:clamp(12px, 1.6vh, 16px); font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--lime); margin-bottom:6px; }
+  .dark-scripture-card .vt{ font-style:normal; font-family:'Inter',sans-serif; font-weight:700; font-size:clamp(14px, 2vh, 20px); line-height:1.5; opacity:.95; }
+  @media (min-width: 1024px) {
+    .dark-scripture-card{ padding:44px 48px; border-radius:28px; border-width:4.5px; }
+    .dark-scripture-card .ref{ font-size:22px; margin-bottom:14px; }
+    .dark-scripture-card .vt{ font-size:30px; line-height:1.6; }
+    .circle-hero.coaching-circle{ width:clamp(380px, 48vh, 480px); height:clamp(380px, 48vh, 480px); padding:40px; border-width:6px; box-shadow:9px 9px 0 var(--ink); }
+    .circle-hero.coaching-circle .arc-stem-text{ font-size:16px; letter-spacing:1.5px; margin-bottom:12px; }
+    .circle-hero.coaching-circle .label-god-is{ font-size:clamp(36px, 4.6vh, 46px); margin-bottom:14px; }
+    .circle-hero.coaching-circle .blank-input{ font-size:clamp(26px, 3.4vh, 34px); border-bottom-width:4.5px; }
+  }
+  @media (min-width: 1400px) {
+    .dark-scripture-card{ padding:54px 58px; }
+    .dark-scripture-card .ref{ font-size:24px; }
+    .dark-scripture-card .vt{ font-size:34px; }
+    .circle-hero.coaching-circle{ width:clamp(440px, 54vh, 540px); height:clamp(440px, 54vh, 540px); }
+    .circle-hero.coaching-circle .label-god-is{ font-size:clamp(42px, 5.2vh, 52px); }
+    .circle-hero.coaching-circle .blank-input{ font-size:clamp(30px, 3.8vh, 38px); }
+  }
 
-    .circle-write-space {
-      width: 100%;
-      flex-grow: 1;
-    }
+  .final-live-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    padding: 0 10px;
+    gap: clamp(16px, 3vh, 32px);
+  }
+  .final-live-prompt {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(24px, 4.2vw, 48px);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+    text-transform: none;
+  }
+  .final-trait-badge {
+    display: inline-block;
+    color: var(--purple);
+    border-bottom: 3.5px solid var(--ink);
+    padding: 0 6px;
+    text-transform: capitalize;
+    font-weight: 900;
+  }
+  .final-mobile-subtext {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(14px, 1.9vh, 16px);
+    font-weight: 700;
+    line-height: 1.4;
+    opacity: 0.8;
+    color: var(--ink);
+    display: block;
+    max-width: 320px;
+    margin-top: 0;
+  }
+  .final-desktop-timer {
+    display: none;
+  }
+  .final-timer-btn {
+    background: #FFF;
+    border: 3.5px solid var(--ink);
+    border-radius: 100px;
+    padding: 10px 24px;
+    box-shadow: 4px 4px 0 var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--ink);
+  }
 
-    @media print {
-      html, body {
-        width: 11in !important;
-        height: 8.5in !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        background: transparent !important;
-        overflow: hidden !important;
-      }
+  .final-timer-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  .final-timer-btn.running { background: var(--lime); }
+  .final-timer-btn .timer-icon { font-size: 16px; }
+  .final-timer-btn .timer-digits { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800; line-height: 1; }
 
-      .sheet {
-        width: 11in !important;
-        height: 8.5in !important;
-        padding: 0.35in 0.375in !important;
-        column-gap: 0.75in !important;
-        box-shadow: none !important;
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-      }
-    }
-  </style>
+  @media (min-width: 768px) {
+    .final-mobile-subtext { display: none; }
+    .final-desktop-timer { display: flex; justify-content: center; }
+    .final-trait-badge { border-bottom-width: 4.5px; padding: 0 10px; }
+  }
+  @media (max-width: 767px) {
+    .final-live-wrap { justify-content: flex-start; height: 100%; padding-top: clamp(24px, 8vh, 60px); }
+    .final-bottom-group { margin-top: auto; padding-bottom: clamp(8px, 2vh, 16px); display: flex; flex-direction: column; align-items: center; }
+  }
+  @media (min-width: 1024px) {
+    .final-timer-btn { padding: 14px 32px; border-width: 4px; box-shadow: 5px 5px 0 var(--ink); gap: 12px; }
+    .final-timer-btn .timer-icon { font-size: 20px; }
+    .final-timer-btn .timer-digits { font-size: 24px; }
+  }
+
+  .full-page{ flex:1; display:flex; flex-direction:column; min-height:0; width:100%; }
+
+  /* DEV MODE */
+  .dev-bubbles-bar{ display:flex; gap:8px; overflow-x:auto; overflow-y:hidden; padding:2px 40px 6px 2px; scrollbar-width:none; }
+  .dev-bubbles-bar::-webkit-scrollbar{ display:none; }
+  .dev-bubble{ flex-shrink:0; width:30px; height:30px; border-radius:50%; border:2px solid rgba(0,0,0,0.25); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:12px; cursor:pointer; position:relative; transition:transform .12s ease; }
+
+  .dev-bubble.active{ border:3px solid var(--ink); box-shadow:0 0 0 3px rgba(255,255,255,0.6); }
+  .dev-bubble .note-dot{ position:absolute; top:-3px; right:-3px; width:9px; height:9px; border-radius:50%; background:var(--yellow); border:1.5px solid var(--ink); }
+
+  .dev-notes-overlay{ position:absolute; inset:0; z-index:200; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; padding:24px; }
+  .dev-notes-panel{ background:#fff; color:var(--ink); border:4px solid var(--ink); border-radius:20px; padding:20px; width:100%; max-width:520px; max-height:85vh; overflow-y:auto; box-shadow:6px 6px 0 var(--ink); display:flex; flex-direction:column; gap:12px; font-family:'Inter',sans-serif; }
+  .dev-notes-panel h3{ font-family:'Space Grotesk',sans-serif; margin:0; font-size:16px; text-transform:uppercase; }
+  .dev-notes-panel textarea{ width:100%; min-height:90px; border:2.5px solid var(--ink); border-radius:10px; padding:10px; font-family:'Inter',sans-serif; font-size:14px; resize:vertical; }
+  .dev-notes-panel .dnp-row{ display:flex; gap:10px; }
+  .dev-notes-panel button.dnp-btn{ font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:13px; text-transform:uppercase; background:var(--lime); border:2.5px solid var(--ink); border-radius:100px; padding:10px 16px; cursor:pointer; }
+  .dev-notes-panel button.dnp-close{ background:#eee; }
+  .dnp-status{ font-size:12px; font-weight:700; font-family:'Inter',sans-serif; }
+
+  .share-trigger-btn{
+    position:relative; z-index:5; pointer-events:auto;
+    background:#FFF; border:3.5px solid var(--ink); border-radius:100px; padding:12px 22px;
+    box-shadow:4px 4px 0 var(--ink); display:inline-flex; align-items:center; gap:9px;
+    cursor:pointer; transition:all .15s ease; color:var(--ink);
+    font-family:'Space Grotesk', sans-serif; font-weight:800; font-size:12.5px; text-transform:uppercase; letter-spacing:.4px;
+  }
+  .share-trigger-btn:active{ transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
+  .share-trigger-btn i{ font-size:13px; }
+
+  .share-overlay{ position:absolute; inset:0; z-index:210; background:rgba(0,0,0,0.65); display:flex; align-items:center; justify-content:center; padding:22px; }
+  .share-panel{ background:#fff; color:var(--ink); border:4px solid var(--ink); border-radius:20px; padding:22px; width:100%; max-width:380px; max-height:90vh; overflow-y:auto; box-shadow:6px 6px 0 var(--ink); display:flex; flex-direction:column; align-items:center; gap:16px; font-family:'Inter',sans-serif; }
+  .share-panel h3{ font-family:'Space Grotesk',sans-serif; margin:0; font-size:13.5px; text-transform:uppercase; letter-spacing:1px; align-self:flex-start; }
+  .share-card-stage{ width:100%; aspect-ratio:1/1; border-radius:16px; border:3.5px solid var(--ink); display:flex; align-items:center; justify-content:center; padding:22px; transition:background .25s ease; }
+  .share-card-stage .circle-hero{ background:#fff; box-shadow:4px 4px 0 var(--ink); width:100%; height:100%; max-width:240px; max-height:240px; }
+  .share-swatch-row{ display:flex; gap:9px; align-self:flex-start; flex-wrap:wrap; }
+  .share-swatch-btn{ width:28px; height:28px; border-radius:50%; border:2.5px solid var(--ink); padding:0; cursor:pointer; }
+  .share-swatch-btn.active{ box-shadow:0 0 0 2px #fff, 0 0 0 4px var(--ink); }
+  .share-action-row{ display:flex; gap:10px; width:100%; }
+  .share-action-btn{ flex:1; font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:12.5px; text-transform:uppercase; border:2.5px solid var(--ink); border-radius:100px; padding:12px 14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .share-action-btn.primary{ background:var(--lime); }
+  .share-action-btn.secondary{ background:#eee; }
+  .share-action-btn:disabled{ opacity:.6; cursor:default; }
+  @media (min-width:768px){
+    .share-trigger-btn{ display:none; }
+    .share-panel{ max-width:420px; padding:26px; }
+  }
+  .dnp-status.ok{ color:#1a7a3c; }
+  .dnp-status.warn{ color:#8a5a00; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .fs-toggle-btn:hover { transform: scale(1.08); }
+    .minimal-arrow-btn:hover { opacity: 1; transform: scale(1.15); }
+    .rail-swatch-btn:hover { transform: scale(1.18); }
+    .rail-swatch-btn[data-color="lime"]:hover{ box-shadow: 0 0 0 4px rgba(195,245,60,0.45); }
+    .rail-swatch-btn[data-color="purple"]:hover{ box-shadow: 0 0 0 4px rgba(168,85,247,0.4); }
+    .rail-swatch-btn[data-color="yellow"]:hover{ box-shadow: 0 0 0 4px rgba(255,199,44,0.45); }
+    .rail-swatch-btn[data-color="pink"]:hover{ box-shadow: 0 0 0 4px rgba(244,63,94,0.4); }
+    .final-timer-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+    .dev-bubble:hover{ transform:scale(1.12); }
+  }
+</style>
 </head>
 <body>
 
-  <div class="sheet">
+<div class="app-viewport" id="phone">
+  <button class="fs-toggle-btn" id="fsToggleBtn" onclick="toggleFullScreen()" title="Toggle Fullscreen (F)" aria-label="Toggle fullscreen">
+    <i class="fa-solid fa-expand"></i>
+  </button>
 
-    <!-- CARD 1 (LEFT HALF) -->
-    <div class="card-container">
-      <div>
-        <div class="top-bar">
-          <div class="soar-hero-header">SOAR</div>
-          <div class="name-field-wrap">
-            <span class="name-label">Name:</span>
-            <div class="name-line"></div>
-          </div>
-        </div>
-
-        <div class="box-top">
-          <div class="bookmark-tab-left">Scripture &amp; Observation</div>
-          <div class="free-area"></div>
-        </div>
-      </div>
-
-      <div class="center-circle">
-        <div class="circle-title">God is...</div>
-        <div class="circle-write-space"></div>
-      </div>
-
-      <div class="box-bottom">
-        <div class="free-area"></div>
-        <div class="bookmark-tab-right">Application &amp; Reflection</div>
-      </div>
+  <div class="hud-header" id="hudHeader">
+    <div class="progress-container" id="normalProgressWrap">
+      <div class="progress-bar-fill" id="progressBarFill"></div>
+      <div class="notches-layer" id="notchesLayer"></div>
     </div>
-
-    <!-- CARD 2 (RIGHT HALF) -->
-    <div class="card-container">
-      <div>
-        <div class="top-bar">
-          <div class="soar-hero-header">SOAR</div>
-          <div class="name-field-wrap">
-            <span class="name-label">Name:</span>
-            <div class="name-line"></div>
-          </div>
-        </div>
-
-        <div class="box-top">
-          <div class="bookmark-tab-left">Scripture &amp; Observation</div>
-          <div class="free-area"></div>
-        </div>
-      </div>
-
-      <div class="center-circle">
-        <div class="circle-title">God is...</div>
-        <div class="circle-write-space"></div>
-      </div>
-
-      <div class="box-bottom">
-        <div class="free-area"></div>
-        <div class="bookmark-tab-right">Application &amp; Reflection</div>
-      </div>
+    <div class="dev-bubbles-bar" id="devBubblesBar" style="display:none;"></div>
+    <div class="story-meta" id="storyMetaRow">
+      <span id="sectionLabel">Dwell</span>
+      <span id="scriptureMeta">Mark 3</span>
     </div>
-
   </div>
 
+  <div class="stage" id="stage"></div>
+
+  <!-- PERSISTENT MINIMAL CHEVRON NAVIGATION SHELL -->
+  <div class="persistent-nav-shell">
+    <button class="minimal-arrow-btn" id="shellPrevBtn" onclick="goPrev()" aria-label="Previous">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <button class="minimal-arrow-btn" id="shellNextBtn" onclick="handleForwardAttempt()" aria-label="Next">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="gate-nav-hint light" id="questNavHint">
+    <i class="fa-solid fa-hand-point-up"></i>
+    <span id="questNavHintText">Make a selection</span>
+  </div>
+
+  <div class="gate-nav-hint dark" id="charNavHint">
+    <i class="fa-solid fa-pencil"></i>
+    <span id="charNavHintText">Fill in the blank</span>
+  </div>
+
+  <!-- FLOATING CONTEXT ISLAND FOR INTERACTION SLIDES -->
+  <div class="floating-context-island" id="floatingContextIsland" style="display:none;"></div>
+
+  <!-- VOCAB-SCAN COLOR RAIL (right side) -->
+  <div class="vocab-color-rail" id="vocabColorRail" style="display:none;"></div>
+
+  <!-- GLOSSARY SIDE PANEL -->
+  <div class="glossary-drawer" id="glossaryDrawer">
+    <button class="glossary-tab" id="glossaryTabBtn" onclick="event.stopPropagation(); toggleGlossaryDrawer();" aria-label="Toggle glossary panel">
+      <i class="fa-solid fa-book-bookmark"></i>
+      <span>Glossary</span>
+    </button>
+    <div class="glossary-drawer-scrim" onclick="closeGlossaryDrawer();"></div>
+    <div class="glossary-drawer-panel" onclick="event.stopPropagation();">
+      <div class="glossary-drawer-header">
+        <span>Glossary</span>
+        <button class="glossary-drawer-close" onclick="event.stopPropagation(); closeGlossaryDrawer();" aria-label="Close glossary panel"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="glossary-drawer-body" id="glossaryDrawerBody"></div>
+    </div>
+  </div>
+
+  <!-- VIDEO SIDE PANEL -->
+  <div class="video-drawer" id="videoDrawer">
+    <button class="video-tab" id="videoTabBtn" onclick="event.stopPropagation(); toggleVideoDrawer();" aria-label="Toggle video panel">
+      <i class="fa-brands fa-youtube"></i>
+      <span>Video</span>
+    </button>
+    <div class="video-drawer-scrim" onclick="closeVideoDrawer();"></div>
+    <div class="video-drawer-panel">
+      <div class="video-drawer-header">
+        <span>The Book of Mark</span>
+        <button class="video-drawer-close" onclick="event.stopPropagation(); closeVideoDrawer();" aria-label="Close video panel"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="video-drawer-body">
+        <div class="video-embed-wrap">
+          <iframe id="markVideoFrame" src="" title="The Book of Mark" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <a class="video-drawer-link" href="https://www.youtube.com/watch?v=YdjRjSIzry4" target="_blank" rel="noopener">Watch on YouTube <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="share-overlay" id="shareOverlay" style="display:none;" onclick="closeShareOverlay();">
+    <div class="share-panel" onclick="event.stopPropagation();">
+      <h3>Share Your Central Truth</h3>
+      <div class="share-card-stage" id="shareCardStage">
+        <div class="circle-hero" id="shareCircleHero">
+          <div class="arc-stem-text" id="shareArcStem">MARK 3</div>
+          <div class="label-god-is">GOD IS...</div>
+          <div class="static-trait" id="shareTraitText">Healer</div>
+        </div>
+      </div>
+      <div class="share-swatch-row" id="shareSwatchRow"></div>
+      <div class="share-action-row" id="shareActionRow">
+        <button class="share-action-btn secondary" onclick="closeShareOverlay();">Cancel</button>
+        <button class="share-action-btn primary" id="shareConfirmBtn" onclick="confirmShareImage();"><i class="fa-solid fa-arrow-up-from-bracket"></i> Share</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dev-notes-overlay" id="devNotesOverlay" style="display:none;">
+    <div class="dev-notes-panel">
+      <h3 id="dnpTitle">Slide Note</h3>
+      <textarea id="devNoteInput" placeholder="Notes for this slide..." oninput="saveCurrentDevNote(this.value)"></textarea>
+      <div class="dnp-row">
+        <button class="dnp-btn" onclick="copyAllDevNotes()">Copy All Notes</button>
+        <button class="dnp-btn dnp-close" onclick="closeDevNotesPanel()">Close</button>
+      </div>
+      <div id="devAllNotesSection" style="display:none; flex-direction:column; gap:8px;">
+        <h3>All Notes (compiled)</h3>
+        <textarea id="devAllNotesPanel" readonly></textarea>
+        <div class="dnp-row" style="align-items:center;">
+          <span class="dnp-status" id="dnpStatus"></span>
+          <button class="dnp-btn dnp-close" id="dnpRetryBtn" style="display:none;" onclick="tryCopyAllNotes()">Try Copy Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="exportTarget" style="position:fixed; left:-9999px; top:0; width:420px;"></div>
+
+<script>
+// ==================== MERRIAM-WEBSTER INTERMEDIATE DICTIONARY ====================
+const MW_KEY = "eee0ff38-1739-4feb-89fe-868b69ab391b";
+const mwCache = new Map();
+
+async function fetchMwIntermediate(cleanTerm) {
+  if (mwCache.has(cleanTerm)) return mwCache.get(cleanTerm);
+  try {
+    const res = await fetch(`https://www.dictionaryapi.com/api/v3/references/sd3/json/${encodeURIComponent(cleanTerm)}?key=${MW_KEY}`);
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0 && typeof data[0] === 'object' && data[0].shortdef && data[0].shortdef.length) {
+      const result = {
+        term: data[0].hwi && data[0].hwi.hw ? data[0].hwi.hw.replace(/\*/g, '') : cleanTerm,
+        def: data[0].shortdef[0],
+        source: "Merriam-Webster Intermediate Dictionary"
+      };
+      mwCache.set(cleanTerm, result);
+      return result;
+    }
+  } catch (err) {
+    console.warn(`MW Intermediate API lookup failed for "${cleanTerm}":`, err);
+  }
+  mwCache.set(cleanTerm, null);
+  return null;
+}
+
+const PASSAGE_START_VERSE = 1;
+
+const passage = [
+ "Another time Jesus went into the synagogue, and a man with a shriveled hand was there.",
+ "Some of them were looking for a reason to accuse Jesus, so they watched him closely to see if he would heal him on the Sabbath.",
+ "Jesus said to the man with the shriveled hand, \"Stand up in front of everyone.\"",
+ "Then Jesus asked them, \"Which is lawful on the Sabbath: to do good or to do evil, to save life or to kill?\" But they remained silent.",
+ "He looked around at them in anger and, deeply distressed at their stubborn hearts, said to the man, \"Stretch out your hand.\" He stretched it out, and his hand was completely restored.",
+ "Then the Pharisees went out and began to plot with the Herodians how they might kill Jesus.",
+ "Jesus withdrew with his disciples to the lake, and a large crowd from Galilee followed.",
+ "When they heard about all he was doing, many people came to him from Judea, Jerusalem, Idumea, and the regions across the Jordan and around Tyre and Sidon.",
+ "Because of the crowd he told his disciples to have a small boat ready for him, to keep the people from crowding him.",
+ "For he had healed many, so that those with diseases were pushing forward to touch him.",
+ "Whenever the impure spirits saw him, they fell down before him and cried out, \"You are the Son of God.\"",
+ "But he gave them strict orders not to tell others about him.",
+ "Jesus went up on a mountainside and called to him those he wanted, and they came to him.",
+ "He appointed twelve that they might be with him and that he might send them out to preach",
+ "and to have authority to drive out demons.",
+ "These are the twelve he appointed: Simon (to whom he gave the name Peter),",
+ "James son of Zebedee and his brother John (to them he gave the name Boanerges, which means \"sons of thunder\"),",
+ "Andrew, Philip, Bartholomew, Matthew, Thomas, James son of Alphaeus, Thaddaeus, Simon the Zealot",
+ "and Judas Iscariot, who betrayed him.",
+ "Then Jesus entered a house, and again a crowd gathered, so that he and his disciples were not even able to eat.",
+ "When his family heard about this, they went to take charge of him, for they said, \"He is out of his mind.\"",
+ "And the teachers of the law who came down from Jerusalem said, \"He is possessed by Beelzebul! By the prince of demons he is driving out demons.\"",
+ "So Jesus called them over to him and began to speak to them in parables: \"How can Satan drive out Satan?",
+ "If a kingdom is divided against itself, that kingdom cannot stand.",
+ "If a house is divided against itself, that house cannot stand.",
+ "And if Satan opposes himself and is divided, he cannot stand; his end has come.",
+ "In fact, no one can enter a strong man's house without first tying him up. Then he can plunder the strong man's house.",
+ "Truly I tell you, people can be forgiven all their sins and every slander they utter,",
+ "but whoever blasphemes against the Holy Spirit will never be forgiven; they are guilty of an eternal sin.\"",
+ "He said this because they were saying, \"He has an impure spirit.\"",
+ "Then Jesus' mother and brothers arrived. Standing outside, they sent someone in to call him.",
+ "A crowd was sitting around him, and they told him, \"Your mother and brothers are outside looking for you.\"",
+ "\"Who are my mother and my brothers?\" he asked.",
+ "Then he looked at those seated in a circle around him and said, \"Here are my mother and my brothers!",
+ "Whoever does God's will is my brother and sister and mother.\""
+];
+
+const state = { index:0, wordTaps:[], charVerse:null, trait:'', scrolledToEnd:false, activeTool:{ vocab:null, char:null }, passageFontLevel:2, charFontLevel:2 };
+const FONT_LEVELS = [0.85, 0.925, 1, 1.1, 1.2, 1.3];
+let renderGen = 0;
+
+function quoteVerse(text){
+  const t = (text||'').trim();
+  const startsWithQuote = /^["“]/.test(t);
+  const endsWithQuote = /["”]$/.test(t);
+  return (startsWithQuote ? '' : '"') + text + (endsWithQuote ? '' : '"');
+}
+function normWord(w){ return (w||'').replace(/[^a-zA-Z']/g,'').toLowerCase(); }
+
+const stopWords = new Set(['a','an','the','and','but','or','nor','for','so','yet','of','to','in','on','at','by','with','from','into','onto','up','out','off','over','under','again','then','than','as','is','am','are','was','were','be','been','being','he','she','it','they','him','her','them','his','its','their','this','that','these','those','who','whom','whose','which','what','i','you','we','me','us','my','your','our','not','no','all','any','some','there','here','when','where','why','how','went','come','came','said','say','says','saw','see','seen','got','get','gets','made','make','makes','took','take','taken','knew','know','known','told','tell','asked','ask','gave','give','given','put','let','called','call','began','begin','left','leave','found','find','ran','run','stood','stand','sat','sit','looked','look','walked','walk','brought','bring','heard','hear','felt','feel','thought','think','wanted','want','one','two','three','man','men','people','day','days','time','way','down','after','before','while','because','if','also','just','only','very','too','back','away','still','around','about','once','more','other','many','much']);
+
+function kw(lines, extraClass){
+  let i = 0;
+  const body = lines.map(line=>{
+    const words = line.map(w=>{
+      const delay = (i * 0.09).toFixed(2); i++;
+      return `<span class="kword" style="animation-delay:${delay}s">${w}</span>`;
+    }).join(' ');
+    return `<div class="kline">${words}</div>`;
+  }).join('');
+  return `<div class="hero-title${extraClass ? ' '+extraClass : ''}">${body}</div>`;
+}
+
+const paragraphEnds = [6, 12, 19, 30, 35];
+const PASSAGE_LAST_VERSE = PASSAGE_START_VERSE + passage.length - 1;
+
+function passageWordsHTML(){
+  let out = '<p class="flow-para">';
+  passage.forEach((v,i)=>{
+    const verseNum = i + PASSAGE_START_VERSE;
+    const words = v.replace(/—(?=\S)/g, '— ').split(/\s+/);
+    const normed = words.map(normWord);
+    const pieces = [];
+    let wi = 0;
+    while (wi < words.length) {
+      const marker = wi === 0 ? `<span class="verse-num-inline">${verseNum}</span>` : '';
+      const norm = normed[wi];
+      pieces.push(`${marker}<span class="w" data-word="${norm}" onclick="tapWord(event,this)">${words[wi]}</span>`);
+      wi++;
+    }
+    out += pieces.join(' ') + ' ';
+    if (paragraphEnds.includes(verseNum) && verseNum !== PASSAGE_LAST_VERSE) out += '</p><p class="flow-para">';
+  });
+  out += '</p>';
+  return out;
+}
+
+function versePickHTML(){
+  return passage.map((v,i)=>`
+    <div class="verse-tile" data-v="${i+PASSAGE_START_VERSE}" onclick="tapVerseTile(event, ${i+PASSAGE_START_VERSE})">
+      <div class="vnum">${i+PASSAGE_START_VERSE}</div><div class="vtext">${v}</div>
+    </div>`).join('');
+}
+
+const BOOK_MAP_SECTIONS = [
+  { title:'Torah (Law)', testament:'Old', color:'#C97B4A', desc:"The foundation of Israel's story and God's covenant", books:[['Genesis',50,38262],['Exodus',40,32685],['Leviticus',27,24541],['Numbers',36,32896],['Deuteronomy',34,28352]] },
+  { title:'History', testament:'Old', color:'#D98F3E', desc:"Israel's journey from conquest to exile", books:[['Joshua',24,18854],['Judges',21,18966],['Ruth',4,2574],['1 Samuel',31,25048],['2 Samuel',24,20600],['1 Kings',22,24513],['2 Kings',25,23517],['1 Chronicles',29,20365],['2 Chronicles',36,26069],['Ezra',10,7440],['Nehemiah',13,10480],['Esther',10,5633]] },
+  { title:'Wisdom & Poetry', testament:'Old', color:'#B08968', desc:'Songs, proverbs, and honest reflections on life', books:[['Job',42,18098],['Psalms',150,42704],['Proverbs',31,15038],['Ecclesiastes',12,5579],['Song of Solomon',8,2658]] },
+  { title:'Prophets', testament:'Old', color:'#8B5E3C', desc:"God's messengers calling His people back — some short, some long", books:[['Isaiah',66,37036],['Jeremiah',52,42654],['Lamentations',5,3411],['Ezekiel',48,39401],['Daniel',12,11602],['Hosea',14,5174],['Joel',3,2033],['Amos',9,4216],['Obadiah',1,669],['Jonah',4,1320],['Micah',7,3152],['Nahum',3,1284],['Habakkuk',3,1475],['Zephaniah',3,1616],['Haggai',2,1130],['Zechariah',14,6443],['Malachi',4,1781]] },
+  { title:'Gospels', testament:'New', color:'#38BDF8', desc:"Jesus's life, death & resurrection", books:[['Matthew',28,23343],['Mark',16,14949],['Luke',24,25640],['John',21,18658]] },
+  { title:'Church History', testament:'New', color:'#22C55E', desc:"The Holy Spirit's arrival and church growth", books:[['Acts',28,24229]] },
+  { title:"Paul's Letters", testament:'New', color:'#A855F7', desc:'Helping churches live out the gospel', books:[['Romans',16,9422],['1 Corinthians',16,9462],['2 Corinthians',13,6046],['Galatians',6,3084],['Ephesians',6,3022],['Philippians',4,2183],['Colossians',4,1979],['1 Thessalonians',5,1837],['2 Thessalonians',3,1022],['1 Timothy',6,2244],['2 Timothy',4,1666],['Titus',3,896],['Philemon',1,430]] },
+  { title:'General Letters', testament:'New', color:'#F43F5E', desc:'Guidance for early believers', books:[['Hebrews',13,6897],['James',5,2304],['1 Peter',5,2476],['2 Peter',3,1553],['1 John',5,2517],['2 John',1,298],['3 John',1,294],['Jude',1,608]] },
+  { title:'Prophecy', testament:'New', color:'#4338CA', desc:'A visionary look at how it all ends', books:[['Revelation',22,11952]] }
+];
+
+const BOOK_FIND_SEQUENCE = ['Genesis', 'Revelation', 'Exodus', 'Mark'];
+const bookMapState = { phase: 'testament', foundIndex: 0 };
+
+function partitionIntoRows(items, n){
+  const weights = items.map(it => it.aspect);
+  const totalWeight = weights.reduce((a, b) => a + b, 0);
+  const maxSingle = Math.max(...weights);
+
+  function countGroups(maxSum){
+    let groups = 1, cur = 0;
+    for (const w of weights){
+      if (cur > 0 && cur + w > maxSum) { groups++; cur = w; }
+      else { cur += w; }
+    }
+    return groups;
+  }
+
+  let lo = maxSingle, hi = totalWeight;
+  for (let i = 0; i < 60; i++){
+    const mid = (lo + hi) / 2;
+    if (countGroups(mid) <= n) hi = mid; else lo = mid;
+  }
+
+  const threshold = hi;
+  const rows = [];
+  let curRow = [];
+  let curSum = 0;
+  items.forEach(item => {
+    if (curRow.length > 0 && curSum + item.aspect > threshold) { rows.push(curRow); curRow = [item]; curSum = item.aspect; }
+    else { curRow.push(item); curSum += item.aspect; }
+  });
+  if (curRow.length) rows.push(curRow);
+  return rows;
+}
+
+function layoutRowsFullWidth(rows, containerW, gap){
+  const rects = [];
+  let y = 0;
+  rows.forEach(rowItems => {
+    const rowSum = rowItems.reduce((a, b) => a + b.aspect, 0);
+    const availW = containerW - (rowItems.length - 1) * gap;
+    const rowHeight = availW / rowSum;
+    let x = 0;
+    rowItems.forEach(item => {
+      const w = item.aspect * rowHeight;
+      rects.push({ ...item, rx: x, ry: y, rw: w, rh: rowHeight });
+      x += w + gap;
+    });
+    y += rowHeight + gap;
+  });
+  return { rects, totalHeight: Math.max(0, y - gap) };
+}
+
+const BOOK_ABBREV = {
+  'Genesis':'Gen', 'Exodus':'Exod', 'Leviticus':'Lev', 'Numbers':'Num', 'Deuteronomy':'Deut',
+  'Joshua':'Josh', 'Judges':'Judg', 'Ruth':'Ruth', '1 Samuel':'1 Sam', '2 Samuel':'2 Sam', '1 Kings':'1 Kgs', '2 Kings':'2 Kgs', '1 Chronicles':'1 Chr', '2 Chronicles':'2 Chr', 'Ezra':'Ezra', 'Nehemiah':'Neh', 'Esther':'Esth',
+  'Job':'Job', 'Psalms':'Ps', 'Proverbs':'Prov', 'Ecclesiastes':'Eccl', 'Song of Solomon':'Song',
+  'Isaiah':'Isa', 'Jeremiah':'Jer', 'Lamentations':'Lam', 'Ezekiel':'Ezek', 'Daniel':'Dan',
+  'Hosea':'Hos', 'Joel':'Joel', 'Amos':'Amos', 'Obadiah':'Obad', 'Jonah':'Jonah', 'Micah':'Mic', 'Nahum':'Nah', 'Habakkuk':'Hab', 'Zephaniah':'Zeph', 'Haggai':'Hag', 'Zechariah':'Zech', 'Malachi':'Mal',
+  'Matthew':'Matt', 'Mark':'Mark', 'Luke':'Luke', 'John':'John', 'Acts':'Acts',
+  'Romans':'Rom', '1 Corinthians':'1 Cor', '2 Corinthians':'2 Cor', 'Galatians':'Gal', 'Ephesians':'Eph', 'Philippians':'Phil', 'Colossians':'Col', '1 Thessalonians':'1 Thess', '2 Thessalonians':'2 Thess', '1 Timothy':'1 Tim', '2 Timothy':'2 Tim', 'Titus':'Titus', 'Philemon':'Phlm',
+  'Hebrews':'Heb', 'James':'Jas', '1 Peter':'1 Pet', '2 Peter':'2 Pet', '1 John':'1 John', '2 John':'2 John', '3 John':'3 John', 'Jude':'Jude', 'Revelation':'Rev'
+};
+
+function isMobileViewport(){ return window.innerWidth < 768; }
+
+function getSectionForBook(name){
+  return BOOK_MAP_SECTIONS.find(s => s.books.some(b => b[0] === name));
+}
+const SECTION_FIND_SEQUENCE = BOOK_FIND_SEQUENCE.map(name => getSectionForBook(name).title);
+const SECTION_SIZE_MIN_RATIO = 0.55;
+
+function getSectionItemsFor(sectionsSubset){
+  const items = sectionsSubset.map(s => ({
+    raw: Math.sqrt(s.books.reduce((sum, b) => sum + b[1], 0)),
+    name: s.title,
+    testament: s.testament,
+    color: s.color,
+    desc: s.desc
+  }));
+  const rawAvg = items.reduce((a, b) => a + b.raw, 0) / items.length;
+  const minRaw = rawAvg * SECTION_SIZE_MIN_RATIO;
+  items.forEach(b => { b.raw = Math.max(b.raw, minRaw); });
+  const avgWeight = items.reduce((a, b) => a + b.raw, 0) / items.length;
+  items.forEach(b => { b.aspect = b.raw / avgWeight; });
+  return items;
+}
+
+const TESTAMENT_LABEL_WIDTH_DESKTOP = 44;
+const TESTAMENT_LABEL_WIDTH_MOBILE = 28;
+
+function computeSectionBandLayout(containerW, containerH, gap, rowsPerTestament, labelWidth){
+  const oldSections = BOOK_MAP_SECTIONS.filter(s => s.testament === 'Old');
+  const newSections = BOOK_MAP_SECTIONS.filter(s => s.testament === 'New');
+  const otItems = getSectionItemsFor(oldSections);
+  const ntItems = getSectionItemsFor(newSections);
+  const cardsW = Math.max(60, containerW - labelWidth - gap);
+
+  const otRows = partitionIntoRows(otItems, rowsPerTestament);
+  const ntRows = partitionIntoRows(ntItems, rowsPerTestament);
+
+  const otLayout = layoutRowsFullWidth(otRows, cardsW, gap);
+  const ntLayoutRaw = layoutRowsFullWidth(ntRows, cardsW, gap);
+  const ntRects = ntLayoutRaw.rects.map(r => ({ ...r, ry: r.ry + otLayout.totalHeight + gap }));
+  const naturalTotal = otLayout.totalHeight + gap + ntLayoutRaw.totalHeight;
+
+  const scaleY = naturalTotal > 0 ? containerH / naturalTotal : 1;
+  const offsetX = labelWidth + gap;
+  const rects = [...otLayout.rects, ...ntRects].map(r => ({ ...r, rx: r.rx + offsetX, ry: r.ry * scaleY, rh: r.rh * scaleY }));
+
+  const bands = [
+    { testament: 'Old', y: 0, h: otLayout.totalHeight * scaleY, bookCount: oldSections.reduce((s, x) => s + x.books.length, 0) },
+    { testament: 'New', y: (otLayout.totalHeight + gap) * scaleY, h: ntLayoutRaw.totalHeight * scaleY, bookCount: newSections.reduce((s, x) => s + x.books.length, 0) }
+  ];
+
+  return { rects, bands };
+}
+
+function testamentSideLabelHTML(band, labelWidth){
+  return `<div class="testament-side-label" style="top:${band.y.toFixed(1)}px; height:${band.h.toFixed(1)}px; width:${labelWidth}px;">
+            <span>${band.testament} Testament &middot; ${band.bookCount} Books</span>
+          </div>`;
+}
+
+function sectionTileHTML(r){
+  return `<div class="sec-tile" data-section="${r.name}" style="left:${r.rx.toFixed(1)}px; top:${r.ry.toFixed(1)}px; width:${r.rw.toFixed(1)}px; height:${r.rh.toFixed(1)}px; --sec-color:${r.color};" onclick="tapSectionTile(event, this)">
+            <div class="sec-name">${r.name}</div>
+            <div class="sec-desc">${r.desc}</div>
+          </div>`;
+}
+
+function bookPillHTML(name){
+  const abbrev = BOOK_ABBREV[name] || name;
+  const isQuestBook = BOOK_FIND_SEQUENCE.includes(name);
+  return `<div class="book-pill${isQuestBook ? ' quest-found' : ''}">${isQuestBook ? '<i class="fa-solid fa-check"></i>' : ''}${abbrev}</div>`;
+}
+
+function bookPillWrapHTML(sr, section){
+  const pills = section.books.map(([name]) => bookPillHTML(name)).join('');
+  return `<div class="book-pill-wrap" style="left:${sr.rx.toFixed(1)}px; top:${sr.ry.toFixed(1)}px; width:${sr.rw.toFixed(1)}px; height:${sr.rh.toFixed(1)}px; --sec-color:${section.color};">${pills}</div>`;
+}
+
+function renderTestamentGateIntoCanvas(){
+  const canvas = document.getElementById('bookmapCanvas');
+  if (!canvas) return;
+  const frame = canvas.closest('.mosaic-frame');
+  if (!frame) return;
+  const w = frame.clientWidth;
+  const h = frame.clientHeight;
+  if (!w || !h) return;
+  const gap = 10;
+  const bandH = (h - gap) / 2;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  canvas.innerHTML = `
+    <div class="tp-card" data-testament="Old" style="left:0px; top:0px; width:${w}px; height:${bandH.toFixed(1)}px; --tp-color:#C97B4A;" onclick="tapTestamentGate(event, this)">
+      <div class="tp-check"><i class="fa-solid fa-check"></i></div>
+      <div class="tp-badge">39 Books &middot; 1000+ yrs</div>
+      <div class="tp-name">Old Testament</div>
+      <div class="tp-desc">The Hebrew scriptures pointing toward the coming Messiah</div>
+    </div>
+    <div class="tp-card" data-testament="New" style="left:0px; top:${(bandH + gap).toFixed(1)}px; width:${w}px; height:${bandH.toFixed(1)}px; --tp-color:#38BDF8;" onclick="tapTestamentGate(event, this)">
+      <div class="tp-check"><i class="fa-solid fa-check"></i></div>
+      <div class="tp-badge">27 Books &middot; ~40 yrs</div>
+      <div class="tp-name">New Testament</div>
+      <div class="tp-desc">Jesus's life, teaching, resurrection, and the birth of the church</div>
+    </div>
+  `;
+}
+
+function computeSingleTestamentLayout(testament, containerW, containerH, gap, rows){
+  const sections = BOOK_MAP_SECTIONS.filter(s => s.testament === testament);
+  const items = getSectionItemsFor(sections);
+  const rowGroups = partitionIntoRows(items, rows);
+  const { rects, totalHeight } = layoutRowsFullWidth(rowGroups, containerW, gap);
+  const scaleY = totalHeight > 0 ? containerH / totalHeight : 1;
+  return rects.map(r => ({ ...r, ry: r.ry * scaleY, rh: r.rh * scaleY }));
+}
+
+function unveilBandIntoSections(bandEl, testament){
+  const canvas = document.getElementById('bookmapCanvas');
+  if (!canvas || !bandEl) return;
+  const bandRect = {
+    rx: parseFloat(bandEl.style.left),
+    ry: parseFloat(bandEl.style.top),
+    rw: parseFloat(bandEl.style.width),
+    rh: parseFloat(bandEl.style.height)
+  };
+  const rows = isMobileViewport() ? 2 : 1;
+  const rects = computeSingleTestamentLayout(testament, bandRect.rw, bandRect.rh, 6, rows)
+    .map(r => ({ ...r, rx: r.rx + bandRect.rx, ry: r.ry + bandRect.ry }));
+
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = rects.map(r => sectionTileHTML(r)).join('');
+  const newTiles = Array.from(wrapper.children);
+  newTiles.forEach(t => {
+    t.classList.add('unveil-in');
+    t.style.transformOrigin = 'center';
+    canvas.appendChild(t);
+  });
+  bandEl.remove();
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    newTiles.forEach((t, i) => setTimeout(() => t.classList.add('show'), i * 40));
+  }));
+}
+
+function currentTargetBook(){
+  return BOOK_FIND_SEQUENCE[bookMapState.foundIndex];
+}
+
+function showSectionPhaseForCurrentBook(){
+  const book = currentTargetBook();
+  if (!book) return;
+  const testament = getSectionForBook(book).testament;
+  renderTestamentGateIntoCanvas();
+  const canvas = document.getElementById('bookmapCanvas');
+  if (!canvas) return;
+  const otherTestament = testament === 'Old' ? 'New' : 'Old';
+  const correctBand = canvas.querySelector(`.tp-card[data-testament="${testament}"]`);
+  const otherBand = canvas.querySelector(`.tp-card[data-testament="${otherTestament}"]`);
+  if (otherBand) otherBand.classList.add('dimmed');
+  if (correctBand) {
+    correctBand.classList.add('found');
+    unveilBandIntoSections(correctBand, testament);
+  }
+}
+
+function tapTestamentGate(e, el){
+  e.stopPropagation();
+  const book = currentTargetBook();
+  const correctTestament = getSectionForBook(book).testament;
+  if (el.dataset.testament === correctTestament) {
+    el.classList.add('found');
+    celebrateFind(el);
+    bookMapState.phase = 'section';
+
+    const canvas = document.getElementById('bookmapCanvas');
+    const otherBand = canvas ? Array.from(canvas.querySelectorAll('.tp-card')).find(c => c !== el) : null;
+    if (otherBand) otherBand.classList.add('dimmed');
+
+    setTimeout(() => {
+      unveilBandIntoSections(el, correctTestament);
+      const promptEl = document.getElementById('bookmapPrompt');
+      if (promptEl) promptEl.innerHTML = `Which section is <span class="locator-emphasis" id="bookmapPromptTarget">${book}</span> in?`;
+    }, 700);
+
+    updateNavShell();
+  } else {
+    el.classList.add('shake');
+    setTimeout(() => el.classList.remove('shake'), 450);
+  }
+}
+
+function renderBookMapHTML(){
+  return `<div class="full-page bookmap-wrap">
+            <div class="bookmap-prompt" id="bookmapPrompt">What testament is <span class="locator-emphasis" id="bookmapPromptTarget">${BOOK_FIND_SEQUENCE[0]}</span> in?</div>
+            <div class="mosaic-frame"><div class="mosaic-canvas" id="bookmapCanvas"></div></div>
+          </div>`;
+}
+
+function spawnConfetti(cx, cy, count, spread){
+  const colors = ['#C3F53C', '#FFFFFF', '#FFD166', '#38BDF8', '#F43F5E', '#A855F7'];
+  for (let i = 0; i < count; i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-bit';
+    const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
+    const dist = spread.min + Math.random() * (spread.max - spread.min);
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+    p.style.left = cx + 'px';
+    p.style.top = cy + 'px';
+    p.style.background = colors[i % colors.length];
+    p.style.setProperty('--dx', dx + 'px');
+    p.style.setProperty('--dy', dy + 'px');
+    p.style.setProperty('--rot', (Math.random() * 360) + 'deg');
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 750);
+  }
+}
+
+function playChime(freqs){
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const now = ctx.currentTime;
+    freqs.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, now + i * 0.09);
+      gain.gain.linearRampToValueAtTime(0.18, now + i * 0.09 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.35);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now + i * 0.09);
+      osc.stop(now + i * 0.09 + 0.4);
+    });
+  } catch (err) { }
+}
+
+function celebrateFind(el){
+  el.classList.add('celebrate');
+  setTimeout(() => el.classList.remove('celebrate'), 700);
+  const rect = el.getBoundingClientRect();
+  spawnConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2, 16, { min: 65, max: 140 });
+  playChime([523.25, 783.99]);
+}
+
+function revealAllBooksInSections(){
+  const canvas = document.getElementById('bookmapCanvas');
+  const frame = canvas ? canvas.closest('.mosaic-frame') : null;
+  if (!canvas || !frame) return;
+  const w = frame.clientWidth;
+  const h = frame.clientHeight;
+  if (!w || !h) return;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+
+  const canvasRect = canvas.getBoundingClientRect();
+  spawnConfetti(canvasRect.left + canvasRect.width / 2, canvasRect.top + canvasRect.height / 2, 44, { min: 120, max: 340 });
+  playChime([523.25, 659.25, 783.99, 1046.5]);
+
+  const rowsPerTestament = isMobileViewport() ? 2 : 1;
+  const labelWidth = isMobileViewport() ? TESTAMENT_LABEL_WIDTH_MOBILE : TESTAMENT_LABEL_WIDTH_DESKTOP;
+  const { rects: sectionRects, bands } = computeSectionBandLayout(w, h, 6, rowsPerTestament, labelWidth);
+
+  let html = bands.map(b => testamentSideLabelHTML(b, labelWidth)).join('');
+  sectionRects.forEach(sr => {
+    const section = BOOK_MAP_SECTIONS.find(s => s.title === sr.name);
+    html += bookPillWrapHTML(sr, section);
+  });
+  canvas.innerHTML = html;
+
+  const pills = Array.from(canvas.querySelectorAll('.book-pill'));
+  pills.forEach((pill, i) => {
+    setTimeout(() => { pill.classList.add('show'); }, i * 14);
+  });
+}
+
+function tapSectionTile(e, el){
+  e.stopPropagation();
+  if (bookMapState.foundIndex >= BOOK_FIND_SEQUENCE.length) return;
+  const targetSection = SECTION_FIND_SEQUENCE[bookMapState.foundIndex];
+  if (el.dataset.section === targetSection) {
+    el.classList.add('found');
+    celebrateFind(el);
+    bookMapState.foundIndex++;
+    if (bookMapState.foundIndex < BOOK_FIND_SEQUENCE.length) {
+      bookMapState.phase = 'testament';
+      const nextBook = BOOK_FIND_SEQUENCE[bookMapState.foundIndex];
+      setTimeout(() => {
+        renderTestamentGateIntoCanvas();
+        const promptEl = document.getElementById('bookmapPrompt');
+        if (promptEl) promptEl.innerHTML = `What testament is <span class="locator-emphasis" id="bookmapPromptTarget">${nextBook}</span> in?`;
+      }, 900);
+    } else {
+      bookMapState.phase = 'done';
+      const promptEl = document.getElementById('bookmapPrompt');
+      if (promptEl) promptEl.innerHTML = 'All four found! Nice work.';
+      setTimeout(() => {
+        revealAllBooksInSections();
+        const p = document.getElementById('bookmapPrompt');
+        if (p) p.innerHTML = 'The whole Bible, all 66 books!';
+      }, 900);
+    }
+    updateNavShell();
+  } else {
+    el.classList.add('shake');
+    setTimeout(() => el.classList.remove('shake'), 450);
+  }
+}
+
+// ==================== STREAMLINED BEATS ====================
+const beats = [
+  /* 0. INTRO */
+  { id:'intro', type:'tapAuto', isInteractive:false, bgGrad:'var(--bg-cream)', text:'dark', align:'start',
+    html:`<div class="emoji" onclick="event.stopPropagation(); handleEmojiTap();">👋</div>
+          <div class="hero-wrap">
+            <div class="intro-top-title">MS HANG GUIDE</div>
+            ${kw([["MARK", "&nbsp;3"]],'xl')}
+            <div class="intro-duration"><i class="fa-regular fa-clock"></i> Prep Duration: 5 min</div>
+          ` },
+
+  /* 1. FIND THE BOOK MAP */
+  { id:'book-map', type:'input', blockTap:true, isInteractive:true, clue:'Tap the highlighted book to continue', bgGrad:'var(--bg-cream)', text:'dark',
+    html: renderBookMapHTML() },
+
+  /* 2. RECAP (GOD IS HEALER) */
+  { id:'reveal-context', type:'tapAuto', isInteractive:false, bgGrad:'var(--bg-discover)', text:'dark', align:'start',
+    html:`<div class="sketch-lead-title" style="margin-bottom:8px;">The Book of Mark</div>
+          <div class="recap-context-grid">
+            <div class="circle-hero-container">
+              <div class="circle-hero">
+                <div class="arc-stem-text">Last Week's God Shot</div>
+                <div class="label-god-is">GOD IS...</div>
+                <div class="static-trait">Healer</div>
+              </div>
+            </div>
+            <div class="recap-free-flow">
+              <div class="recap-item-block">
+                <span class="recap-tag">Historical Context</span>
+                <div class="book-meta-row">
+                  <div class="book-meta-item"><span class="bm-label">Author</span><span class="bm-value">Mark</span></div>
+                  <div class="book-meta-item"><span class="bm-label">Time</span><span class="bm-value">50&ndash;70 AD</span></div>
+                  <div class="book-meta-item"><span class="bm-label">Purpose</span><span class="bm-value">Jesus as King and Servant</span></div>
+                </div>
+              </div>
+              <div class="recap-item-block">
+                <span class="recap-tag">Last Week</span>
+                <div>Jesus forgives the paralyzed man, calls tax collectors and outcasts to dinner, and declares He is Lord of the Sabbath.</div>
+              </div>
+              <div class="recap-item-block">
+                <span class="recap-tag">This Week</span>
+                <div>Jesus heals a shriveled hand on the Sabbath, appoints the Twelve disciples, refutes religious leaders, and redefines true family.</div>
+              </div>
+            </div>
+          </div>` },
+
+  /* 3. PRAYER */
+  { id:'breath-prayer', type:'tapAuto', isInteractive:false, bgGrad:'var(--bg-cream)', text:'dark', align:'center',
+    html:`<div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; gap:44px;">
+            <div class="breath-visual">
+              <div class="breath-circle"></div>
+            </div>
+            <div class="prayer-subtext">Pause and pray before moving into reading.</div>
+          </div>` },
+
+  /* 4. PASSAGE SCAN (WORD WORK) */
+  { id:'vocab-scan', type:'input', blockTap:true, isInteractive:true, clue:'Highlight key words & scroll to bottom', bgGrad:'var(--bg-cream)', text:'dark',
+    html:`<div class="full-page">
+            <div class="passage-scroll-wrap">
+              <div class="passage-scroll" id="passageScrollEl">${passageWordsHTML()}</div>
+            </div>
+          </div>` },
+
+  /* 5. TRI-FOCAL SYNTHESIS (DEEPLY LOWERED ANCHOR <40% VISIBLE) */
+  { id:'tri-focal-synthesis', type:'tapAuto', isInteractive:false, bgGrad:'var(--bg-expand)', text:'dark', align:'start',
+    html:`<div class="synthesis-stage">
+            <div class="synthesis-split-grid">
+              <!-- Top Left: Stacked Historical Context -->
+              <div class="synthesis-panel">
+                <div class="synthesis-panel-header">
+                  What context is important to understand this Scripture? (author, time, purpose)
+                </div>
+                <div class="synthesis-panel-body">
+                  <div class="synthesis-stacked-list">
+                    <div class="synthesis-stat-row">
+                      <span class="s-label">Author:</span>
+                      <span class="s-val">Mark</span>
+                    </div>
+                    <div class="synthesis-stat-row">
+                      <span class="s-label">Time:</span>
+                      <span class="s-val">50–70 AD</span>
+                    </div>
+                    <div class="synthesis-stat-row">
+                      <span class="s-label">Purpose:</span>
+                      <span class="s-val">Jesus as King &amp; Servant</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Top Right: Highlighted Observations -->
+              <div class="synthesis-panel">
+                <div class="synthesis-panel-header">
+                  What am I observing as I read the text? (repetition, confusing terms, hyperlinks)
+                </div>
+                <div class="synthesis-panel-body">
+                  <div class="synthesis-obs-kicker"><i class="fa-solid fa-pen-nib"></i> You should have defined:</div>
+                  <div id="synthesisHighlightCloud" class="pill-cloud"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Anchor: God Is... (<40% visible dome) -->
+            <div class="synthesis-bottom-anchor">
+              <div class="anchor-arc-kicker">NEXT UP</div>
+              <div class="anchor-title">GOD IS...</div>
+            </div>
+          </div>` },
+
+  /* 6. VERSE PICK */
+  { id:'char-verse-pick', type:'input', blockTap:true, isInteractive:true, clue:'Select a verse to continue', bgGrad:'var(--bg-cream)', text:'dark',
+    html:`<div class="full-page">
+            <div class="passage-scroll-wrap">
+              <div class="verse-pick-list">${versePickHTML()}</div>
+            </div>
+          </div>` },
+
+  /* 7. GOD SHOT COACHING */
+  { id:'char-coaching', type:'input', blockTap:true, isInteractive:true, clue:'Fill in the blank to continue', bgGrad:'var(--bg-learn)', text:'dark',
+    html:`<div class="sketch-lead-title" style="margin-bottom:8px;">Central Truth</div>
+          <div class="coaching-scene">
+            <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
+              <div class="dark-scripture-card coaching-card">
+                <div class="ref" id="charRef"></div>
+                <div class="vt" id="charText"></div>
+              </div>
+            </div>
+            <div class="circle-hero-container">
+              <div class="circle-hero coaching-circle">
+                <div class="arc-stem-text" id="arcStemText">GOD IS...</div>
+                <div class="label-god-is">GOD IS...</div>
+                <input class="blank-input" id="customTraitInput" placeholder="" oninput="handleCustomTrait(this.value)" onclick="event.stopPropagation();" />
+              </div>
+            </div>
+          </div>` },
+
+  /* 8. FINAL PROMPT */
+  { id:'final', type:'input', blockTap:true, isInteractive:false, bgGrad:'var(--bg-cream)', text:'dark', align:'start',
+    html:`<div class="final-live-wrap">
+            <div class="final-live-prompt">
+              If God is <span class="final-trait-badge" id="finalGodIsTrait">Healer</span>, what should our response be?
+            </div>
+            <div class="final-desktop-timer">
+              <button class="final-timer-btn" id="timerCard" onclick="event.stopPropagation(); toggleTimer();" title="Start Reflection Timer" aria-label="Start Reflection Timer">
+                <i class="fa-solid fa-play timer-icon" id="timerIcon"></i>
+                <span class="timer-digits" id="timerDigits">02:00</span>
+              </button>
+            </div>
+            <div class="final-bottom-group">
+              <div class="final-mobile-subtext">
+                Take a few quiet minutes to journal and pray through this on your own.
+              </div>
+              <button class="share-trigger-btn" id="shareTruthBtn" onclick="event.stopPropagation(); shareCentralTruthDirect();" style="margin-top:14px;">
+                <i class="fa-solid fa-arrow-up-from-bracket"></i> Share Your Central Truth
+              </button>
+            </div>
+          </div>` }
+];
+
+const sectionLabels = [
+  'Guide', 'Discover', 'Discover',
+  'Prayer', 'Word Work',
+  'Expand', 'Learn', 'Learn', 'Live'
+];
+
+const sectionColorKeys = ['', 'discover', 'discover', '', 'wordwork', 'expand', 'learn', 'learn', 'live'];
+
+function initNotches(){
+  const layer = document.getElementById('notchesLayer');
+  layer.innerHTML = '';
+  const total = beats.length;
+  beats.forEach((b, i) => {
+    if (b.isInteractive) {
+      const notch = document.createElement('div');
+      notch.className = 'prog-notch';
+      notch.id = `notch-${i}`;
+      const pct = (i / (total - 1)) * 100;
+      notch.style.left = `${pct}%`;
+      const colorKey = sectionColorKeys[i];
+      if (colorKey) notch.style.setProperty('--notch-color', `var(--bg-${colorKey})`);
+      layer.appendChild(notch);
+    }
+  });
+}
+
+function updateProgressBar(){
+  const fill = document.getElementById('progressBarFill');
+  const total = beats.length;
+  const pct = (state.index / (total - 1)) * 100;
+  fill.style.width = `${pct}%`;
+
+  beats.forEach((b, i) => {
+    if (b.isInteractive) {
+      const notch = document.getElementById(`notch-${i}`);
+      if (!notch) return;
+      notch.classList.remove('passed', 'active');
+      if (state.index > i) notch.classList.add('passed');
+      else if (state.index === i) notch.classList.add('active');
+    }
+  });
+}
+
+const stage = document.getElementById('stage');
+const phoneEl = document.getElementById('phone');
+
+beats.forEach((b,i)=>{
+  const div=document.createElement('div');
+  div.className = `beat ${b.text === 'light' ? 'tx-light' : 'tx-dark'}`;
+  div.id = `beat-${i}`;
+  div.innerHTML = b.html;
+  stage.appendChild(div);
+});
+
+function updateHeaderMeta(){
+  const labelEl = document.getElementById('sectionLabel');
+  const scriptureEl = document.getElementById('scriptureMeta');
+  if (!labelEl || !scriptureEl) return;
+
+  if (devMode) {
+    labelEl.innerHTML = `<span style="display:inline-flex; gap:12px;"><button class="meta-link-btn" onclick="event.stopPropagation(); openDevNotesPanel();">Notes</button><button class="meta-link-btn" onclick="event.stopPropagation(); clearAllDevNotes();">Clear</button></span>`;
+    scriptureEl.innerHTML = `<button class="meta-link-btn" onclick="event.stopPropagation(); exitDevMode();">Close</button>`;
+  } else {
+    labelEl.textContent = sectionLabels[state.index] || '';
+    scriptureEl.textContent = 'Mark 3';
+  }
+}
+
+function isVocabComplete(){
+  return state.wordTaps.length > 0 && state.scrolledToEnd;
+}
+
+function updateNavShell(){
+  const prevBtn = document.getElementById('shellPrevBtn');
+  const nextBtn = document.getElementById('shellNextBtn');
+  const island = document.getElementById('floatingContextIsland');
+  const b = beats[state.index];
+  const isFinalSlide = state.index === beats.length - 1;
+
+  prevBtn.classList.toggle('disabled', state.index === 0);
+
+  let ready = false;
+  if (b.id === 'book-map') ready = bookMapState.phase === 'done';
+  else if (b.id === 'vocab-scan') ready = isVocabComplete();
+  else if (b.id === 'char-verse-pick') ready = state.charVerse !== null;
+  else if (b.id === 'char-coaching') ready = Boolean(state.trait && state.trait.trim());
+  else ready = !b.blockTap;
+  nextBtn.classList.toggle('ready', ready);
+
+  prevBtn.style.display = '';
+  nextBtn.style.display = isFinalSlide ? 'none' : '';
+
+  if (b.id === 'book-map') {
+    island.style.display = 'flex';
+    if (bookMapState.phase === 'testament') {
+      island.innerHTML = `<button class="action-gate-pill" id="bookmapActionPill" onclick="event.stopPropagation(); handleForwardAttempt();">Pick Old or New Testament</button>`;
+    } else {
+      const isDone = bookMapState.phase === 'done';
+      const remaining = BOOK_FIND_SEQUENCE.length - bookMapState.foundIndex;
+      island.innerHTML = `
+        <button class="action-gate-pill ${isDone ? 'ready' : ''}" id="bookmapActionPill" onclick="event.stopPropagation(); handleForwardAttempt();">
+          ${isDone ? '<i class="fa-solid fa-check"></i> Continue' : `Find ${remaining} more book${remaining === 1 ? '' : 's'}`}
+        </button>
+      `;
+    }
+  } else if (b.id === 'vocab-scan') {
+    island.style.display = 'flex';
+    const isDone = isVocabComplete();
+    const hasWords = state.wordTaps.length > 0;
+    let pillLabel;
+    if (isDone) pillLabel = '<i class="fa-solid fa-check"></i> Continue';
+    else if (hasWords) pillLabel = 'Finish Reading';
+    else pillLabel = 'Highlight Words';
+    island.innerHTML = `
+      <button class="action-gate-pill ${isDone ? 'ready' : ''}" id="vocabActionPill" onclick="event.stopPropagation(); handleForwardAttempt();">
+        ${pillLabel}
+      </button>
+    `;
+  } else if (b.id === 'char-verse-pick') {
+    island.style.display = 'flex';
+    const isPicked = state.charVerse !== null;
+    island.innerHTML = `
+      <button class="action-gate-pill ${isPicked ? 'ready' : ''}" id="verseActionPill" onclick="event.stopPropagation(); handleForwardAttempt();">
+        ${isPicked ? '<i class="fa-solid fa-check"></i> Continue' : 'Spot a God Shot'}
+      </button>
+    `;
+  } else {
+    island.style.display = 'none';
+  }
+
+  const rail = document.getElementById('vocabColorRail');
+  if (b.id === 'vocab-scan') {
+    rail.style.display = 'flex';
+    const colors = [
+      ['lime', 'Characters'], ['purple', 'Setting'],
+      ['yellow', 'Confusing'], ['pink', 'Repeated']
+    ];
+    const swatchHtml = colors.map(([c, label]) => `
+      <button class="rail-swatch-btn ${state.activeTool.vocab === c ? 'active' : ''}" data-color="${c}" title="${label}" aria-label="${label}" onclick="event.stopPropagation(); setPassageHighlighter('${c}', this);"></button>
+    `).join('');
+    const atMax = state.passageFontLevel >= FONT_LEVELS.length - 1;
+    const atMin = state.passageFontLevel <= 0;
+    rail.innerHTML = `
+      <button class="rail-font-btn" title="Increase text size" aria-label="Increase text size" ${atMax ? 'disabled' : ''} onclick="event.stopPropagation(); adjustPassageFont(1);">+</button>
+      ${swatchHtml}
+      <button class="rail-font-btn" title="Decrease text size" aria-label="Decrease text size" ${atMin ? 'disabled' : ''} onclick="event.stopPropagation(); adjustPassageFont(-1);">−</button>
+    `;
+  } else if (b.id === 'char-verse-pick') {
+    rail.style.display = 'flex';
+    const atMax = state.charFontLevel >= FONT_LEVELS.length - 1;
+    const atMin = state.charFontLevel <= 0;
+    rail.innerHTML = `
+      <button class="rail-font-btn" title="Increase text size" aria-label="Increase text size" ${atMax ? 'disabled' : ''} onclick="event.stopPropagation(); adjustCharFont(1);">+</button>
+      <button class="rail-font-btn" title="Decrease text size" aria-label="Decrease text size" ${atMin ? 'disabled' : ''} onclick="event.stopPropagation(); adjustCharFont(-1);">−</button>
+    `;
+  } else {
+    rail.style.display = 'none';
+  }
+}
+
+function renderSynthesisPanel(){
+  const cloud = document.getElementById('synthesisHighlightCloud');
+  if (!cloud) return;
+  let uniqueWords = Array.from(new Set(state.wordTaps.map(w => w.word.charAt(0).toUpperCase() + w.word.slice(1))));
+  if (uniqueWords.length === 0) {
+    uniqueWords = ['Synagogue', 'Sabbath', 'Herodians', 'Beelzebul', 'Parables'];
+  }
+  cloud.innerHTML = uniqueWords.map(w => `<span class="research-pill">${w}</span>`).join('');
+}
+
+function renderBeat(i){
+  document.querySelectorAll('.beat').forEach(el=>el.classList.remove('active'));
+  document.getElementById(`beat-${i}`).classList.add('active');
+  renderGen++;
+  const b = beats[i];
+
+  phoneEl.style.background = b.bgGrad;
+  if (b.bgGrad === 'var(--bg-cream)') {
+    phoneEl.classList.remove('grain-bg');
+  } else {
+    phoneEl.classList.add('grain-bg');
+  }
+  if (b.text === 'light') {
+    phoneEl.classList.add('tx-light');
+    phoneEl.classList.remove('tx-dark');
+    document.getElementById('hudHeader').className = 'hud-header tx-light';
+  } else {
+    phoneEl.classList.add('tx-dark');
+    phoneEl.classList.remove('tx-light');
+    document.getElementById('hudHeader').className = 'hud-header tx-dark';
+  }
+
+  updateHeaderMeta();
+  updateNavShell();
+
+  if (b.id === 'book-map') {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (bookMapState.phase === 'section') {
+        showSectionPhaseForCurrentBook();
+      } else if (bookMapState.phase === 'done') {
+        revealAllBooksInSections();
+      } else {
+        renderTestamentGateIntoCanvas();
+      }
+    }));
+  }
+
+  if (b.id === 'tri-focal-synthesis') {
+    renderSynthesisPanel();
+  }
+
+  if (b.id === 'char-coaching') {
+    const activeVerse = state.charVerse || PASSAGE_START_VERSE;
+    document.getElementById('charRef').textContent = 'Mark 3:' + activeVerse;
+    document.getElementById('charText').textContent = quoteVerse(passage[activeVerse - PASSAGE_START_VERSE]);
+    const arcStem = document.getElementById('arcStemText');
+    if (arcStem) arcStem.textContent = `BASED ON VERSE ${activeVerse}:`;
+    const inp = document.getElementById('customTraitInput');
+    if (inp) inp.value = state.trait || '';
+    requestAnimationFrame(() => requestAnimationFrame(() => fitCharVerseText('charText')));
+  } else if (b.id === 'char-verse-pick') {
+    document.querySelectorAll('#beat-'+i+' .verse-tile').forEach(t=>t.classList.toggle('selected', state.charVerse !== null && Number(t.dataset.v)===state.charVerse));
+  } else if (b.id === 'vocab-scan') {
+    checkPassageScroll();
+  }
+
+  const glossaryDrawerEl = document.getElementById('glossaryDrawer');
+  if (glossaryDrawerEl) {
+    if (b.id === 'vocab-scan') {
+      glossaryDrawerEl.classList.add('gd-visible');
+      renderGlossaryDrawer();
+    } else {
+      glossaryDrawerEl.classList.remove('gd-visible');
+      glossaryDrawerEl.classList.remove('open');
+    }
+  }
+
+  const videoDrawerEl = document.getElementById('videoDrawer');
+  if (videoDrawerEl) {
+    if (b.id === 'reveal-context') {
+      videoDrawerEl.classList.add('vd-visible');
+    } else {
+      videoDrawerEl.classList.remove('vd-visible');
+      toggleVideoDrawer(false);
+    }
+  }
+
+  if (b.id === 'final') renderFinalReflection();
+  updateProgressBar();
+  if (devMode) renderDevBubbles();
+}
+
+function setPassageHighlighter(color, btnEl){
+  if (state.activeTool.vocab === color) {
+    state.activeTool.vocab = null;
+  } else {
+    state.activeTool.vocab = color;
+  }
+  updateNavShell();
+}
+
+function applyPassageFontScale(){
+  document.documentElement.style.setProperty('--passage-font-scale', FONT_LEVELS[state.passageFontLevel]);
+}
+
+function adjustPassageFont(delta){
+  const next = state.passageFontLevel + delta;
+  if (next < 0 || next >= FONT_LEVELS.length) return;
+  state.passageFontLevel = next;
+  applyPassageFontScale();
+  updateNavShell();
+}
+
+function applyCharFontScale(){
+  document.documentElement.style.setProperty('--char-font-scale', FONT_LEVELS[state.charFontLevel]);
+}
+
+function adjustCharFont(delta){
+  const next = state.charFontLevel + delta;
+  if (next < 0 || next >= FONT_LEVELS.length) return;
+  state.charFontLevel = next;
+  applyCharFontScale();
+  updateNavShell();
+}
+
+async function tapWord(e, el){
+  e.stopPropagation();
+  const key = el.dataset.word;
+  if (!key) return;
+  const rawWord = el.textContent.trim().replace(/^[^A-Za-z']+/, '').replace(/[^A-Za-z']+$/, '');
+  const isStop = stopWords.has(key);
+
+  if (state.activeTool.vocab) {
+    const cls = 'hl-' + state.activeTool.vocab;
+    const alreadyThisColor = el.classList.contains(cls);
+    ['hl-lime','hl-purple','hl-yellow','hl-pink','flagged'].forEach(c => el.classList.remove(c));
+    
+    if (!alreadyThisColor) {
+      el.classList.add(cls);
+      state.wordTaps = state.wordTaps.filter(w => w.el !== el);
+      state.wordTaps.push({ el, word: rawWord, key, isStop });
+      await fetchMwIntermediate(key);
+    } else {
+      state.wordTaps = state.wordTaps.filter(w => w.el !== el);
+    }
+  } else {
+    const isColored = ['hl-lime','hl-purple','hl-yellow','hl-pink'].some(c=>el.classList.contains(c));
+    if (isColored) {
+      ['hl-lime','hl-purple','hl-yellow','hl-pink'].forEach(c => el.classList.remove(c));
+      state.wordTaps = state.wordTaps.filter(w => w.el !== el);
+    } else if (el.classList.contains('flagged')) {
+      el.classList.remove('flagged');
+      state.wordTaps = state.wordTaps.filter(w => w.el !== el);
+    } else {
+      el.classList.add('flagged');
+      state.wordTaps = state.wordTaps.filter(w => w.el !== el);
+      state.wordTaps.push({ el, word: rawWord, key, isStop });
+      await fetchMwIntermediate(key);
+    }
+  }
+  updateNavShell();
+  renderGlossaryDrawer();
+}
+
+function tapVerseTile(e, v){
+  e.stopPropagation();
+  state.charVerse = (state.charVerse === v) ? null : v;
+  document.querySelectorAll('.verse-tile').forEach(t=>t.classList.toggle('selected', Number(t.dataset.v)===state.charVerse));
+  updateNavShell();
+}
+
+function checkPassageScroll(){
+  const el = document.getElementById('passageScrollEl');
+  if (!el) return;
+  const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 45;
+  if (atBottom && !state.scrolledToEnd) {
+    state.scrolledToEnd = true;
+    updateNavShell();
+  }
+}
+
+function gatherGlossaryData(){
+  const defined = [];
+  const undefinedWords = [];
+  const seen = new Set();
+
+  state.wordTaps.forEach(w => {
+    const norm = normWord(w.word);
+    if (seen.has(norm)) return;
+    seen.add(norm);
+
+    const cached = mwCache.get(norm);
+    if (cached) {
+      defined.push({ word: cached.term, def: cached.def, source: cached.source });
+    } else {
+      undefinedWords.push(w.word);
+    }
+  });
+
+  return { defined, undefinedWords };
+}
+
+function renderGlossaryDrawer(){
+  const body = document.getElementById('glossaryDrawerBody');
+  if (!body) return;
+  const { defined, undefinedWords } = gatherGlossaryData();
+
+  if (defined.length === 0 && undefinedWords.length === 0) {
+    body.innerHTML = `<div class="gd-empty">Highlight a word in the passage to look it up in Merriam-Webster Intermediate Dictionary.</div>`;
+    return;
+  }
+
+  let html = '';
+  if (defined.length > 0) {
+    html += defined.map((w,i) => `
+      <div class="gd-row" id="gdRow${i}">
+        <button class="gd-row-term" onclick="event.stopPropagation(); toggleGlossaryRow(${i});">
+          <span>${w.word}</span><i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="gd-row-def">
+          <p style="margin:0 0 6px 0;">${w.def}</p>
+          <span style="display:inline-block; font-family:'Space Grotesk',sans-serif; font-size:10px; font-weight:800; opacity:0.6; text-transform:uppercase; letter-spacing:0.5px;">
+            Source: ${w.source}
+          </span>
+        </div>
+      </div>`).join('');
+  }
+  if (undefinedWords.length > 0) {
+    html += `<div class="review-section-header" style="margin-top:14px;"><i class="fa-solid fa-magnifying-glass"></i> Terms Highlighted</div>
+             <div class="pill-cloud">${undefinedWords.map(word => `<div class="research-pill">${word}</div>`).join('')}</div>`;
+  }
+  body.innerHTML = html;
+}
+
+function toggleGlossaryRow(idx){
+  const row = document.getElementById('gdRow' + idx);
+  if (row) row.classList.toggle('revealed');
+}
+
+function toggleGlossaryDrawer(force){
+  const d = document.getElementById('glossaryDrawer');
+  if (!d) return;
+  const willOpen = typeof force === 'boolean' ? force : !d.classList.contains('open');
+  d.classList.toggle('open', willOpen);
+}
+function openGlossaryDrawer(){ toggleGlossaryDrawer(true); }
+function closeGlossaryDrawer(){ toggleGlossaryDrawer(false); }
+
+const MARK_VIDEO_ID = 'YdjRjSIzry4';
+function toggleVideoDrawer(force){
+  const d = document.getElementById('videoDrawer');
+  if (!d) return;
+  const willOpen = typeof force === 'boolean' ? force : !d.classList.contains('open');
+  d.classList.toggle('open', willOpen);
+  const frame = document.getElementById('markVideoFrame');
+  if (frame) {
+    frame.src = willOpen ? `https://www.youtube.com/embed/${MARK_VIDEO_ID}` : '';
+  }
+}
+
+function handleCustomTrait(val){ 
+  state.trait = val; 
+  updateNavShell();
+}
+
+function renderFinalReflection(){
+  const trait = state.trait && state.trait.trim() ? state.trait.trim() : 'Healer';
+  const traitEl = document.getElementById('finalGodIsTrait');
+  if (traitEl) traitEl.textContent = trait;
+}
+
+/* 2 MINUTE TIMER LOGIC */
+let timerSeconds = 120;
+let timerInterval = null;
+let timerRunning = false;
+
+function toggleTimer(){
+  const btn = document.getElementById('timerCard');
+  const icon = document.getElementById('timerIcon');
+  const digits = document.getElementById('timerDigits');
+  
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    btn.classList.remove('running');
+    icon.className = 'fa-solid fa-play timer-icon';
+  } else {
+    if (timerSeconds <= 0) timerSeconds = 120;
+    timerRunning = true;
+    btn.classList.add('running');
+    icon.className = 'fa-solid fa-pause timer-icon';
+    
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+      const secs = String(timerSeconds % 60).padStart(2, '0');
+      digits.textContent = `${mins}:${secs}`;
+      
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        btn.classList.remove('running');
+        icon.className = 'fa-solid fa-rotate-right timer-icon';
+      }
+    }, 1000);
+  }
+}
+
+const pillMsgTimeouts = {};
+function triggerPillMessage(pillId, tempText){
+  const pill = document.getElementById(pillId);
+  if (!pill) return;
+  pill.classList.remove('shake-warn');
+  void pill.offsetWidth;
+  pill.classList.add('shake-warn');
+  setTimeout(() => pill.classList.remove('shake-warn'), 600);
+
+  pill.textContent = tempText;
+
+  clearTimeout(pillMsgTimeouts[pillId]);
+  pillMsgTimeouts[pillId] = setTimeout(() => {
+    updateNavShell();
+  }, 1500);
+}
+
+const gateHintTimeouts = {};
+function triggerGateNavHint(hintId){
+  const nextBtn = document.getElementById('shellNextBtn');
+  if (nextBtn) {
+    nextBtn.classList.remove('shake-warn');
+    void nextBtn.offsetWidth;
+    nextBtn.classList.add('shake-warn');
+    setTimeout(() => nextBtn.classList.remove('shake-warn'), 600);
+  }
+  const hint = document.getElementById(hintId);
+  if (hint) {
+    hint.classList.remove('visible');
+    void hint.offsetWidth;
+    hint.classList.add('visible');
+    clearTimeout(gateHintTimeouts[hintId]);
+    gateHintTimeouts[hintId] = setTimeout(() => hint.classList.remove('visible'), 1800);
+  }
+}
+
+function handleForwardAttempt(){
+  const b = beats[state.index];
+  if (b.blockTap) {
+    if (b.id === 'book-map' && bookMapState.phase === 'testament') {
+      triggerPillMessage('bookmapActionPill', 'Pick a Testament');
+      return;
+    }
+    if (b.id === 'book-map' && bookMapState.foundIndex < BOOK_FIND_SEQUENCE.length) {
+      triggerPillMessage('bookmapActionPill', `Find ${BOOK_FIND_SEQUENCE[bookMapState.foundIndex]}`);
+      return;
+    }
+    if (b.id === 'vocab-scan') {
+      if (!state.wordTaps.length) {
+        triggerPillMessage('vocabActionPill', 'Select 1-2 Words');
+        return;
+      } else if (!state.scrolledToEnd) {
+        triggerPillMessage('vocabActionPill', 'Finish Reading');
+        return;
+      }
+    }
+    if (b.id === 'char-verse-pick' && state.charVerse === null) { 
+      triggerPillMessage('verseActionPill', 'Select a Verse'); 
+      return; 
+    }
+    if (b.id === 'char-coaching' && !(state.trait && state.trait.trim())) { 
+      triggerGateNavHint('charNavHint'); 
+      return; 
+    }
+  }
+  goNext();
+}
+
+function fitCharVerseText(elementId = 'charText'){
+  const vt = document.getElementById(elementId);
+  const card = vt ? vt.closest('.dark-scripture-card') : null;
+  const beatEl = card ? card.closest('.beat') : null;
+  if (!vt || !card || !beatEl) return;
+  vt.style.fontSize = '';
+  const maxFont = parseFloat(getComputedStyle(vt).fontSize);
+  let fontSize = maxFont;
+  const minFont = Math.max(11, maxFont * 0.5);
+  let guard = 0;
+  while (beatEl.scrollHeight > beatEl.clientHeight + 2 && fontSize > minFont && guard < 50) {
+    fontSize -= 0.5;
+    vt.style.fontSize = fontSize + 'px';
+    guard++;
+  }
+}
+
+function goNext(){
+  if (state.index < beats.length - 1) {
+    state.index++; 
+    renderBeat(state.index);
+  }
+}
+
+function goPrev(){ 
+  if (state.index > 0) { 
+    state.index--; 
+    renderBeat(state.index); 
+  } 
+}
+
+function toggleFullScreen() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(err => console.log(err));
+  else if (document.exitFullscreen) document.exitFullscreen();
+}
+
+document.addEventListener('keydown', (e) => {
+  const inField = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable;
+  if (!inField && (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'PageDown' || e.key === 'PageUp')) {
+    const scrollable = document.querySelector(
+      '.beat.active .passage-scroll, .beat.active .verse-pick-list'
+    );
+    if (scrollable) {
+      const amount = (e.key === 'PageDown' || e.key === 'PageUp')
+        ? scrollable.clientHeight * 0.9
+        : 220;
+      const dir = (e.key === 'ArrowDown' || e.key === 'PageDown') ? 1 : -1;
+      scrollable.scrollBy({ top: amount * dir, behavior: 'smooth' });
+      return;
+    }
+  }
+  if (e.key === 'ArrowRight') handleForwardAttempt();
+  if (e.key === 'ArrowLeft') goPrev();
+  if (e.key.toLowerCase() === 'f' && e.target.tagName !== 'INPUT') toggleFullScreen();
+});
+
+/* TAP-ZONE + SWIPE NAVIGATION */
+(function initGestureNav(){
+  const stageEl = document.getElementById('stage');
+  if (!stageEl) return;
+  const LEFT_ZONE = 0.28;
+  const SWIPE_THRESHOLD = 60;
+  let lastSwipeTime = 0;
+
+  stageEl.addEventListener('click', (e) => {
+    if (Date.now() - lastSwipeTime < 500) return;
+    const b = beats[state.index];
+    const rect = stageEl.getBoundingClientRect();
+    const relX = (e.clientX - rect.left) / rect.width;
+    if (relX < LEFT_ZONE) {
+      goPrev();
+    } else if (!b.blockTap) {
+      goNext();
+    } else {
+      handleForwardAttempt();
+    }
+  });
+
+  let touchStartX = 0, touchStartY = 0, touchTracking = false;
+  stageEl.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchTracking = true;
+  }, { passive: true });
+
+  stageEl.addEventListener('touchend', (e) => {
+    if (!touchTracking) return;
+    touchTracking = false;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD) {
+      lastSwipeTime = Date.now();
+      const b = beats[state.index];
+      if (dx < 0) {
+        if (!b.blockTap) goNext(); else handleForwardAttempt();
+      } else {
+        goPrev();
+      }
+    }
+  }, { passive: true });
+
+  stageEl.addEventListener('touchcancel', () => { touchTracking = false; }, { passive: true });
+})();
+
+const passageScrollElInit = document.getElementById('passageScrollEl');
+if (passageScrollElInit) passageScrollElInit.addEventListener('scroll', checkPassageScroll, { passive: true });
+
+/* ===================== DEV MODE ===================== */
+let devMode = false;
+let devTapCount = 0;
+let devLastTapTime = 0;
+const DEV_NOTES_KEY = 'msHangDevNotes_3_1_35';
+
+function loadDevNotes(){
+  try { return JSON.parse(localStorage.getItem(DEV_NOTES_KEY) || '{}'); }
+  catch(e){ return {}; }
+}
+function saveDevNotes(obj){
+  try { localStorage.setItem(DEV_NOTES_KEY, JSON.stringify(obj)); } catch(e){}
+}
+
+function handleEmojiTap(){
+  const now = Date.now();
+  if (now - devLastTapTime > 1500) devTapCount = 0;
+  devTapCount++;
+  devLastTapTime = now;
+  if (devTapCount >= 10) {
+    devTapCount = 0;
+    enterDevMode();
+  }
+}
+
+function enterDevMode(){
+  devMode = true;
+  document.getElementById('normalProgressWrap').style.display = 'none';
+  document.getElementById('devBubblesBar').style.display = 'flex';
+  updateHeaderMeta();
+  renderDevBubbles();
+  renderGlossaryDrawer();
+}
+
+function exitDevMode(){
+  devMode = false;
+  document.getElementById('normalProgressWrap').style.display = 'block';
+  document.getElementById('devBubblesBar').style.display = 'none';
+  updateHeaderMeta();
+  closeDevNotesPanel();
+  renderGlossaryDrawer();
+}
+
+function renderDevBubbles(){
+  const bar = document.getElementById('devBubblesBar');
+  const notes = loadDevNotes();
+  bar.innerHTML = '';
+  beats.forEach((b, i) => {
+    const bub = document.createElement('div');
+    bub.className = 'dev-bubble' + (i === state.index ? ' active' : '');
+    bub.style.background = b.bgGrad;
+    bub.style.color = b.text === 'light' ? '#FFF' : 'var(--ink)';
+    bub.textContent = i + 1;
+    bub.title = b.id;
+    if (notes[i + '_' + b.id] && notes[i + '_' + b.id].trim()) {
+      const dot = document.createElement('div');
+      dot.className = 'note-dot';
+      bub.appendChild(dot);
+    }
+    bub.onclick = (e) => { e.stopPropagation(); state.index = i; renderBeat(i); renderDevBubbles(); };
+    bar.appendChild(bub);
+  });
+  const activeBub = bar.querySelector('.dev-bubble.active');
+  if (activeBub) activeBub.scrollIntoView({ inline: 'center', block: 'nearest' });
+}
+
+const SHARE_BG_COLORS = {
+  discover: ['#d2f860', '#a2e014'],
+  wordwork: ['#fb5672', '#be123c'],
+  expand:   ['#bae6fd', '#38bdf8'],
+  learn:    ['#ffd452', '#eab308'],
+  live:     ['#262626', '#050505'],
+  cream:    ['#f4f0e8', '#d8d2c7']
+};
+const SHARE_COLOR_KEYS = Object.keys(SHARE_BG_COLORS);
+
+function roundRectPath(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y + x, y, r);
+  ctx.closePath();
+}
+
+function drawCentralTruthCanvas(colorKey, verseNum, traitText){
+  const size = 1000;
+  const canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+
+  const [c1, c2] = SHARE_BG_COLORS[colorKey] || SHARE_BG_COLORS.discover;
+  const grad = ctx.createLinearGradient(0, 0, size, size);
+  grad.addColorStop(0, c1);
+  grad.addColorStop(1, c2);
+  roundRectPath(ctx, 0, 0, size, size, 56);
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  const cx = size / 2, cy = size / 2;
+  const circleR = size * 0.335;
+  const shadowOffset = size * 0.02;
+
+  ctx.beginPath();
+  ctx.arc(cx + shadowOffset, cy + shadowOffset, circleR, 0, Math.PI * 2);
+  ctx.fillStyle = '#0D0D0D';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, circleR, 0, Math.PI * 2);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fill();
+  ctx.lineWidth = size * 0.008;
+  ctx.strokeStyle = '#0D0D0D';
+  ctx.stroke();
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  ctx.fillStyle = 'rgba(13,13,13,0.65)';
+  ctx.font = `800 ${Math.round(size * 0.024)}px 'Space Grotesk', sans-serif`;
+  ctx.fillText(`MARK 3:${verseNum}`, cx, cy - circleR * 0.42);
+
+  ctx.fillStyle = '#0D0D0D';
+  ctx.font = `800 ${Math.round(size * 0.05)}px 'Space Grotesk', sans-serif`;
+  ctx.fillText('GOD IS...', cx, cy - circleR * 0.12);
+
+  const traitDisplay = traitText.charAt(0).toUpperCase() + traitText.slice(1);
+  const traitY = cy + circleR * 0.26;
+  const dy = traitY - cy;
+  const halfChord = Math.sqrt(Math.max(circleR * circleR - dy * dy, 0));
+  const maxTraitWidth = halfChord * 2 - size * 0.09;
+
+  let traitFontSize = Math.round(size * 0.05);
+  const minTraitFontSize = Math.round(size * 0.022);
+  ctx.fillStyle = '#A855F7';
+  ctx.font = `900 ${traitFontSize}px 'Inter', sans-serif`;
+  let traitWidth = ctx.measureText(traitDisplay).width;
+  while (traitWidth > maxTraitWidth && traitFontSize > minTraitFontSize) {
+    traitFontSize -= 2;
+    ctx.font = `900 ${traitFontSize}px 'Inter', sans-serif`;
+    traitWidth = ctx.measureText(traitDisplay).width;
+  }
+  ctx.fillText(traitDisplay, cx, traitY);
+  ctx.strokeStyle = '#0D0D0D';
+  ctx.lineWidth = size * 0.007;
+  ctx.beginPath();
+  ctx.moveTo(cx - traitWidth / 2 - 16, traitY + size * 0.032);
+  ctx.lineTo(cx + traitWidth / 2 + 16, traitY + size * 0.032);
+  ctx.stroke();
+
+  return canvas;
+}
+
+async function shareCentralTruthDirect(){
+  try {
+    const activeVerse = state.charVerse || PASSAGE_START_VERSE;
+    const traitText = (state.trait && state.trait.trim()) ? state.trait.trim() : 'Healer';
+    const colorKey = SHARE_COLOR_KEYS[Math.floor(Math.random() * SHARE_COLOR_KEYS.length)];
+    const canvas = drawCentralTruthCanvas(colorKey, activeVerse, traitText);
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    if (!blob) throw new Error('canvas produced no image data');
+
+    const file = new File([blob], 'central-truth.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file] });
+    } else {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'central-truth.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  } catch(err){
+    if (err && err.name === 'AbortError') return;
+    console.error('Direct share failed, falling back to the picker', err);
+    openShareOverlay();
+  }
+}
+
+const SHARE_COLORS = [
+  { key:'discover', dot:'var(--lime)' },
+  { key:'wordwork', dot:'var(--pink)' },
+  { key:'expand',   dot:'var(--purple)' },
+  { key:'learn',    dot:'var(--yellow)' },
+  { key:'live',     dot:'#262626' },
+  { key:'cream',    dot:'var(--cream)' }
+];
+
+function initShareSwatches(){
+  const row = document.getElementById('shareSwatchRow');
+  row.innerHTML = SHARE_COLORS.map(c =>
+    `<button class="share-swatch-btn" data-key="${c.key}" style="background:${c.dot};" onclick="event.stopPropagation(); selectShareColor('${c.key}');" aria-label="${c.key} background"></button>`
+  ).join('');
+}
+
+function selectShareColor(key){
+  state.shareColor = key;
+  const stage = document.getElementById('shareCardStage');
+  if (stage) stage.style.background = `var(--bg-${key})`;
+  document.querySelectorAll('.share-swatch-btn').forEach(b => b.classList.toggle('active', b.dataset.key === key));
+}
+
+function openShareOverlay(){
+  const activeVerse = state.charVerse || PASSAGE_START_VERSE;
+  document.getElementById('shareArcStem').textContent = `MARK 3:${activeVerse}`;
+  document.getElementById('shareTraitText').textContent = (state.trait && state.trait.trim()) ? state.trait.trim() : 'Healer';
+  initShareSwatches();
+  selectShareColor(state.shareColor || 'discover');
+  document.getElementById('shareOverlay').style.display = 'flex';
+}
+
+function closeShareOverlay(){
+  document.getElementById('shareOverlay').style.display = 'none';
+}
+
+async function confirmShareImage(){
+  const btn = document.getElementById('shareConfirmBtn');
+  const original = btn.innerHTML;
+  btn.innerHTML = 'Preparing…';
+  btn.disabled = true;
+  try{
+    const node = document.getElementById('shareCardStage');
+    const canvas = await html2canvas(node, { backgroundColor: null, scale: 3, useCORS: true });
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    if (!blob) throw new Error('canvas produced no image data');
+
+    const file = new File([blob], 'central-truth.png', { type: 'image/png' });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file] });
+      closeShareOverlay();
+    } else {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'central-truth.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  } catch(err){
+    if (err.name !== 'AbortError') console.error('Share image failed', err);
+  } finally {
+    btn.innerHTML = original;
+    btn.disabled = false;
+  }
+}
+
+function openDevNotesPanel(){
+  const b = beats[state.index];
+  document.getElementById('dnpTitle').textContent = `Slide ${state.index + 1}: ${b.id}`;
+  const notes = loadDevNotes();
+  document.getElementById('devNoteInput').value = notes[state.index + '_' + b.id] || '';
+  document.getElementById('devAllNotesSection').style.display = 'none';
+  document.getElementById('dnpStatus').textContent = '';
+  document.getElementById('dnpRetryBtn').style.display = 'none';
+  document.getElementById('devNotesOverlay').style.display = 'flex';
+}
+function closeDevNotesPanel(){
+  document.getElementById('devNotesOverlay').style.display = 'none';
+}
+function saveCurrentDevNote(val){
+  const b = beats[state.index];
+  const notes = loadDevNotes();
+  notes[state.index + '_' + b.id] = val;
+  saveDevNotes(notes);
+  if (devMode) renderDevBubbles();
+}
+
+function clearAllDevNotes(){
+  if (!confirm('Clear all slide notes? This cannot be undone.')) return;
+  saveDevNotes({});
+  const input = document.getElementById('devNoteInput');
+  if (input) input.value = '';
+  const allNotesPanel = document.getElementById('devAllNotesPanel');
+  if (allNotesPanel) allNotesPanel.value = '';
+  if (devMode) renderDevBubbles();
+}
+
+function compileAllNotes(){
+  const notes = loadDevNotes();
+  const lines = [];
+  beats.forEach((b, i) => {
+    const key = i + '_' + b.id;
+    const txt = notes[key];
+    if (txt && txt.trim()) lines.push(`[${i}] ${b.id}:\n${txt.trim()}`);
+  });
+  return lines.length ? lines.join('\n\n') : 'No notes yet.';
+}
+
+function copyAllDevNotes(){
+  const section = document.getElementById('devAllNotesSection');
+  const panel = document.getElementById('devAllNotesPanel');
+  section.style.display = 'flex';
+  panel.value = compileAllNotes();
+  panel.focus();
+  panel.select();
+  tryCopyAllNotes();
+}
+
+function tryCopyAllNotes(){
+  const panel = document.getElementById('devAllNotesPanel');
+  const status = document.getElementById('dnpStatus');
+  const retryBtn = document.getElementById('dnpRetryBtn');
+  panel.focus();
+  panel.select();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(panel.value).then(() => {
+      status.textContent = '✓ Copied to clipboard';
+      status.className = 'dnp-status ok';
+      retryBtn.style.display = 'none';
+    }).catch(() => {
+      status.textContent = 'Copy failed — select the text above and copy manually.';
+      status.className = 'dnp-status warn';
+      retryBtn.style.display = 'inline-block';
+    });
+  } else {
+    status.textContent = 'Clipboard unavailable — select the text above and copy manually.';
+    status.className = 'dnp-status warn';
+    retryBtn.style.display = 'inline-block';
+  }
+}
+
+initNotches();
+applyPassageFontScale();
+renderBeat(0);
+
+window.addEventListener('resize', () => {
+  const cur = beats[state.index] && beats[state.index].id;
+  if (cur === 'book-map') {
+    if (bookMapState.phase === 'testament') {
+      renderTestamentGateIntoCanvas();
+    } else if (bookMapState.phase === 'section') {
+      showSectionPhaseForCurrentBook();
+    } else if (bookMapState.phase === 'done') {
+      revealAllBooksInSections();
+    }
+  }
+});
+</script>
 </body>
 </html>
