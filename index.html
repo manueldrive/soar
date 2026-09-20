@@ -3,24 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOAR Cards — Dwell Edition</title>
+  <title>Student Activity Sheet</title>
   
   <!-- Google Fonts: Space Grotesk & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <style>
     :root {
       --ink: #0D0D0D;
       --paper: #FFFFFF;
       --cream: #EAE6DF;
-      --lime: #C3F53C;
-      --pink: #F43F5E;
-      --blue: #38BDF8;
-      --yellow: #FFC72C;
-      --purple: #A855F7;
-      --green: #22C55E;
     }
 
     * {
@@ -32,7 +29,7 @@
     }
 
     @page {
-      size: 11in 8.5in landscape;
+      size: 8.5in 11in portrait;
       margin: 0;
     }
 
@@ -49,28 +46,28 @@
     }
 
     .sheet {
-      width: 11in;
-      height: 8.5in;
-      max-width: 11in;
-      max-height: 8.5in;
+      width: 8.5in;
+      height: 11in;
+      max-width: 8.5in;
+      max-height: 11in;
       background: var(--paper);
       padding: 0.35in 0.375in;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: 0.75in;
+      grid-template-rows: 1fr 1fr;
+      row-gap: 0.5in;
       box-shadow: 0 6px 20px rgba(13, 13, 13, 0.15);
       position: relative;
     }
 
-    /* Subtle Center Cut Guide */
+    /* Horizontal Center Cut Guide */
     .sheet::before {
       content: "";
       position: absolute;
-      top: 0.15in;
-      bottom: 0.15in;
-      left: 5.5in;
-      width: 1px;
-      border-left: 2px dashed #d8d2c7;
+      left: 0.25in;
+      right: 0.25in;
+      top: 5.5in;
+      height: 1px;
+      border-top: 2px dashed #d8d2c7;
       pointer-events: none;
       z-index: 1;
     }
@@ -89,29 +86,18 @@
     .top-bar {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 6px;
+      align-items: center;
+      margin-bottom: 8px;
       padding: 0 4px;
     }
 
-    .soar-hero-header {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 38px;
-      font-weight: 900;
-      letter-spacing: -0.5px;
-      text-transform: uppercase;
-      color: var(--ink);
-      line-height: 0.85;
-    }
-
-    .name-field-wrap {
+    .meta-field-wrap {
       display: flex;
       align-items: baseline;
       gap: 6px;
-      margin-bottom: 2px;
     }
 
-    .name-label {
+    .meta-label {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 11px;
       font-weight: 800;
@@ -120,35 +106,56 @@
       color: var(--ink);
     }
 
-    .name-line {
+    .meta-line {
       border-bottom: 2.5px solid var(--ink);
-      width: 130px;
+      width: 200px;
       height: 12px;
     }
 
-    /* Canvas Boxes */
-    .box-top {
-      border: 3.5px solid var(--ink);
-      background: var(--paper);
-      height: 3.45in;
-      border-radius: 18px;
-      box-shadow: 4.5px 4.5px 0 var(--ink);
+    /* Horizontal Dual-Box Layout */
+    .horizontal-boxes-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 0.4in;
+      width: 100%;
+      flex-grow: 1;
       position: relative;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
     }
 
-    .box-bottom {
+    /* Canvas Boxes */
+    .box-left {
       border: 3.5px solid var(--ink);
       background: var(--paper);
-      height: 3.55in;
+      height: 100%;
       border-radius: 18px;
       box-shadow: 4.5px 4.5px 0 var(--ink);
       position: relative;
       padding: 14px 16px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .box-right {
+      border: 3.5px solid var(--ink);
+      background: var(--paper);
+      height: 100%;
+      border-radius: 18px;
+      box-shadow: 4.5px 4.5px 0 var(--ink);
+      position: relative;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .box-header-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      color: var(--ink);
     }
 
     .free-area {
@@ -156,79 +163,67 @@
       width: 100%;
     }
 
-    /* Neo-Brutalist Hanging Bookmark Pills */
-    .bookmark-tab-left {
-      position: absolute;
-      top: -2px;
-      left: 20px;
-      background: var(--ink);
-      color: var(--paper);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      padding: 4px 14px;
-      border-radius: 0 0 8px 8px;
-      white-space: nowrap;
-      z-index: 2;
+    /* Minimalist Micro Type Rows (Bottom of Boxes) */
+    .inner-text-row-bottom-left {
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-top: 8px;
+      flex-wrap: wrap;
     }
 
-    .bookmark-tab-right {
-      position: absolute;
-      bottom: -2px;
-      right: 20px;
-      background: var(--ink);
-      color: var(--paper);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      padding: 4px 14px;
-      border-radius: 8px 8px 0 0;
-      white-space: nowrap;
-      z-index: 2;
+    .inner-text-row-bottom-right {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 8px;
+      flex-wrap: wrap;
     }
 
-    /* Central Focal Circle (Dwell Hero Style) */
+    .micro-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: #555555;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .micro-label i {
+      font-size: 9.5px;
+      color: var(--ink);
+    }
+
+    /* Central Focal Circle */
     .center-circle {
       position: absolute;
-      top: 54.5%;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 195px;
-      height: 195px;
+      width: 210px;
+      height: 210px;
       border-radius: 50%;
       background: var(--paper);
-      border: 4px solid var(--ink);
+      border: 4.5px solid var(--ink);
       box-shadow: 5px 5px 0 var(--ink);
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 16px 16px 16px;
+      padding: 28px 16px 16px 16px;
       z-index: 10;
       text-align: center;
     }
 
-    .circle-kicker {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      opacity: 0.65;
-      margin-bottom: 2px;
-    }
-
     .circle-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
       letter-spacing: -0.5px;
       text-transform: uppercase;
       color: var(--ink);
-      margin-bottom: auto;
     }
 
     .circle-write-space {
@@ -238,8 +233,8 @@
 
     @media print {
       html, body {
-        width: 11in !important;
-        height: 8.5in !important;
+        width: 8.5in !important;
+        height: 11in !important;
         margin: 0 !important;
         padding: 0 !important;
         background: transparent !important;
@@ -247,10 +242,10 @@
       }
 
       .sheet {
-        width: 11in !important;
-        height: 8.5in !important;
+        width: 8.5in !important;
+        height: 11in !important;
         padding: 0.35in 0.375in !important;
-        column-gap: 0.75in !important;
+        row-gap: 0.5in !important;
         box-shadow: none !important;
         position: fixed !important;
         top: 0 !important;
@@ -263,61 +258,99 @@
 
   <div class="sheet">
 
-    <!-- CARD 1 (LEFT HALF) -->
+    <!-- CARD 1 (TOP STACKED CARD) -->
     <div class="card-container">
-      <div>
-        <div class="top-bar">
-          <div class="soar-hero-header">SOAR</div>
-          <div class="name-field-wrap">
-            <span class="name-label">Name:</span>
-            <div class="name-line"></div>
+      <div class="top-bar">
+        <div class="meta-field-wrap">
+          <span class="meta-label">Scripture:</span>
+          <div class="meta-line"></div>
+        </div>
+        <div class="meta-field-wrap">
+          <span class="meta-label">Name:</span>
+          <div class="meta-line"></div>
+        </div>
+      </div>
+
+      <div class="horizontal-boxes-wrap">
+        <!-- Left Box -->
+        <div class="box-left">
+          <div class="box-header-title">What does it say?</div>
+          <div class="free-area"></div>
+          <div class="inner-text-row-bottom-left">
+            <span class="micro-label"><i class="fa-solid fa-envelope"></i> CONTEXT</span>
+            <span class="micro-label"><i class="fa-solid fa-align-left"></i> DEFINITIONS</span>
+            <span class="micro-label"><i class="fa-solid fa-link"></i> CONNECTIONS</span>
+            <span class="micro-label"><i class="fa-solid fa-circle-question"></i> QUESTIONS</span>
           </div>
         </div>
 
-        <div class="box-top">
-          <div class="bookmark-tab-left">Scripture &amp; Observation</div>
-          <div class="free-area"></div>
+        <!-- Central Circle Wheel -->
+        <div class="center-circle">
+          <div class="circle-title">GOD IS...</div>
+          <div class="circle-write-space"></div>
+          <div class="circle-title">THEREFORE, I...</div>
+          <div class="circle-write-space"></div>
         </div>
-      </div>
 
-      <div class="center-circle">
-        <div class="circle-kicker">CENTRAL TRUTH</div>
-        <div class="circle-title">God is...</div>
-        <div class="circle-write-space"></div>
-      </div>
-
-      <div class="box-bottom">
-        <div class="free-area"></div>
-        <div class="bookmark-tab-right">Application &amp; Reflection</div>
+        <!-- Right Box -->
+        <div class="box-right">
+          <div class="box-header-title" style="text-align: right;">How should I respond?</div>
+          <div class="free-area"></div>
+          <div class="inner-text-row-bottom-right">
+            <span class="micro-label"><i class="fa-solid fa-school"></i> SCHOOL</span>
+            <span class="micro-label"><i class="fa-solid fa-user-group"></i> FAMILY / FRIENDS</span>
+            <span class="micro-label"><i class="fa-solid fa-futbol"></i> HOBBIES</span>
+            <span class="micro-label"><i class="fa-solid fa-globe"></i> INTERNET</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- CARD 2 (RIGHT HALF) -->
+    <!-- CARD 2 (BOTTOM STACKED CARD) -->
     <div class="card-container">
-      <div>
-        <div class="top-bar">
-          <div class="soar-hero-header">SOAR</div>
-          <div class="name-field-wrap">
-            <span class="name-label">Name:</span>
-            <div class="name-line"></div>
+      <div class="top-bar">
+        <div class="meta-field-wrap">
+          <span class="meta-label">Scripture:</span>
+          <div class="meta-line"></div>
+        </div>
+        <div class="meta-field-wrap">
+          <span class="meta-label">Name:</span>
+          <div class="meta-line"></div>
+        </div>
+      </div>
+
+      <div class="horizontal-boxes-wrap">
+        <!-- Left Box -->
+        <div class="box-left">
+          <div class="box-header-title">What does it say?</div>
+          <div class="free-area"></div>
+          <div class="inner-text-row-bottom-left">
+            <span class="micro-label"><i class="fa-solid fa-envelope"></i> CONTEXT</span>
+            <span class="micro-label"><i class="fa-solid fa-align-left"></i> DEFINITIONS</span>
+            <span class="micro-label"><i class="fa-solid fa-link"></i> CONNECTIONS</span>
+            <span class="micro-label"><i class="fa-solid fa-circle-question"></i> QUESTIONS</span>
           </div>
         </div>
 
-        <div class="box-top">
-          <div class="bookmark-tab-left">Scripture &amp; Observation</div>
-          <div class="free-area"></div>
+        <!-- Central Circle Wheel -->
+        <div class="center-circle">
+          <div class="circle-title">GOD IS...</div>
+          <div class="circle-write-space"></div>
+          <div class="circle-title">THEREFORE, I...</div>
+          <div class="circle-write-space"></div>
         </div>
-      </div>
 
-      <div class="center-circle">
-        <div class="circle-kicker">CENTRAL TRUTH</div>
-        <div class="circle-title">God is...</div>
-        <div class="circle-write-space"></div>
-      </div>
-
-      <div class="box-bottom">
-        <div class="free-area"></div>
-        <div class="bookmark-tab-right">Application &amp; Reflection</div>
+        <!-- Right Box -->
+        <div class="box-right">
+          <div class="box-header-title" style="text-align: right;">How should I respond?</div>
+          <div class="free-area"></div>
+          <div class="inner-text-row-bottom-right">
+            <span class="micro-label"><i class="fa-solid fa-school"></i> SCHOOL</span>
+            <span class="micro-label"><i class="fa-solid fa-user-group"></i> FAMILY / FRIENDS</span>
+            <span class="micro-label"><i class="fa-solid fa-futbol"></i> HOBBIES</span>
+            <span class="micro-label"><i class="fa-solid fa-globe"></i> INTERNET</span>
+          </div>
+        </div>
       </div>
     </div>
 
