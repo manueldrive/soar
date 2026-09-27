@@ -1,360 +1,596 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Activity Sheet</title>
-  
-  <!-- Google Fonts: Space Grotesk & Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-  
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<meta charset="utf-8">
+<title>SOAR Card Tool</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #e9edf2;
+    font-family: Arial, Helvetica, sans-serif;
+  }
 
-  <style>
-    :root {
-      --ink: #0D0D0D;
-      --paper: #FFFFFF;
-      --cream: #EAE6DF;
-    }
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border-bottom: 1px solid #dde2e8;
+  }
+  .tabs {
+    display: flex;
+    background: #eef1f5;
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .tabs button {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #4a5568;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    cursor: pointer;
+  }
+  .tabs button.active {
+    background: #16345c;
+    color: #ffffff;
+  }
+  .divider-v {
+    width: 1px;
+    height: 26px;
+    background: #dde2e8;
+  }
+  .format-toolbar {
+    display: flex;
+    gap: 4px;
+    background: #eef1f5;
+    border-radius: 10px;
+    padding: 3px;
+  }
+  .format-toolbar button {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: #333;
+    background: #ffffff;
+    border: 1px solid #dde2e8;
+    border-radius: 7px;
+    padding: 7px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .format-toolbar button:hover { background: #f4f6f8; }
+  .format-toolbar button:active { background: #e5e9ee; }
+  .download-btn {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    color: #ffffff;
+    background: #16345c;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .download-btn:hover { background: #0f2544; }
+  .hint {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #808894;
+  }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
+  .stage {
+    display: none;
+    justify-content: center;
+    padding: 28px 14px 50px;
+  }
+  .stage.visible { display: flex; }
 
-    @page {
-      size: 8.5in 11in portrait;
-      margin: 0;
-    }
+  /* ---------- Edit card (single, big, fillable) ---------- */
+  .card {
+    width: 612pt;
+    height: 792pt;
+    background: #ffffff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    padding: 40pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12pt;
+    align-items: center;
+    margin-bottom: 20pt;
+  }
+  .field {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+    font-weight: 700;
+    font-size: 11pt;
+    letter-spacing: 1pt;
+    color: #111111;
+  }
+  .field input {
+    flex: 1;
+    border: none;
+    border-bottom: 1.3pt solid #111111;
+    background: transparent;
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    font-size: 16pt;
+    color: #16345c;
+    padding: 0 2pt 2pt;
+    outline: none;
+  }
+  .field input::placeholder { color: #b7b7b7; font-family: Arial, sans-serif; font-size: 10pt; }
 
-    body {
-      background-color: var(--cream);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-      color: var(--ink);
-    }
+  .grid {
+    position: relative;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12pt;
+  }
+  .box {
+    position: relative;
+    border: 3pt solid #111111;
+    border-radius: 16pt;
+  }
+  .tl, .tr { background: #E7F1FC; }
+  .bl, .br { background: #EEE8FA; }
 
-    .sheet {
-      width: 8.5in;
-      height: 11in;
-      max-width: 8.5in;
-      max-height: 11in;
-      background: var(--paper);
-      padding: 0.35in 0.375in;
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-      row-gap: 0.5in;
-      box-shadow: 0 6px 20px rgba(13, 13, 13, 0.15);
-      position: relative;
-    }
+  .caption {
+    position: absolute;
+    left: 6pt;
+    right: 6pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5pt;
+    white-space: nowrap;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .tl .caption, .tr .caption { top: 9pt; }
+  .bl .caption, .br .caption { bottom: 9pt; }
+  .caption .name {
+    font-weight: 800;
+    font-size: 10.5pt;
+    letter-spacing: 0.1pt;
+    color: #111111;
+  }
+  .caption .sep { color: #b0b0b0; font-size: 8pt; }
+  .ind {
+    display: flex;
+    align-items: center;
+    gap: 2.5pt;
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.1pt;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ind i { width: 8pt; font-size: 9pt; text-align: center; margin-right: 2pt; }
+  .s .ind, .s .ind i { color: #2f6fd6; }
+  .o .ind, .o .ind i { color: #2f6fd6; }
+  .a .ind, .a .ind i { color: #8551c9; }
+  .r .ind, .r .ind i { color: #8551c9; }
 
-    /* Horizontal Center Cut Guide */
-    .sheet::before {
-      content: "";
-      position: absolute;
-      left: 0.25in;
-      right: 0.25in;
-      top: 5.5in;
-      height: 1px;
-      border-top: 2px dashed #d8d2c7;
-      pointer-events: none;
-      z-index: 1;
-    }
+  .notes {
+    position: absolute;
+    left: 12pt;
+    right: 12pt;
+    font-family: 'Caveat', cursive;
+    font-weight: 500;
+    font-size: 16pt;
+    line-height: 1.4;
+    color: #16345c;
+    overflow-y: auto;
+    outline: none;
+  }
+  .notes ul { margin: 2pt 0; padding-left: 18pt; }
+  .tl .notes, .tr .notes { top: 34pt; bottom: 10pt; }
+  .bl .notes, .br .notes { top: 10pt; bottom: 34pt; }
+  .notes:focus { box-shadow: 0 0 0 2pt rgba(22,52,92,0.25) inset; border-radius: 6pt; }
+  .notes:not(.has-text):before {
+    content: attr(data-placeholder);
+    color: #9fb3c8;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    font-style: italic;
+  }
 
-    .card-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      z-index: 2;
-    }
+  .circle-exclude {
+    width: 105pt;
+    height: 105pt;
+    shape-margin: 6pt;
+    pointer-events: none;
+  }
+  .tl .circle-exclude { float: right; margin-top: 184pt; shape-outside: circle(105pt at 100% 100%); }
+  .tr .circle-exclude { float: left; margin-top: 184pt; shape-outside: circle(105pt at 0% 100%); }
+  .bl .circle-exclude { float: right; shape-outside: circle(105pt at 100% 0%); }
+  .br .circle-exclude { float: left; shape-outside: circle(105pt at 0% 0%); }
 
-    /* Top Bar */
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      padding: 0 4px;
-    }
+  .center-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 210pt;
+    height: 210pt;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3pt solid #111111;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 5pt;
+    padding: 14pt;
+  }
+  .center-circle .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5pt;
+  }
+  .center-circle .label {
+    font-weight: 900;
+    font-size: 17pt;
+    color: #111111;
+  }
+  .center-circle .therefore { margin-top: 6pt; }
+  .center-circle .answer {
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    font-size: 16pt;
+    color: #16345c;
+    line-height: 1.2;
+    width: 100%;
+    outline: none;
+    min-height: 20pt;
+  }
+  .center-circle .answer:focus { box-shadow: 0 0 0 2pt rgba(22,52,92,0.25) inset; border-radius: 6pt; }
+  .center-circle .answer:not(.has-text):before {
+    content: attr(data-placeholder);
+    color: #9fb3c8;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9pt;
+    font-style: italic;
+  }
 
-    .meta-field-wrap {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
+  /* ---------- Blank 2-up print page ---------- */
+  .mini-page {
+    width: 792pt;
+    height: 612pt;
+    background: #ffffff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    padding: 28pt;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
+  .mini-divider {
+    width: 0;
+    border-left: 1.5pt dashed #bbbbbb;
+    margin: 0 12pt;
+  }
+  .mini-card {
+    width: 356pt;
+    height: 556pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .mini-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8pt;
+    align-items: center;
+    margin-bottom: 16pt;
+  }
+  .mini-field {
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+    font-weight: 700;
+    font-size: 9pt;
+    letter-spacing: 1pt;
+    color: #111111;
+  }
+  .mini-line { flex: 1; border-bottom: 1.3pt solid #111111; height: 1pt; }
 
-    .meta-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--ink);
-    }
+  .mini-grid {
+    position: relative;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8pt;
+  }
+  .mini-box { position: relative; border: 3pt solid #111111; border-radius: 14pt; }
+  .mtl, .mtr { background: #E7F1FC; }
+  .mbl, .mbr { background: #EEE8FA; }
 
-    .meta-line {
-      border-bottom: 2.5px solid var(--ink);
-      width: 200px;
-      height: 12px;
-    }
+  .mini-caption {
+    position: absolute;
+    left: 4pt;
+    right: 4pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4pt;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .mtl .mini-caption, .mtr .mini-caption { top: 7pt; }
+  .mbl .mini-caption, .mbr .mini-caption { bottom: 7pt; }
+  .mini-caption .name { font-weight: 800; font-size: 8.5pt; letter-spacing: 0.1pt; color: #111111; }
+  .mini-caption .sep { color: #b0b0b0; font-size: 6.5pt; }
+  .mini-ind {
+    display: flex;
+    align-items: center;
+    gap: 2pt;
+    font-weight: 700;
+    font-size: 6.6pt;
+    letter-spacing: 0.1pt;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .mini-ind i { width: 7pt; font-size: 7.4pt; text-align: center; margin-right: 1.5pt; }
+  .ms .mini-ind, .ms .mini-ind i { color: #2f6fd6; }
+  .mo .mini-ind, .mo .mini-ind i { color: #2f6fd6; }
+  .ma .mini-ind, .ma .mini-ind i { color: #8551c9; }
+  .mr .mini-ind, .mr .mini-ind i { color: #8551c9; }
 
-    /* Horizontal Dual-Box Layout */
-    .horizontal-boxes-wrap {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: 0.4in;
-      width: 100%;
-      flex-grow: 1;
-      position: relative;
-    }
+  .mini-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 152pt;
+    height: 152pt;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3pt solid #111111;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 4pt;
+    padding: 8pt;
+  }
+  .mini-label { font-weight: 900; font-size: 12pt; color: #111111; }
+  .mini-therefore { margin-top: 5pt; }
+  .mini-write-space { width: 100%; height: 13pt; }
 
-    /* Canvas Boxes */
-    .box-left {
-      border: 3.5px solid var(--ink);
-      background: var(--paper);
-      height: 100%;
-      border-radius: 18px;
-      box-shadow: 4.5px 4.5px 0 var(--ink);
-      position: relative;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .box-right {
-      border: 3.5px solid var(--ink);
-      background: var(--paper);
-      height: 100%;
-      border-radius: 18px;
-      box-shadow: 4.5px 4.5px 0 var(--ink);
-      position: relative;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .box-header-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: 0.2px;
-      text-transform: uppercase;
-      color: var(--ink);
-    }
-
-    .free-area {
-      flex-grow: 1;
-      width: 100%;
-    }
-
-    /* Minimalist Micro Type Rows (Bottom of Boxes) */
-    .inner-text-row-bottom-left {
-      display: flex;
-      justify-content: flex-start;
-      gap: 10px;
-      margin-top: 8px;
-      flex-wrap: wrap;
-    }
-
-    .inner-text-row-bottom-right {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 8px;
-      flex-wrap: wrap;
-    }
-
-    .micro-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 8.5px;
-      font-weight: 800;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      color: #555555;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .micro-label i {
-      font-size: 9.5px;
-      color: var(--ink);
-    }
-
-    /* Central Focal Circle */
-    .center-circle {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 210px;
-      height: 210px;
-      border-radius: 50%;
-      background: var(--paper);
-      border: 4.5px solid var(--ink);
-      box-shadow: 5px 5px 0 var(--ink);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 28px 16px 16px 16px;
-      z-index: 10;
-      text-align: center;
-    }
-
-    .circle-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      text-transform: uppercase;
-      color: var(--ink);
-    }
-
-    .circle-write-space {
-      width: 100%;
-      flex-grow: 1;
-    }
-
-    @media print {
-      html, body {
-        width: 8.5in !important;
-        height: 11in !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        background: transparent !important;
-        overflow: hidden !important;
-      }
-
-      .sheet {
-        width: 8.5in !important;
-        height: 11in !important;
-        padding: 0.35in 0.375in !important;
-        row-gap: 0.5in !important;
-        box-shadow: none !important;
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-      }
-    }
-  </style>
+  @media print {
+    .toolbar { display: none; }
+    .stage { padding: 0; }
+    .card, .mini-page { box-shadow: none; }
+    body { background: #ffffff; }
+  }
+</style>
 </head>
 <body>
-
-  <div class="sheet">
-
-    <!-- CARD 1 (TOP STACKED CARD) -->
-    <div class="card-container">
-      <div class="top-bar">
-        <div class="meta-field-wrap">
-          <span class="meta-label">Scripture:</span>
-          <div class="meta-line"></div>
-        </div>
-        <div class="meta-field-wrap">
-          <span class="meta-label">Name:</span>
-          <div class="meta-line"></div>
-        </div>
-      </div>
-
-      <div class="horizontal-boxes-wrap">
-        <!-- Left Box -->
-        <div class="box-left">
-          <div class="box-header-title">What does it say?</div>
-          <div class="free-area"></div>
-          <div class="inner-text-row-bottom-left">
-            <span class="micro-label"><i class="fa-solid fa-envelope"></i> CONTEXT</span>
-            <span class="micro-label"><i class="fa-solid fa-align-left"></i> DEFINITIONS</span>
-            <span class="micro-label"><i class="fa-solid fa-link"></i> CONNECTIONS</span>
-            <span class="micro-label"><i class="fa-solid fa-circle-question"></i> QUESTIONS</span>
-          </div>
-        </div>
-
-        <!-- Central Circle Wheel -->
-        <div class="center-circle">
-          <div class="circle-title">GOD IS...</div>
-          <div class="circle-write-space"></div>
-          <div class="circle-title">THEREFORE, I...</div>
-          <div class="circle-write-space"></div>
-        </div>
-
-        <!-- Right Box -->
-        <div class="box-right">
-          <div class="box-header-title" style="text-align: right;">How should I respond?</div>
-          <div class="free-area"></div>
-          <div class="inner-text-row-bottom-right">
-            <span class="micro-label"><i class="fa-solid fa-school"></i> SCHOOL</span>
-            <span class="micro-label"><i class="fa-solid fa-user-group"></i> FAMILY / FRIENDS</span>
-            <span class="micro-label"><i class="fa-solid fa-futbol"></i> HOBBIES</span>
-            <span class="micro-label"><i class="fa-solid fa-globe"></i> INTERNET</span>
-          </div>
-        </div>
-      </div>
+  <div class="toolbar">
+    <div class="tabs">
+      <button id="tabBlank" class="active">Blank Template (2-up)</button>
+      <button id="tabEdit">Edit &amp; Fill</button>
     </div>
-
-    <!-- CARD 2 (BOTTOM STACKED CARD) -->
-    <div class="card-container">
-      <div class="top-bar">
-        <div class="meta-field-wrap">
-          <span class="meta-label">Scripture:</span>
-          <div class="meta-line"></div>
-        </div>
-        <div class="meta-field-wrap">
-          <span class="meta-label">Name:</span>
-          <div class="meta-line"></div>
-        </div>
-      </div>
-
-      <div class="horizontal-boxes-wrap">
-        <!-- Left Box -->
-        <div class="box-left">
-          <div class="box-header-title">What does it say?</div>
-          <div class="free-area"></div>
-          <div class="inner-text-row-bottom-left">
-            <span class="micro-label"><i class="fa-solid fa-envelope"></i> CONTEXT</span>
-            <span class="micro-label"><i class="fa-solid fa-align-left"></i> DEFINITIONS</span>
-            <span class="micro-label"><i class="fa-solid fa-link"></i> CONNECTIONS</span>
-            <span class="micro-label"><i class="fa-solid fa-circle-question"></i> QUESTIONS</span>
-          </div>
-        </div>
-
-        <!-- Central Circle Wheel -->
-        <div class="center-circle">
-          <div class="circle-title">GOD IS...</div>
-          <div class="circle-write-space"></div>
-          <div class="circle-title">THEREFORE, I...</div>
-          <div class="circle-write-space"></div>
-        </div>
-
-        <!-- Right Box -->
-        <div class="box-right">
-          <div class="box-header-title" style="text-align: right;">How should I respond?</div>
-          <div class="free-area"></div>
-          <div class="inner-text-row-bottom-right">
-            <span class="micro-label"><i class="fa-solid fa-school"></i> SCHOOL</span>
-            <span class="micro-label"><i class="fa-solid fa-user-group"></i> FAMILY / FRIENDS</span>
-            <span class="micro-label"><i class="fa-solid fa-futbol"></i> HOBBIES</span>
-            <span class="micro-label"><i class="fa-solid fa-globe"></i> INTERNET</span>
-          </div>
-        </div>
-      </div>
+    <div class="divider-v" id="formatDivider" style="display:none;"></div>
+    <div class="format-toolbar" id="formatToolbar" style="display:none;">
+      <button data-cmd="bold"><i class="fa-solid fa-bold"></i>Bold</button>
+      <button data-cmd="insertUnorderedList"><i class="fa-solid fa-list-ul"></i>Bullets</button>
     </div>
-
+    <div class="divider-v"></div>
+    <button class="download-btn" id="downloadBtn"><i class="fa-solid fa-download"></i>Download PDF</button>
+    <div class="hint" id="hintText"></div>
   </div>
 
+  <!-- ============ BLANK 2-UP PRINT STAGE ============ -->
+  <div class="stage visible" id="blankStage">
+    <div class="mini-page" id="blankPage">
+      <div class="mini-card"></div>
+      <div class="mini-divider"></div>
+      <div class="mini-card"></div>
+    </div>
+  </div>
+
+  <!-- ============ EDIT & FILL STAGE ============ -->
+  <div class="stage" id="editStage">
+    <div class="card" id="card">
+      <div class="header">
+        <div class="field">
+          <span>PASSAGE:</span>
+          <input type="text" placeholder="e.g. Mark 6:30&ndash;56" value="Mark 6:30&#8211;56">
+        </div>
+        <div class="field">
+          <span>NAME:</span>
+          <input type="text" placeholder="Your name" value="Manny">
+        </div>
+      </div>
+      <div class="grid">
+        <div class="box tl">
+          <div class="caption s">
+            <span class="name">Scripture:</span>
+            <div class="ind"><i class="fa-solid fa-user"></i> <span>Author</span></div>
+            <span class="sep">&bull;</span>
+            <div class="ind"><i class="fa-solid fa-bullseye"></i> <span>Purpose</span></div>
+          </div>
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div>The disciples' feelings till now!<br><br>&bull; awe &amp; wonder<br>&bull; fear &amp; confusion<br>&bull; rejection &amp; danger<br>&bull; calling &amp; identity</div>
+        </div>
+        <div class="box tr">
+          <div class="caption o">
+            <span class="name">Observation:</span>
+            <div class="ind"><i class="fa-solid fa-highlighter"></i> <span>Words</span></div>
+            <span class="sep">&bull;</span>
+            <div class="ind"><i class="fa-solid fa-link"></i> <span>Links</span></div>
+          </div>
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div>5,000 people (20,000+)<br>5 loaves, 2 fish<br><br><i class="fa-solid fa-link" style="font-size:12pt;"></i>&nbsp;Exodus &ndash; Manna in the wilderness<br><i class="fa-solid fa-link" style="font-size:12pt;"></i>&nbsp;John &ndash; I am the bread of life</div>
+        </div>
+        <div class="box bl">
+          <div class="caption a">
+            <span class="name">Application:</span>
+            <div class="ind"><i class="fa-solid fa-comment-dots"></i> <span>Thoughts</span></div>
+            <span class="sep">&bull;</span>
+            <div class="ind"><i class="fa-solid fa-bolt"></i> <span>Actions</span></div>
+          </div>
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div>I can teach others to "eat"/ immerse in biblical literacy<br><br>And serve/donate at food banks, low income areas</div>
+        </div>
+        <div class="box br">
+          <div class="caption r">
+            <span class="name">Reflection:</span>
+            <div class="ind"><i class="fa-solid fa-hands-praying"></i> <span>Prayers</span></div>
+            <span class="sep">&bull;</span>
+            <div class="ind"><i class="fa-solid fa-circle-question"></i> <span>Questions</span></div>
+          </div>
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div>I need to reflect further on miracles. Are they signs of who he is, should we pursue them?</div>
+        </div>
+        <div class="center-circle">
+          <div class="content">
+            <div class="label">GOD IS&hellip;</div>
+            <div class="answer" contenteditable="true" data-placeholder="type here">compassionate provider</div>
+            <div class="label therefore">THEREFORE, I&hellip;</div>
+            <div class="answer" contenteditable="true" data-placeholder="type here">trust Him &amp; feed others</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- shared caption builder ----------
+    function captionHTML(prefix, letterClass, name, icon1, word1, icon2, word2) {
+      return '<div class="' + prefix + 'caption ' + letterClass + '">' +
+        '<span class="name">' + name + '</span>' +
+        '<div class="' + prefix + 'ind"><i class="fa-solid ' + icon1 + '"></i> <span>' + word1 + '</span></div>' +
+        '<span class="sep">&bull;</span>' +
+        '<div class="' + prefix + 'ind"><i class="fa-solid ' + icon2 + '"></i> <span>' + word2 + '</span></div>' +
+      '</div>';
+    }
+
+    function buildMiniCard() {
+      const el = document.createElement('div');
+      el.className = 'mini-card';
+      el.innerHTML =
+        '<div class="mini-header">' +
+          '<div class="mini-field"><span>PASSAGE:</span><span class="mini-line"></span></div>' +
+          '<div class="mini-field"><span>NAME:</span><span class="mini-line"></span></div>' +
+        '</div>' +
+        '<div class="mini-grid">' +
+          '<div class="mini-box mtl">' + captionHTML('mini-', 'ms', 'Scripture:', 'fa-user', 'Author', 'fa-bullseye', 'Purpose') + '</div>' +
+          '<div class="mini-box mtr">' + captionHTML('mini-', 'mo', 'Observation:', 'fa-highlighter', 'Words', 'fa-link', 'Links') + '</div>' +
+          '<div class="mini-box mbl">' + captionHTML('mini-', 'ma', 'Application:', 'fa-comment-dots', 'Thoughts', 'fa-bolt', 'Actions') + '</div>' +
+          '<div class="mini-box mbr">' + captionHTML('mini-', 'mr', 'Reflection:', 'fa-hands-praying', 'Prayers', 'fa-circle-question', 'Questions') + '</div>' +
+          '<div class="mini-circle">' +
+            '<div class="mini-label">GOD IS&hellip;</div>' +
+            '<div class="mini-write-space"></div>' +
+            '<div class="mini-label mini-therefore">THEREFORE, I&hellip;</div>' +
+            '<div class="mini-write-space"></div>' +
+          '</div>' +
+        '</div>';
+      return el;
+    }
+
+    document.querySelectorAll('#blankPage .mini-card').forEach(function (placeholder) {
+      placeholder.replaceWith(buildMiniCard());
+    });
+
+    // ---------- placeholder toggling for editable areas ----------
+    document.querySelectorAll('.notes, .answer').forEach(function (el) {
+      function refresh() { el.classList.toggle('has-text', el.textContent.trim().length > 0); }
+      refresh();
+      el.addEventListener('input', refresh);
+    });
+
+    // ---------- simple formatting toolbar (bold / bullets) ----------
+    document.querySelectorAll('#formatToolbar button').forEach(function (btn) {
+      btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+      btn.addEventListener('click', function () {
+        document.execCommand(btn.dataset.cmd, false, null);
+      });
+    });
+
+    // ---------- mode switching ----------
+    const tabBlank = document.getElementById('tabBlank');
+    const tabEdit = document.getElementById('tabEdit');
+    const blankStage = document.getElementById('blankStage');
+    const editStage = document.getElementById('editStage');
+    const formatToolbar = document.getElementById('formatToolbar');
+    const formatDivider = document.getElementById('formatDivider');
+    const hintText = document.getElementById('hintText');
+    let currentMode = 'blank';
+
+    function setMode(mode) {
+      currentMode = mode;
+      tabBlank.classList.toggle('active', mode === 'blank');
+      tabEdit.classList.toggle('active', mode === 'edit');
+      blankStage.classList.toggle('visible', mode === 'blank');
+      editStage.classList.toggle('visible', mode === 'edit');
+      formatToolbar.style.display = mode === 'edit' ? 'flex' : 'none';
+      formatDivider.style.display = mode === 'edit' ? 'block' : 'none';
+      hintText.textContent = mode === 'blank'
+        ? 'Two ready-to-print blank cards — click Download PDF to save a landscape page for your printer.'
+        : 'Click any box to type. Select text and use Bold / Bullets above to format. Content saves nowhere else, so download when you’re done.';
+    }
+    tabBlank.addEventListener('click', function () { setMode('blank'); });
+    tabEdit.addEventListener('click', function () { setMode('edit'); });
+    setMode('blank');
+
+    // ---------- download ----------
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+      if (currentMode === 'blank') {
+        html2pdf().set({
+          margin: 0,
+          filename: 'SOAR Blank Template.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 3, useCORS: true },
+          jsPDF: { unit: 'pt', format: [792, 612], orientation: 'landscape' }
+        }).from(document.getElementById('blankPage')).save();
+      } else {
+        const card = document.getElementById('card');
+        const passage = card.querySelector('.field input').value.trim();
+        const filename = (passage ? 'SOAR - ' + passage : 'SOAR Card') + '.pdf';
+        html2pdf().set({
+          margin: 0,
+          filename: filename,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 3, useCORS: true },
+          jsPDF: { unit: 'pt', format: [612, 792], orientation: 'portrait' }
+        }).from(card).save();
+      }
+    });
+  </script>
 </body>
 </html>
