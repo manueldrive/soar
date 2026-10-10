@@ -425,8 +425,8 @@
   }
   .prompts ul { margin: 0; padding-left: 16pt; }
   .prompts li { margin-bottom: 10pt; }
-  .tl .prompts, .tr .prompts { top: 32pt; }
-  .bl .prompts, .br .prompts { bottom: 32pt; }
+  .tl .prompts, .tr .prompts { top: 52pt; }
+  .bl .prompts, .br .prompts { bottom: 54pt; }
   .leader-circle { justify-content: flex-start; padding: 30pt 18pt 0; gap: 4pt; }
   .leader-circle .circle-prompt {
     font-size: 12.5pt;
@@ -437,6 +437,36 @@
   }
   .leader-circle .label { margin-top: 2pt; }
   .leader-circle .write-gap { height: 30pt; }
+
+  /* ---------- Section titles (big letter + key words) ---------- */
+  .tblock {
+    position: absolute;
+    top: 9pt;
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+    pointer-events: none;
+  }
+  .tblock.left { left: 12pt; }
+  .tblock.bottom { top: auto; bottom: 9pt; }
+  .tblock.right { right: 12pt; flex-direction: row-reverse; text-align: right; }
+  .tblock .big {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 30pt;
+    line-height: 1;
+  }
+  .tblock .tword { font-weight: 800; font-size: 12pt; color: #111111; line-height: 1.1; }
+  .tblock .kw { font-size: 9.5pt; color: #4a5568; line-height: 1.2; margin-top: 1pt; }
+  .tblock.blue .big { color: #2f6fd6; }
+  .tblock.purple .big { color: #8551c9; }
+  .mini-box .tblock { top: 7pt; gap: 4pt; }
+  .mini-box .tblock.left { left: 9pt; }
+  .mini-box .tblock.bottom { top: auto; bottom: 7pt; }
+  .mini-box .tblock.right { right: 9pt; }
+  .mini-box .tblock .big { font-size: 22pt; }
+  .mini-box .tblock .tword { font-size: 9.5pt; }
+  .mini-box .tblock .kw { font-size: 8pt; }
 
   @media print {
     .toolbar { display: none; }
@@ -543,12 +573,7 @@
       </div>
       <div class="grid">
         <div class="box tl">
-          <div class="caption s">
-            <span class="name">Scripture:</span>
-            <div class="ind"><i class="fa-solid fa-user"></i> <span>Author</span></div>
-            <span class="sep">&bull;</span>
-            <div class="ind"><i class="fa-solid fa-bullseye"></i> <span>Purpose</span></div>
-          </div>
+          <div class="tblock left blue"><span class="big">S</span><div><div class="tword">Scripture</div><div class="kw">author &middot; purpose</div></div></div>
           <div class="prompts"><ul>
             <li>What passage are we reading, and what happens right before it?</li>
             <li>Who wrote this book, and when?</li>
@@ -556,12 +581,7 @@
           </ul></div>
         </div>
         <div class="box tr">
-          <div class="caption o">
-            <span class="name">Observation:</span>
-            <div class="ind"><i class="fa-solid fa-highlighter"></i> <span>Words</span></div>
-            <span class="sep">&bull;</span>
-            <div class="ind"><i class="fa-solid fa-link"></i> <span>Links</span></div>
-          </div>
+          <div class="tblock right blue"><span class="big">O</span><div><div class="tword">Observation</div><div class="kw">words &middot; links</div></div></div>
           <div class="prompts"><ul>
             <li>What 1&ndash;2 words or phrases need clarity?</li>
             <li>What repeats, surprises you, or is confusing?</li>
@@ -573,24 +593,14 @@
             <li>How is this truth different from what the world says?</li>
             <li>How can you live this out this week?</li>
           </ul></div>
-          <div class="caption a">
-            <span class="name">Application:</span>
-            <div class="ind"><i class="fa-solid fa-comment-dots"></i> <span>Thoughts</span></div>
-            <span class="sep">&bull;</span>
-            <div class="ind"><i class="fa-solid fa-bolt"></i> <span>Actions</span></div>
-          </div>
+          <div class="tblock left bottom purple"><span class="big">A</span><div><div class="tword">Application</div><div class="kw">thoughts &middot; actions</div></div></div>
         </div>
         <div class="box br">
           <div class="prompts"><ul>
             <li>What do you want to pray about?</li>
             <li>What questions do you still have?</li>
           </ul></div>
-          <div class="caption r">
-            <span class="name">Reflection:</span>
-            <div class="ind"><i class="fa-solid fa-hands-praying"></i> <span>Prayers</span></div>
-            <span class="sep">&bull;</span>
-            <div class="ind"><i class="fa-solid fa-circle-question"></i> <span>Questions</span></div>
-          </div>
+          <div class="tblock right bottom purple"><span class="big">R</span><div><div class="tword">Reflection</div><div class="kw">prayers &middot; questions</div></div></div>
         </div>
         <div class="center-circle leader-circle">
           <div class="label">GOD IS&hellip;</div>
@@ -614,6 +624,11 @@
       '</div>';
     }
 
+    function titleHTML(side, color, letter, word, kw) {
+      return '<div class="tblock ' + side + ' ' + color + '"><span class="big">' + letter + '</span>' +
+        '<div><div class="tword">' + word + '</div><div class="kw">' + kw + '</div></div></div>';
+    }
+
     function buildMiniCard() {
       const el = document.createElement('div');
       el.className = 'mini-card';
@@ -623,10 +638,10 @@
           '<div class="mini-field"><span>NAME:</span><span class="mini-line"></span></div>' +
         '</div>' +
         '<div class="mini-grid">' +
-          '<div class="mini-box mtl">' + captionHTML('mini-', 'ms', 'Scripture:', 'fa-user', 'Author', 'fa-bullseye', 'Purpose') + '</div>' +
-          '<div class="mini-box mtr">' + captionHTML('mini-', 'mo', 'Observation:', 'fa-highlighter', 'Words', 'fa-link', 'Links') + '</div>' +
-          '<div class="mini-box mbl">' + captionHTML('mini-', 'ma', 'Application:', 'fa-comment-dots', 'Thoughts', 'fa-bolt', 'Actions') + '</div>' +
-          '<div class="mini-box mbr">' + captionHTML('mini-', 'mr', 'Reflection:', 'fa-hands-praying', 'Prayers', 'fa-circle-question', 'Questions') + '</div>' +
+          '<div class="mini-box mtl">' + titleHTML('left', 'blue', 'S', 'Scripture', 'author &middot; purpose') + '</div>' +
+          '<div class="mini-box mtr">' + titleHTML('right', 'blue', 'O', 'Observation', 'words &middot; links') + '</div>' +
+          '<div class="mini-box mbl">' + titleHTML('left bottom', 'purple', 'A', 'Application', 'thoughts &middot; actions') + '</div>' +
+          '<div class="mini-box mbr">' + titleHTML('right bottom', 'purple', 'R', 'Reflection', 'prayers &middot; questions') + '</div>' +
           '<div class="mini-circle">' +
             '<div class="mini-label">GOD IS&hellip;</div>' +
             '<div class="mini-write-space"><div class="mini-write-line"></div><div class="mini-write-line"></div></div>' +
