@@ -5,7 +5,7 @@
 <title>SOAR Card Tool</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Unbounded:wght@700;800;900&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   * { box-sizing: border-box; }
@@ -417,12 +417,12 @@
     position: absolute;
     left: 12pt;
     right: 14pt;
-    font-size: 16.5pt;
-    line-height: 1.3;
+    font-size: 15.5pt;
+    line-height: 1.28;
     color: #4a5568;
   }
   .prompts ul { margin: 0; padding-left: 16pt; }
-  .prompts li { margin-bottom: 10pt; }
+  .prompts li { margin-bottom: 8pt; }
   .tl .prompts, .tr .prompts { top: 52pt; }
   .bl .prompts, .br .prompts { bottom: 54pt; }
   .leader-circle { justify-content: flex-start; padding: 30pt 18pt 0; gap: 4pt; }
@@ -474,6 +474,19 @@
   .mini-brand .mini-header { flex: 1; grid-template-columns: 1fr; gap: 12pt; margin-bottom: 0; }
   .brand-row .field > span:first-child { width: 74pt; flex: none; }
   .mini-brand .mini-field > span:first-child { width: 62pt; flex: none; }
+
+  /* ---------- Fonts: Unbounded (display, matches logo) + DM Sans (text) ---------- */
+  body, .prompts, .tblock .kw, .circle-prompt { font-family: 'DM Sans', Arial, Helvetica, sans-serif; }
+  .tblock .big { font-family: 'Unbounded', Arial, sans-serif; font-weight: 900; font-size: 30pt; }
+  .mini-box .tblock .big { font-size: 22pt; }
+  .tblock .tword { font-family: 'Unbounded', Arial, sans-serif; font-weight: 700; font-size: 10.5pt; letter-spacing: 0.2pt; }
+  .mini-box .tblock .tword { font-size: 8pt; }
+  .center-circle .label, .mini-label { font-family: 'Unbounded', Arial, sans-serif; font-weight: 800; }
+  .center-circle .label { font-size: 15pt; }
+  .mini-label { font-size: 12pt; }
+  .field > span:first-child, .mini-field > span:first-child { font-family: 'Unbounded', Arial, sans-serif; font-weight: 700; letter-spacing: 0.3pt; }
+  .field > span:first-child { font-size: 9.5pt; }
+  .mini-field > span:first-child { font-size: 7.5pt; }
 
   @media print {
     .toolbar { display: none; }
