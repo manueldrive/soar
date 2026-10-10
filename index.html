@@ -499,8 +499,9 @@
     line-height: 1.25;
     color: #4a5568;
   }
-  .mini-prompts ul { margin: 0; padding-left: 12pt; }
-  .mini-prompts li { margin-bottom: 4pt; }
+  .mini-prompts ul { margin: 0; padding-left: 0; list-style: none; }
+  .mini-prompts li { margin-bottom: 4pt; padding-left: 11pt; position: relative; }
+  .mini-prompts li::before { content: ''; position: absolute; left: 1pt; top: 0.55em; width: 4pt; height: 4pt; border-radius: 50%; background: #4a5568; }
   .mtl .mini-prompts, .mtr .mini-prompts { top: 40pt; }
   .mbl .mini-prompts, .mbr .mini-prompts { bottom: 40pt; }
   .mini-circle .mini-hint {
@@ -739,7 +740,7 @@
           margin: 0,
           filename: 'SOAR Blank Template.pdf',
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 3, useCORS: true },
+          html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
           jsPDF: { unit: 'pt', format: [792, 612], orientation: 'landscape' }
         }).from(document.getElementById('blankPage')).save();
       } else if (currentMode === 'leader') {
@@ -747,7 +748,7 @@
           margin: 0,
           filename: 'SOAR Leader Guide.pdf',
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 3, useCORS: true },
+          html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
           jsPDF: { unit: 'pt', format: [792, 612], orientation: 'landscape' }
         }).from(document.getElementById('leaderPage')).save();
       } else {
@@ -758,7 +759,7 @@
           margin: 0,
           filename: filename,
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 3, useCORS: true },
+          html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
           jsPDF: { unit: 'pt', format: [612, 792], orientation: 'portrait' }
         }).from(card).save();
       }
