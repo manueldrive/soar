@@ -469,8 +469,8 @@
   .brand-row { display: flex; align-items: center; gap: 30pt; margin-bottom: 16pt; }
   .brand-logo { height: 64pt; width: auto; display: block; }
   .brand-row .header { flex: 1; grid-template-columns: 1fr; gap: 14pt; margin-bottom: 0; }
-  .mini-brand { display: flex; align-items: center; gap: 22pt; margin-bottom: 12pt; }
-  .mini-brand .brand-logo { height: 44pt; }
+  .mini-brand { display: flex; align-items: center; gap: 22pt; margin-bottom: 8pt; }
+  .mini-brand .brand-logo { height: 36pt; }
   .mini-brand .mini-header { flex: 1; grid-template-columns: 1fr; gap: 12pt; margin-bottom: 0; }
   .brand-row .field > span:first-child { width: 74pt; flex: none; text-align: right; }
   .mini-brand .mini-field > span:first-child { width: 58pt; flex: none; text-align: right; }
@@ -533,6 +533,14 @@
   .exporting .answer:not(.has-text):before { content: none; }
   .exporting .field input::placeholder { color: transparent; }
   .exporting .notes:focus, .exporting .answer:focus { box-shadow: none; }
+
+  /* Passage/Name lines sit on the baseline of their labels */
+  .mini-field { align-items: flex-end; }
+  .mini-field > span:first-child { line-height: 1; }
+  .mini-line { margin-bottom: 1.5pt; }
+  .field { align-items: flex-end; }
+  .field > span:first-child { line-height: 1; padding-bottom: 2pt; }
+  .field input { line-height: 1; padding-bottom: 0; }
 
   @media print {
     html, body { background: #ffffff; }
