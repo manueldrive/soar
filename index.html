@@ -528,11 +528,22 @@
 
   .mini-circle .mini-hint.god-hint { padding-top: 12pt; }
 
+  /* ---------- Print / PDF export cleanup ---------- */
+  .exporting .notes:not(.has-text):before,
+  .exporting .answer:not(.has-text):before { content: none; }
+  .exporting .field input::placeholder { color: transparent; }
+  .exporting .notes:focus, .exporting .answer:focus { box-shadow: none; }
+
   @media print {
+    html, body { background: #ffffff; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .toolbar { display: none; }
     .stage { padding: 0; }
     .card, .mini-page { box-shadow: none; }
-    body { background: #ffffff; }
+    .notes:not(.has-text):before, .answer:not(.has-text):before { content: none; }
+    .field input::placeholder { color: transparent; }
+    .notes:focus, .answer:focus { box-shadow: none; }
+    .notes, .answer { overflow: visible; }
   }
 </style>
 </head>
@@ -733,37 +744,52 @@
     tabLeader.addEventListener('click', function () { setMode('leader'); });
     setMode('blank');
 
-    // ---------- download ----------
+    // ---------- download (print-optimized PDF) ----------
+    // Lossless PNG at ~300 dpi, fonts fully loaded, editing hints hidden.
+    let exporting = false;
+    function exportPDF(el, filename, landscape) {
+      if (exporting) return;
+      exporting = true;
+      const btn = document.getElementById('downloadBtn');
+      btn.style.opacity = '0.6';
+      (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
+        document.body.classList.add('exporting');
+        el.querySelectorAll('input[placeholder]').forEach(function (i) { i.dataset.ph = i.placeholder; i.placeholder = ''; });
+        return html2pdf().set({
+          margin: 0,
+          filename: filename,
+          image: { type: 'png' },
+          html2canvas: { scale: 4.2, useCORS: true, scrollX: 0, scrollY: 0, backgroundColor: '#ffffff' },
+          jsPDF: { unit: 'pt', format: landscape ? [792, 612] : [612, 792], orientation: landscape ? 'landscape' : 'portrait', compress: true }
+        }).from(el).save();
+      }).finally(function () {
+        document.body.classList.remove('exporting');
+        el.querySelectorAll('input[data-ph]').forEach(function (i) { i.placeholder = i.dataset.ph; delete i.dataset.ph; });
+        btn.style.opacity = '';
+        exporting = false;
+      });
+    }
+
     document.getElementById('downloadBtn').addEventListener('click', function () {
       if (currentMode === 'blank') {
-        html2pdf().set({
-          margin: 0,
-          filename: 'SOAR Blank Template.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
-          jsPDF: { unit: 'pt', format: [792, 612], orientation: 'landscape' }
-        }).from(document.getElementById('blankPage')).save();
+        exportPDF(document.getElementById('blankPage'), 'SOAR Blank Template.pdf', true);
       } else if (currentMode === 'leader') {
-        html2pdf().set({
-          margin: 0,
-          filename: 'SOAR Leader Guide.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
-          jsPDF: { unit: 'pt', format: [792, 612], orientation: 'landscape' }
-        }).from(document.getElementById('leaderPage')).save();
+        exportPDF(document.getElementById('leaderPage'), 'SOAR Leader Guide.pdf', true);
       } else {
         const card = document.getElementById('card');
         const passage = card.querySelector('.field input').value.trim();
-        const filename = (passage ? 'SOAR - ' + passage : 'SOAR Card') + '.pdf';
-        html2pdf().set({
-          margin: 0,
-          filename: filename,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 3, useCORS: true, scrollX: 0, scrollY: 0 },
-          jsPDF: { unit: 'pt', format: [612, 792], orientation: 'portrait' }
-        }).from(card).save();
+        exportPDF(card, (passage ? 'SOAR - ' + passage : 'SOAR Card') + '.pdf', false);
       }
     });
+
+    // ---------- browser print (Ctrl/Cmd+P): right page orientation, no margins ----------
+    const pageStyle = document.createElement('style');
+    document.head.appendChild(pageStyle);
+    function updatePageStyle() {
+      pageStyle.textContent = '@page { size: letter ' + (currentMode === 'edit' ? 'portrait' : 'landscape') + '; margin: 0; }';
+    }
+    [tabBlank, tabLeader, tabEdit].forEach(function (t) { t.addEventListener('click', updatePageStyle); });
+    updatePageStyle();
   </script>
 </body>
 </html>
