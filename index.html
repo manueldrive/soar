@@ -163,8 +163,7 @@
     border: 3pt solid #111111;
     border-radius: 16pt;
   }
-  .tl, .tr { background: #E7F1FC; }
-  .bl, .br { background: #EEE8FA; }
+  .tl, .tr, .bl, .br { background: #ffffff; }
 
   .caption {
     position: absolute;
@@ -337,8 +336,7 @@
     gap: 8pt;
   }
   .mini-box { position: relative; border: 3pt solid #111111; border-radius: 14pt; }
-  .mtl, .mtr { background: #E7F1FC; }
-  .mbl, .mbr { background: #EEE8FA; }
+  .mtl, .mtr, .mbl, .mbr { background: #ffffff; }
 
   .mini-caption {
     position: absolute;
@@ -458,8 +456,7 @@
   }
   .tblock .tword { font-weight: 800; font-size: 12pt; color: #111111; line-height: 1.1; }
   .tblock .kw { font-size: 9.5pt; color: #4a5568; line-height: 1.2; margin-top: 1pt; }
-  .tblock.blue .big { color: #2f6fd6; }
-  .tblock.purple .big { color: #8551c9; }
+  .tblock .big { color: #111111; }
   .mini-box .tblock { top: 7pt; gap: 4pt; }
   .mini-box .tblock.left { left: 9pt; }
   .mini-box .tblock.bottom { top: auto; bottom: 7pt; }
@@ -573,7 +570,7 @@
       </div>
       <div class="grid">
         <div class="box tl">
-          <div class="tblock left blue"><span class="big">S</span><div><div class="tword">Scripture</div><div class="kw">author &middot; purpose</div></div></div>
+          <div class="tblock left blue"><span class="big">S</span><div><div class="tword">Scripture</div><div class="kw">author &middot; time &middot; purpose</div></div></div>
           <div class="prompts"><ul>
             <li>What passage are we reading, and what happens right before it?</li>
             <li>Who wrote this book, and when?</li>
@@ -581,7 +578,7 @@
           </ul></div>
         </div>
         <div class="box tr">
-          <div class="tblock right blue"><span class="big">O</span><div><div class="tword">Observation</div><div class="kw">words &middot; links</div></div></div>
+          <div class="tblock right blue"><span class="big">O</span><div><div class="tword">Observation</div><div class="kw">words &middot; concepts &middot; hyperlinks</div></div></div>
           <div class="prompts"><ul>
             <li>What 1&ndash;2 words or phrases need clarity?</li>
             <li>What repeats, surprises you, or is confusing?</li>
@@ -638,8 +635,8 @@
           '<div class="mini-field"><span>NAME:</span><span class="mini-line"></span></div>' +
         '</div>' +
         '<div class="mini-grid">' +
-          '<div class="mini-box mtl">' + titleHTML('left', 'blue', 'S', 'Scripture', 'author &middot; purpose') + '</div>' +
-          '<div class="mini-box mtr">' + titleHTML('right', 'blue', 'O', 'Observation', 'words &middot; links') + '</div>' +
+          '<div class="mini-box mtl">' + titleHTML('left', 'blue', 'S', 'Scripture', 'author &middot; time &middot; purpose') + '</div>' +
+          '<div class="mini-box mtr">' + titleHTML('right', 'blue', 'O', 'Observation', 'words &middot; concepts &middot; hyperlinks') + '</div>' +
           '<div class="mini-box mbl">' + titleHTML('left bottom', 'purple', 'A', 'Application', 'thoughts &middot; actions') + '</div>' +
           '<div class="mini-box mbr">' + titleHTML('right bottom', 'purple', 'R', 'Reflection', 'prayers &middot; questions') + '</div>' +
           '<div class="mini-circle">' +
