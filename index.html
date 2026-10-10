@@ -517,6 +517,14 @@
     padding: 0 6pt;
   }
 
+  /* ---------- Digital template ---------- */
+  #card .tl .notes, #card .tr .notes { top: 58pt; bottom: 10pt; }
+  #card .bl .notes, #card .br .notes { top: 10pt; bottom: 58pt; }
+  #card .tl .circle-exclude, #card .tr .circle-exclude { margin-top: 122pt; }
+  .digital-circle { justify-content: flex-start; padding: 40pt 22pt 0; gap: 4pt; }
+  .digital-circle .answer { min-height: 52pt; display: flex; align-items: center; justify-content: center; }
+  .digital-circle .therefore { margin-top: 0; }
+
   @media print {
     .toolbar { display: none; }
     .stage { padding: 0; }
@@ -528,9 +536,9 @@
 <body>
   <div class="toolbar">
     <div class="tabs">
-      <button id="tabBlank" class="active">Blank Template (2-up)</button>
-      <button id="tabEdit">Edit &amp; Fill</button>
+      <button id="tabBlank" class="active">Blank Template</button>
       <button id="tabLeader">Leader Guide</button>
+      <button id="tabEdit">Digital Template</button>
     </div>
     <div class="divider-v" id="formatDivider" style="display:none;"></div>
     <div class="format-toolbar" id="formatToolbar" style="display:none;">
@@ -559,58 +567,36 @@
         <div class="header">
           <div class="field">
             <span>PASSAGE:</span>
-            <input type="text" placeholder="e.g. Mark 6:30&ndash;56" value="Mark 6:30&#8211;56">
+            <input type="text" placeholder="e.g. Mark 4:35&ndash;41">
           </div>
           <div class="field">
             <span>NAME:</span>
-            <input type="text" placeholder="Your name" value="Manny">
+            <input type="text" placeholder="Your name">
           </div>
         </div>
       </div>
       <div class="grid">
         <div class="box tl">
-          <div class="caption s">
-            <span class="name">Scripture:</span>
-            <div class="ind"><i class="fa-solid fa-user"></i> <span>Author</span></div>
-            <span class="sep">&bull;</span>
-            <div class="ind"><i class="fa-solid fa-bullseye"></i> <span>Purpose</span></div>
-          </div>
-          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div>The disciples' feelings till now!<br><br>&bull; awe &amp; wonder<br>&bull; fear &amp; confusion<br>&bull; rejection &amp; danger<br>&bull; calling &amp; identity</div>
+          <div class="tblock left"><span class="big">S</span><div><div class="tword">Scripture</div><div class="kw">author &middot; time &middot; purpose</div></div></div>
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div></div>
         </div>
         <div class="box tr">
-          <div class="caption o">
-            <span class="name">Observation:</span>
-            <div class="ind"><i class="fa-solid fa-highlighter"></i> <span>Words</span></div>
-            <span class="sep">&bull;</span>
-            <div class="ind"><i class="fa-solid fa-link"></i> <span>Links</span></div>
-          </div>
-          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div>5,000 people (20,000+)<br>5 loaves, 2 fish<br><br><i class="fa-solid fa-link" style="font-size:12pt;"></i>&nbsp;Exodus &ndash; Manna in the wilderness<br><i class="fa-solid fa-link" style="font-size:12pt;"></i>&nbsp;John &ndash; I am the bread of life</div>
+          <div class="tblock right"><span class="big">O</span><div><div class="tword">Observation</div><div class="kw">words &middot; concepts &middot; hyperlinks</div></div></div>
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div></div>
         </div>
         <div class="box bl">
-          <div class="caption a">
-            <span class="name">Application:</span>
-            <div class="ind"><i class="fa-solid fa-comment-dots"></i> <span>Thoughts</span></div>
-            <span class="sep">&bull;</span>
-            <div class="ind"><i class="fa-solid fa-bolt"></i> <span>Actions</span></div>
-          </div>
-          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div>I can teach others to "eat"/ immerse in biblical literacy<br><br>And serve/donate at food banks, low income areas</div>
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div></div>
+          <div class="tblock left bottom"><span class="big">A</span><div><div class="tword">Application</div><div class="kw">thoughts &middot; words &middot; actions</div></div></div>
         </div>
         <div class="box br">
-          <div class="caption r">
-            <span class="name">Reflection:</span>
-            <div class="ind"><i class="fa-solid fa-hands-praying"></i> <span>Prayers</span></div>
-            <span class="sep">&bull;</span>
-            <div class="ind"><i class="fa-solid fa-circle-question"></i> <span>Questions</span></div>
-          </div>
-          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div>I need to reflect further on miracles. Are they signs of who he is, should we pursue them?</div>
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div></div>
+          <div class="tblock right bottom"><span class="big">R</span><div><div class="tword">Reflection</div><div class="kw">prayers &middot; questions &middot; insights</div></div></div>
         </div>
-        <div class="center-circle">
-          <div class="content">
-            <div class="label">GOD IS&hellip;</div>
-            <div class="answer" contenteditable="true" data-placeholder="type here">compassionate provider</div>
-            <div class="label therefore">THEREFORE, I&hellip;</div>
-            <div class="answer" contenteditable="true" data-placeholder="type here">trust Him &amp; feed others</div>
-          </div>
+        <div class="center-circle digital-circle">
+          <div class="label">GOD IS&hellip;</div>
+          <div class="answer" contenteditable="true" data-placeholder="type here"></div>
+          <div class="label therefore">THEREFORE, I&hellip;</div>
+          <div class="answer" contenteditable="true" data-placeholder="type here"></div>
         </div>
       </div>
     </div>
