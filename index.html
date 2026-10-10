@@ -228,23 +228,23 @@
   }
 
   .circle-exclude {
-    width: 105pt;
-    height: 105pt;
+    width: 120pt;
+    height: 120pt;
     shape-margin: 6pt;
     pointer-events: none;
   }
-  .tl .circle-exclude { float: right; margin-top: 184pt; shape-outside: circle(105pt at 100% 100%); }
-  .tr .circle-exclude { float: left; margin-top: 184pt; shape-outside: circle(105pt at 0% 100%); }
-  .bl .circle-exclude { float: right; shape-outside: circle(105pt at 100% 0%); }
-  .br .circle-exclude { float: left; shape-outside: circle(105pt at 0% 0%); }
+  .tl .circle-exclude { float: right; margin-top: 169pt; shape-outside: circle(120pt at 100% 100%); }
+  .tr .circle-exclude { float: left; margin-top: 169pt; shape-outside: circle(120pt at 0% 100%); }
+  .bl .circle-exclude { float: right; shape-outside: circle(120pt at 100% 0%); }
+  .br .circle-exclude { float: left; shape-outside: circle(120pt at 0% 0%); }
 
   .center-circle {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 210pt;
-    height: 210pt;
+    width: 240pt;
+    height: 240pt;
     border-radius: 50%;
     background: #ffffff;
     border: 3pt solid #111111;
@@ -376,8 +376,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 152pt;
-    height: 152pt;
+    width: 184pt;
+    height: 184pt;
     border-radius: 50%;
     background: #ffffff;
     border: 3pt solid #111111;
@@ -387,12 +387,13 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 4pt;
-    padding: 8pt;
+    gap: 0;
+    padding: 0 14pt 14pt;
   }
   .mini-label { font-weight: 900; font-size: 12pt; color: #111111; }
-  .mini-therefore { margin-top: 5pt; }
-  .mini-write-space { width: 100%; height: 13pt; }
+  .mini-therefore { margin-top: 8pt; }
+  .mini-write-space { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .mini-write-line { width: 132pt; height: 20pt; border-bottom: 1pt solid #a9b0b9; }
 
   @media print {
     .toolbar { display: none; }
@@ -515,9 +516,9 @@
           '<div class="mini-box mbr">' + captionHTML('mini-', 'mr', 'Reflection:', 'fa-hands-praying', 'Prayers', 'fa-circle-question', 'Questions') + '</div>' +
           '<div class="mini-circle">' +
             '<div class="mini-label">GOD IS&hellip;</div>' +
-            '<div class="mini-write-space"></div>' +
+            '<div class="mini-write-space"><div class="mini-write-line"></div><div class="mini-write-line"></div></div>' +
             '<div class="mini-label mini-therefore">THEREFORE, I&hellip;</div>' +
-            '<div class="mini-write-space"></div>' +
+            '<div class="mini-write-space"><div class="mini-write-line"></div><div class="mini-write-line"></div></div>' +
           '</div>' +
         '</div>';
       return el;
