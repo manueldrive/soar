@@ -395,6 +395,51 @@
   .mini-write-space { display: flex; flex-direction: column; align-items: center; width: 100%; }
   .mini-write-line { width: 132pt; height: 20pt; }
 
+  /* ---------- Leader guide ---------- */
+  .week-note {
+    text-align: center;
+    font-size: 9pt;
+    color: #4a5568;
+    margin: -8pt 0 12pt;
+  }
+  .week-note b { color: #16345c; }
+  .field .line { flex: 1; border-bottom: 1.3pt solid #111111; height: 1pt; }
+  .day-tag {
+    font-size: 7pt;
+    font-weight: 800;
+    letter-spacing: 0.6pt;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #16345c;
+    border-radius: 5pt;
+    padding: 2pt 5pt;
+    white-space: nowrap;
+  }
+  .prompts {
+    position: absolute;
+    left: 16pt;
+    right: 16pt;
+    font-size: 9.5pt;
+    line-height: 1.35;
+    color: #5b6878;
+  }
+  .prompts ol { margin: 0; padding-left: 14pt; }
+  .prompts li { margin-bottom: 4pt; }
+  .tl .prompts, .tr .prompts { top: 32pt; }
+  .bl .prompts, .br .prompts { bottom: 32pt; }
+  .tr .prompts, .br .prompts { left: auto; width: 200pt; }
+  .tl .prompts, .bl .prompts { right: auto; width: 200pt; }
+  .leader-circle { justify-content: flex-start; padding: 30pt 26pt 0; gap: 3pt; }
+  .leader-circle .circle-prompt {
+    font-size: 8.5pt;
+    font-style: italic;
+    line-height: 1.3;
+    color: #5b6878;
+    max-width: 170pt;
+  }
+  .leader-circle .label { margin-top: 2pt; }
+  .leader-circle .write-gap { height: 40pt; }
+
   @media print {
     .toolbar { display: none; }
     .stage { padding: 0; }
@@ -408,6 +453,7 @@
     <div class="tabs">
       <button id="tabBlank" class="active">Blank Template (2-up)</button>
       <button id="tabEdit">Edit &amp; Fill</button>
+      <button id="tabLeader">Leader Guide</button>
     </div>
     <div class="divider-v" id="formatDivider" style="display:none;"></div>
     <div class="format-toolbar" id="formatToolbar" style="display:none;">
@@ -490,6 +536,81 @@
     </div>
   </div>
 
+  <!-- ============ LEADER GUIDE STAGE ============ -->
+  <div class="stage" id="leaderStage">
+    <div class="card" id="leaderCard">
+      <div class="header">
+        <div class="field"><span>PASSAGE:</span><span class="line"></span></div>
+        <div class="field"><span>NAME:</span><span class="line"></span></div>
+      </div>
+      <div class="week-note"><b>Leader prep:</b> Read the whole passage every day this week, then spend that day&rsquo;s time on one section.</div>
+      <div class="grid">
+        <div class="box tl">
+          <div class="caption s">
+            <span class="day-tag">Day 1</span>
+            <span class="name">Scripture:</span>
+            <div class="ind"><i class="fa-solid fa-user"></i> <span>Author</span></div>
+            <span class="sep">&bull;</span>
+            <div class="ind"><i class="fa-solid fa-bullseye"></i> <span>Purpose</span></div>
+          </div>
+          <div class="prompts"><ol>
+            <li>What passage are we reading, and what happens right before it?</li>
+            <li>Who wrote this book, and when?</li>
+            <li>What was the purpose of this book? Who was it written to?</li>
+          </ol></div>
+        </div>
+        <div class="box tr">
+          <div class="caption o">
+            <span class="day-tag">Days 2&ndash;3</span>
+            <span class="name">Observation:</span>
+            <div class="ind"><i class="fa-solid fa-highlighter"></i> <span>Words</span></div>
+            <span class="sep">&bull;</span>
+            <div class="ind"><i class="fa-solid fa-link"></i> <span>Links</span></div>
+          </div>
+          <div class="prompts"><ol>
+            <li>What 1&ndash;2 words or phrases need clarity?</li>
+            <li>What repeats, surprises you, or is confusing?</li>
+            <li>What is one cross-reference to another part of the Bible?</li>
+          </ol></div>
+        </div>
+        <div class="box bl">
+          <div class="prompts"><ol>
+            <li>How is this truth different from what the world says?</li>
+            <li>How can you live this out this week?</li>
+          </ol></div>
+          <div class="caption a">
+            <span class="day-tag">Day 4</span>
+            <span class="name">Application:</span>
+            <div class="ind"><i class="fa-solid fa-comment-dots"></i> <span>Thoughts</span></div>
+            <span class="sep">&bull;</span>
+            <div class="ind"><i class="fa-solid fa-bolt"></i> <span>Actions</span></div>
+          </div>
+        </div>
+        <div class="box br">
+          <div class="prompts"><ol>
+            <li>What do you want to pray about?</li>
+            <li>What questions do you still have?</li>
+          </ol></div>
+          <div class="caption r">
+            <span class="day-tag">Day 5</span>
+            <span class="name">Reflection:</span>
+            <div class="ind"><i class="fa-solid fa-hands-praying"></i> <span>Prayers</span></div>
+            <span class="sep">&bull;</span>
+            <div class="ind"><i class="fa-solid fa-circle-question"></i> <span>Questions</span></div>
+          </div>
+        </div>
+        <div class="center-circle leader-circle">
+          <span class="day-tag">Day 6</span>
+          <div class="label">GOD IS&hellip;</div>
+          <div class="circle-prompt">What does this passage show about who God is?</div>
+          <div class="write-gap"></div>
+          <div class="label">THEREFORE, I&hellip;</div>
+          <div class="circle-prompt">Because God is like this, how should I respond?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ---------- shared caption builder ----------
     function captionHTML(prefix, letterClass, name, icon1, word1, icon2, word2) {
@@ -546,6 +667,8 @@
     // ---------- mode switching ----------
     const tabBlank = document.getElementById('tabBlank');
     const tabEdit = document.getElementById('tabEdit');
+    const tabLeader = document.getElementById('tabLeader');
+    const leaderStage = document.getElementById('leaderStage');
     const blankStage = document.getElementById('blankStage');
     const editStage = document.getElementById('editStage');
     const formatToolbar = document.getElementById('formatToolbar');
@@ -557,16 +680,21 @@
       currentMode = mode;
       tabBlank.classList.toggle('active', mode === 'blank');
       tabEdit.classList.toggle('active', mode === 'edit');
+      tabLeader.classList.toggle('active', mode === 'leader');
+      leaderStage.classList.toggle('visible', mode === 'leader');
       blankStage.classList.toggle('visible', mode === 'blank');
       editStage.classList.toggle('visible', mode === 'edit');
       formatToolbar.style.display = mode === 'edit' ? 'flex' : 'none';
       formatDivider.style.display = mode === 'edit' ? 'block' : 'none';
       hintText.textContent = mode === 'blank'
         ? 'Two ready-to-print blank cards — click Download PDF to save a landscape page for your printer.'
+        : mode === 'leader'
+        ? 'A one-page leader guide with daily prompts for the week — click Download PDF to print it.'
         : 'Click any box to type. Select text and use Bold / Bullets above to format. Content saves nowhere else, so download when you’re done.';
     }
     tabBlank.addEventListener('click', function () { setMode('blank'); });
     tabEdit.addEventListener('click', function () { setMode('edit'); });
+    tabLeader.addEventListener('click', function () { setMode('leader'); });
     setMode('blank');
 
     // ---------- download ----------
@@ -579,6 +707,14 @@
           html2canvas: { scale: 3, useCORS: true },
           jsPDF: { unit: 'pt', format: [792, 612], orientation: 'landscape' }
         }).from(document.getElementById('blankPage')).save();
+      } else if (currentMode === 'leader') {
+        html2pdf().set({
+          margin: 0,
+          filename: 'SOAR Leader Guide.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 3, useCORS: true },
+          jsPDF: { unit: 'pt', format: [612, 792], orientation: 'portrait' }
+        }).from(document.getElementById('leaderCard')).save();
       } else {
         const card = document.getElementById('card');
         const passage = card.querySelector('.field input').value.trim();
