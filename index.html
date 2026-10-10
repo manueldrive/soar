@@ -489,6 +489,34 @@
   .field > span:first-child { font-size: 11pt; }
   .mini-field > span:first-child { font-size: 9pt; }
 
+  /* ---------- Leader guide 2-up prompts ---------- */
+  .mini-prompts {
+    position: absolute;
+    left: 8pt;
+    right: 9pt;
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.25;
+    color: #4a5568;
+  }
+  .mini-prompts ul { margin: 0; padding-left: 12pt; }
+  .mini-prompts li { margin-bottom: 4pt; }
+  .mtl .mini-prompts, .mtr .mini-prompts { top: 40pt; }
+  .mbl .mini-prompts, .mbr .mini-prompts { bottom: 40pt; }
+  .mini-circle .mini-hint {
+    height: 40pt;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-size: 8.5pt;
+    font-style: italic;
+    line-height: 1.25;
+    color: #4a5568;
+    padding: 0 6pt;
+  }
+
   @media print {
     .toolbar { display: none; }
     .stage { padding: 0; }
@@ -588,55 +616,12 @@
     </div>
   </div>
 
-  <!-- ============ LEADER GUIDE STAGE ============ -->
+  <!-- ============ LEADER GUIDE 2-UP STAGE ============ -->
   <div class="stage" id="leaderStage">
-    <div class="card" id="leaderCard">
-      <div class="brand-row">
-        <img class="brand-logo" src="ms-hang-logo.png" alt="Middle School Hang">
-        <div class="header">
-          <div class="field"><span>PASSAGE:</span><span class="line"></span></div>
-          <div class="field"><span>NAME:</span><span class="line"></span></div>
-        </div>
-      </div>
-      <div class="grid">
-        <div class="box tl">
-          <div class="tblock left blue"><span class="big">S</span><div><div class="tword">Scripture</div><div class="kw">author &middot; time &middot; purpose</div></div></div>
-          <div class="prompts"><ul>
-            <li>What passage are we reading?</li>
-            <li>Who wrote this book?</li>
-            <li>When was it written?</li>
-            <li>What was the purpose of this book?</li>
-          </ul></div>
-        </div>
-        <div class="box tr">
-          <div class="tblock right blue"><span class="big">O</span><div><div class="tword">Observation</div><div class="kw">words &middot; concepts &middot; hyperlinks</div></div></div>
-          <div class="prompts"><ul>
-            <li>What 1&ndash;2 words or concepts need clarity? Review other translations for help.</li>
-            <li>What is one hyperlink that connects this scripture to another part of the Bible?</li>
-          </ul></div>
-        </div>
-        <div class="box bl">
-          <div class="prompts"><ul>
-            <li>How is this different from what the world tells you?</li>
-            <li>What&rsquo;s one thing you&rsquo;ll think, say, or do differently this week?</li>
-          </ul></div>
-          <div class="tblock left bottom purple"><span class="big">A</span><div><div class="tword">Application</div><div class="kw">thoughts &middot; words &middot; actions</div></div></div>
-        </div>
-        <div class="box br">
-          <div class="prompts"><ul>
-            <li>How can you ask God to help you live this out?</li>
-            <li>What questions do you still have?</li>
-          </ul></div>
-          <div class="tblock right bottom purple"><span class="big">R</span><div><div class="tword">Reflection</div><div class="kw">prayers &middot; questions &middot; insights</div></div></div>
-        </div>
-        <div class="center-circle leader-circle">
-          <div class="label">GOD IS&hellip;</div>
-          <div class="circle-prompt">Look at what God says and does here. Who does <b>this</b> passage show He is?</div>
-          <div class="write-gap"></div>
-          <div class="label">THEREFORE, I&hellip;</div>
-          <div class="circle-prompt">What is He inviting me into? How will I respond?</div>
-        </div>
-      </div>
+    <div class="mini-page" id="leaderPage">
+      <div class="mini-card leader-slot"></div>
+      <div class="mini-divider"></div>
+      <div class="mini-card leader-slot"></div>
     </div>
   </div>
 
@@ -679,6 +664,32 @@
         '</div>';
       return el;
     }
+
+    function promptList(items) {
+      return '<div class="mini-prompts"><ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+    }
+
+    function buildLeaderCard() {
+      const el = buildMiniCard();
+      el.querySelector('.mtl').insertAdjacentHTML('beforeend', promptList([
+        'What passage are we reading?', 'Who wrote this book?', 'When was it written?', 'What was the purpose of this book?']));
+      el.querySelector('.mtr').insertAdjacentHTML('beforeend', promptList([
+        'What 1&ndash;2 words or concepts need clarity? Review other translations for help.',
+        'What is one hyperlink that connects this scripture to another part of the Bible?']));
+      el.querySelector('.mbl').insertAdjacentHTML('afterbegin', promptList([
+        'How is this different from what the world tells you?',
+        'What&rsquo;s one thing you&rsquo;ll think, say, or do differently this week?']));
+      el.querySelector('.mbr').insertAdjacentHTML('afterbegin', promptList([
+        'How can you ask God to help you live this out?', 'What questions do you still have?']));
+      const spaces = el.querySelectorAll('.mini-circle .mini-write-space');
+      spaces[0].outerHTML = '<div class="mini-hint"><span>Look at what God says and does here. Who does <b>this</b> passage show He is?</span></div>';
+      spaces[1].outerHTML = '<div class="mini-hint"><span>What is He inviting me into? How will I respond?</span></div>';
+      return el;
+    }
+
+    document.querySelectorAll('#leaderPage .leader-slot').forEach(function (placeholder) {
+      placeholder.replaceWith(buildLeaderCard());
+    });
 
     document.querySelectorAll('#blankPage .mini-card').forEach(function (placeholder) {
       placeholder.replaceWith(buildMiniCard());
@@ -724,7 +735,7 @@
       hintText.textContent = mode === 'blank'
         ? 'Two ready-to-print blank cards — click Download PDF to save a landscape page for your printer.'
         : mode === 'leader'
-        ? 'A one-page leader guide with prompts for each section — click Download PDF to print it.'
+        ? 'Two leader-guide half sheets with prompts for each section — click Download PDF to print a landscape page.'
         : 'Click any box to type. Select text and use Bold / Bullets above to format. Content saves nowhere else, so download when you’re done.';
     }
     tabBlank.addEventListener('click', function () { setMode('blank'); });
@@ -748,8 +759,8 @@
           filename: 'SOAR Leader Guide.pdf',
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: { scale: 3, useCORS: true },
-          jsPDF: { unit: 'pt', format: [612, 792], orientation: 'portrait' }
-        }).from(document.getElementById('leaderCard')).save();
+          jsPDF: { unit: 'pt', format: [792, 612], orientation: 'landscape' }
+        }).from(document.getElementById('leaderPage')).save();
       } else {
         const card = document.getElementById('card');
         const passage = card.querySelector('.field input').value.trim();
