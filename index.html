@@ -465,6 +465,14 @@
   .mini-box .tblock .tword { font-size: 9.5pt; }
   .mini-box .tblock .kw { font-size: 8pt; }
 
+  /* ---------- Brand row (logo + passage/name) ---------- */
+  .brand-row { display: flex; align-items: center; gap: 18pt; margin-bottom: 16pt; }
+  .brand-logo { height: 64pt; width: auto; display: block; }
+  .brand-row .header { flex: 1; grid-template-columns: 1fr; gap: 14pt; margin-bottom: 0; }
+  .mini-brand { display: flex; align-items: center; gap: 12pt; margin-bottom: 12pt; }
+  .mini-brand .brand-logo { height: 44pt; }
+  .mini-brand .mini-header { flex: 1; grid-template-columns: 1fr; gap: 12pt; margin-bottom: 0; }
+
   @media print {
     .toolbar { display: none; }
     .stage { padding: 0; }
@@ -502,14 +510,17 @@
   <!-- ============ EDIT & FILL STAGE ============ -->
   <div class="stage" id="editStage">
     <div class="card" id="card">
-      <div class="header">
-        <div class="field">
-          <span>PASSAGE:</span>
-          <input type="text" placeholder="e.g. Mark 6:30&ndash;56" value="Mark 6:30&#8211;56">
-        </div>
-        <div class="field">
-          <span>NAME:</span>
-          <input type="text" placeholder="Your name" value="Manny">
+      <div class="brand-row">
+        <img class="brand-logo" src="ms-hang-logo.png" alt="Middle School Hang">
+        <div class="header">
+          <div class="field">
+            <span>PASSAGE:</span>
+            <input type="text" placeholder="e.g. Mark 6:30&ndash;56" value="Mark 6:30&#8211;56">
+          </div>
+          <div class="field">
+            <span>NAME:</span>
+            <input type="text" placeholder="Your name" value="Manny">
+          </div>
         </div>
       </div>
       <div class="grid">
@@ -564,9 +575,12 @@
   <!-- ============ LEADER GUIDE STAGE ============ -->
   <div class="stage" id="leaderStage">
     <div class="card" id="leaderCard">
-      <div class="header">
-        <div class="field"><span>PASSAGE:</span><span class="line"></span></div>
-        <div class="field"><span>NAME:</span><span class="line"></span></div>
+      <div class="brand-row">
+        <img class="brand-logo" src="ms-hang-logo.png" alt="Middle School Hang">
+        <div class="header">
+          <div class="field"><span>PASSAGE:</span><span class="line"></span></div>
+          <div class="field"><span>NAME:</span><span class="line"></span></div>
+        </div>
       </div>
       <div class="grid">
         <div class="box tl">
@@ -630,10 +644,11 @@
       const el = document.createElement('div');
       el.className = 'mini-card';
       el.innerHTML =
+        '<div class="mini-brand"><img class="brand-logo" src="ms-hang-logo.png" alt="Middle School Hang">' +
         '<div class="mini-header">' +
           '<div class="mini-field"><span>PASSAGE:</span><span class="mini-line"></span></div>' +
           '<div class="mini-field"><span>NAME:</span><span class="mini-line"></span></div>' +
-        '</div>' +
+        '</div></div>' +
         '<div class="mini-grid">' +
           '<div class="mini-box mtl">' + titleHTML('left', 'blue', 'S', 'Scripture', 'author &middot; time &middot; purpose') + '</div>' +
           '<div class="mini-box mtr">' + titleHTML('right', 'blue', 'O', 'Observation', 'words &middot; concepts &middot; hyperlinks') + '</div>' +
