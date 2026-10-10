@@ -391,7 +391,7 @@
   .mini-label { font-weight: 900; font-size: 12pt; color: #111111; }
   .mini-therefore { margin-top: 8pt; }
   .mini-write-space { display: flex; flex-direction: column; align-items: center; width: 100%; }
-  .mini-write-line { width: 132pt; height: 20pt; }
+  .mini-write-line { width: 132pt; height: 23pt; }
 
   /* ---------- Leader guide ---------- */
   .week-note {
@@ -504,17 +504,17 @@
   .mtl .mini-prompts, .mtr .mini-prompts { top: 40pt; }
   .mbl .mini-prompts, .mbr .mini-prompts { bottom: 40pt; }
   .mini-circle .mini-hint {
-    height: 40pt;
+    height: 46pt;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'DM Sans', Arial, sans-serif;
-    font-size: 8.5pt;
+    font-size: 10pt;
     font-style: italic;
-    line-height: 1.25;
+    line-height: 1.2;
     color: #4a5568;
-    padding: 0 6pt;
+    padding: 0 2pt;
   }
 
   /* ---------- Digital template ---------- */
@@ -668,7 +668,7 @@
       el.querySelector('.mbr').insertAdjacentHTML('afterbegin', promptList([
         'How can you ask God to help you live this out?', 'What questions do you still have?']));
       const spaces = el.querySelectorAll('.mini-circle .mini-write-space');
-      spaces[0].outerHTML = '<div class="mini-hint"><span>Look at what God says and does here. Who does <b>this</b> passage show He is?</span></div>';
+      spaces[0].outerHTML = '<div class="mini-hint"><span>Where do you see God in <b>this</b> passage? What does it show about who He is?</span></div>';
       spaces[1].outerHTML = '<div class="mini-hint"><span>What is He inviting me into? How will I respond?</span></div>';
       return el;
     }
