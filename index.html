@@ -682,7 +682,7 @@
     function buildLeaderCard() {
       const el = buildMiniCard();
       el.querySelector('.mtl').insertAdjacentHTML('beforeend', promptList([
-        'Find who wrote this book and when', 'Identify the author&rsquo;s purpose', 'Note any other helpful context (optional)'], 'Gather background to help bring clarity:'));
+        'Author', 'Time', 'Purpose'], 'Gather background to help bring clarity:'));
       el.querySelector('.mtr').insertAdjacentHTML('beforeend', promptList([
         'Define a confusing term',
         'Explain a difficult concept',
