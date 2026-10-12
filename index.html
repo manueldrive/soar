@@ -547,12 +547,13 @@
 
   /* ---------- Guided SOAR wordmark ---------- */
   .gs-mark { display: flex; flex-direction: row; align-items: center; gap: 4pt; line-height: 1; width: 128pt; flex: none; }
-  .gs-mark .gs-main { font-family: var(--display), sans-serif; font-weight: 600; font-size: 44pt; letter-spacing: 1pt; color: #111; line-height: 0.8; }
-  .gs-mark .gs-subwrap { position: relative; width: 8pt; height: 30pt; flex: none; margin-top: 5pt; }
+  .gs-mark .gs-main { font-family: var(--display), sans-serif; font-weight: 600; font-size: 44pt; letter-spacing: 1pt; color: #111; line-height: 0.8; display: flex; align-items: center; }
+  .gs-mark .gs-o { width: 0.94em; height: 0.94em; flex: none; margin: 0 -0.01em; position: relative; top: 0.055em; }
+  .gs-mark .gs-subwrap { position: relative; width: 8pt; height: 30pt; flex: none; }
   .gs-mark .gs-sub { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); white-space: nowrap; font-family: var(--display), sans-serif; font-weight: 600; font-size: 7.6pt; letter-spacing: 0.9pt; text-transform: uppercase; color: #4a5568; line-height: 1; }
   #card .gs-mark { width: auto; }
   #card .gs-mark .gs-main { font-size: 62pt; }
-  #card .gs-mark .gs-subwrap { width: 11pt; height: 42pt; margin-top: 7pt; }
+  #card .gs-mark .gs-subwrap { width: 11pt; height: 42pt; }
   #card .gs-mark .gs-sub { font-size: 10.7pt; letter-spacing: 1.3pt; }
 
   @media print {
@@ -598,7 +599,7 @@
   <div class="stage" id="editStage">
     <div class="card" id="card">
       <div class="brand-row">
-        <div class="gs-mark" aria-label="Guided SOAR"><div class="gs-main">SOAR</div><div class="gs-subwrap"><div class="gs-sub">Guided</div></div></div>
+        <div class="gs-mark" aria-label="Guided SOAR"><div class="gs-subwrap"><div class="gs-sub">Guided</div></div><div class="gs-main">S<img class="gs-o" src="soar-o.png" alt="O">AR</div></div>
         <div class="header">
           <div class="field">
             <span>PASSAGE:</span>
@@ -666,7 +667,7 @@
       const el = document.createElement('div');
       el.className = 'mini-card';
       el.innerHTML =
-        '<div class="mini-brand"><div class="gs-mark" aria-label="Guided SOAR"><div class="gs-main">SOAR</div><div class="gs-subwrap"><div class="gs-sub">Guided</div></div></div>' +
+        '<div class="mini-brand"><div class="gs-mark" aria-label="Guided SOAR"><div class="gs-subwrap"><div class="gs-sub">Guided</div></div><div class="gs-main">S<img class="gs-o" src="soar-o.png" alt="O">AR</div></div>' +
         '<div class="mini-header">' +
           '<div class="mini-field"><span>PASSAGE:</span><span class="mini-line"></span></div>' +
           '<div class="mini-field"><span>NAME:</span><span class="mini-line"></span></div>' +
