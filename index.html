@@ -542,6 +542,8 @@
   .field > span:first-child { line-height: 1; padding-bottom: 2pt; }
   .field input { line-height: 1; padding-bottom: 0; }
 
+  .mini-prompts .mini-intro { margin: 0 0 5pt; }
+
   @media print {
     html, body { background: #ffffff; }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -673,8 +675,8 @@
       return el;
     }
 
-    function promptList(items) {
-      return '<div class="mini-prompts"><ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+    function promptList(items, intro) {
+      return '<div class="mini-prompts">' + (intro ? '<p class="mini-intro">' + intro + '</p>' : '') + '<ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
     }
 
     function buildLeaderCard() {
@@ -682,8 +684,10 @@
       el.querySelector('.mtl').insertAdjacentHTML('beforeend', promptList([
         'Who wrote this book and when was it written?', 'What was the author&rsquo;s purpose for this book?', 'What&rsquo;s happening right before and after this particular passage?']));
       el.querySelector('.mtr').insertAdjacentHTML('beforeend', promptList([
-        'What are 1 or 2 words or concepts that need clarity? (Review other translations for help.)',
-        'What is one hyperlink that connects this scripture to another part of the Bible?']));
+        'Define a confusing term',
+        'Explain a difficult concept',
+        'Make a connection to another part of the Bible (hyperlink)'],
+        'Pick 1&ndash;2 of the following to help bring clarity:'));
       el.querySelector('.mbl').insertAdjacentHTML('afterbegin', promptList([
         'Do you believe the central truth?',
         'What lies might keep a person from seeing this truth?',
