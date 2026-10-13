@@ -230,6 +230,10 @@ pages.append(f'''<section class="page ref-page"><div class="inner">
 pages.append('<section class="page ref-page" data-card="leader"></section>')
 pages.append('<section class="page ref-page" data-card="resources"></section>')
 pages += ['<section class="page" data-card="blank"></section>'] * BLANKS
+# reference pages that live at the back of the journal, with the timeline last
+for marker in ("66 Books, One Story", "The Big Story"):
+    i = next(k for k, pg in enumerate(pages) if marker in pg)
+    pages.append(pages.pop(i))
 pages.append('<section class="page back"></section>')
 
 html = f'''<!doctype html>
