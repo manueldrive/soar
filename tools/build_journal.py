@@ -39,25 +39,25 @@ def qr_svg(url):
     return svg.replace('<svg ', '<svg class="qr" preserveAspectRatio="xMidYMid meet" shape-rendering="crispEdges" ', 1)
 
 def mountains_svg():
-    """Sunset-style landscape: the circle sits like a setting sun, half-hidden by hazy ridges
-    that get darker toward the front (inspired by a mountain sunset photo)."""
-    import random
+    """Three faint mountain ranges, each a shade lighter than the cover, behind the circle."""
+    import math, random
     W, H = 396, 612
-    def ridge(seed, base, peaks, rough, step=(4, 9)):
+    def ridge(seed, base, peaks, rough):
         rnd = random.Random(seed)
-        pts, x = [], -10
+        pts = []
+        x = -10
         while x <= W + 10:
             y = base
-            for (px, ph, pw) in peaks:
-                y -= ph * max(0.0, 1 - abs(x - px) / pw) ** 1.3
-            y += rnd.uniform(-rough, rough)
-            pts.append((x, y)); x += rnd.uniform(*step)
+            for (px, ph, pw) in peaks:            # big mountain shapes
+                y -= ph * max(0.0, 1 - abs(x - px) / pw) ** 1.15
+            y += rnd.uniform(-rough, rough)       # rocky texture
+            pts.append((x, y))
+            x += rnd.uniform(5, 11)
         return pts
     layers = [
-        # far ridge: crosses the lower part of the circle and climbs to the right, like the photo
-        ("#1d1e21", ridge(5, 388, [(-30, 14, 160), (150, -4, 120), (330, 26, 200)], 1.3, step=(5, 10))),
-        # near ridge: darkest, low rolling hills in front
-        ("#111214", ridge(9, 478, [(30, 22, 170), (200, 6, 120), (380, 30, 170)], 1.1, step=(5, 10))),
+        ("#34363b", ridge(3, 360, [(40, 70, 110), (150, 40, 90), (300, 95, 120), (380, 50, 80)], 3.5)),
+        ("#393b41", ridge(7, 430, [(90, 75, 120), (215, 45, 100), (340, 60, 110)], 3.0)),
+        ("#3f4147", ridge(11, 500, [(20, 40, 90), (150, 60, 120), (290, 35, 100), (396, 55, 100)], 2.5)),
     ]
     paths = []
     for color, pts in layers:
@@ -148,7 +148,7 @@ JOURNAL_CSS = r"""
   .cover { background: #2e2f33; }
   /* cover reuses the blank card so the circle sits exactly where it does on every template */
   .cover-card .mini-brand, .cover-card .mini-box { visibility: hidden; }
-  .cover-card .mini-circle { background: #ececee; border-color: #ececee; box-shadow: 0 0 40pt 14pt rgba(236,236,238,0.18); }
+  .cover-card .mini-circle { background: #47494f; border-color: #47494f; }
   .cover-card .mini-label { color: #fff; }
   .cover-card .mini-circle { gap: 9pt; padding: 0; }
   .cover-logo { height: 40pt; width: auto; display: block; }
@@ -156,8 +156,7 @@ JOURNAL_CSS = r"""
   .cover-circle { width: 176pt; height: 176pt; border-radius: 50%; background: #47494f; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30pt; }
   .cover-circle .lbl { font-family: var(--display), sans-serif; font-weight: 700; font-size: 15pt; color: #fff; letter-spacing: 0.3pt; }
   .back { background: #2e2f33; }
-  .cover { background: radial-gradient(circle at 50% 54%, #6a6c72 0%, #4a4c52 22%, #2f3034 48%, #1f2023 80%); }
-  .cover-mtn { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+  .cover-mtn { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
   .cover .mini-card { position: relative; z-index: 1; }
 
   /* inside cover */
@@ -325,7 +324,7 @@ html = f'''<!doctype html>
 <script>
 {builders}
 document.querySelectorAll('[data-card="leader"]').forEach(function (p) {{ var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'Leader Guide', 'Questions to guide your prep in each section.'); p.appendChild(c); }});
-document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="guided-soar-logo.png" alt="Guided SOAR">'; p.appendChild(c); }});
+document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="guided-soar-logo-white.png" alt="Guided SOAR">'; p.appendChild(c); }});
 function setRefHead(card, title, sub) {{
   card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
 }}
