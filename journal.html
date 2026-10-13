@@ -798,7 +798,7 @@ function resList(groups) {
 function buildResourceCard() {
   var el = buildMiniCard();
   el.classList.add('rev');
-  setRefHead(el, 'Where to Find Answers', 'Tools in print and online for each section.');
+  setRefHead(el, 'Resources', 'Tools in print and online for each section.');
   el.querySelector('.mtl').insertAdjacentHTML('beforeend', resList([
     ['In print', ['Study Bible book introductions', 'Bible handbook or atlas']],
     ['Online', ['BibleProject overview videos', 'YouVersion Bible App book intros']]]));
