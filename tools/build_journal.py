@@ -157,9 +157,10 @@ def timeline():
 SPLIT = next(i for i, t in enumerate(TIMELINE) if t[0] == "birth")
 def timeline_half(stops, side):
     W, LBL, PAD = 356, 92, 20                       # content width, label width, inset of end stops
+    stops = [t for t in stops if t[0] != "silence"]   # the gap at the gutter says it on its own
     n = len(stops)
-    first = PAD if side == "ot" else 46               # NT starts a little in, so the line visibly arrives
-    last = W - 46 if side == "ot" else W - PAD
+    first = PAD if side == "ot" else 60               # NT starts a little in, so the line visibly arrives
+    last = W - 60 if side == "ot" else W - PAD
     out = []
     for i, (icon, title, books) in enumerate(stops):
         x = first + i * (last - first) / (n - 1)
@@ -170,7 +171,7 @@ def timeline_half(stops, side):
         out.append(f'<span class="hs-ic{small}" style="left:{x:.1f}pt"><img src="assets/timeline/{icon}.png" alt=""></span>'
                    f'<span class="hs-stem {pos}{small}" style="left:{x:.1f}pt"></span>'
                    f'<div class="hs-lbl {pos}" style="left:{left:.1f}pt;text-align:{align}">'
-                   f'<div class="what">{title}</div><div class="books">{books.replace(" &middot; ", "&nbsp;&middot; ")}</div></div>')
+                   f'<div class="what">{title}</div></div>')
     line = 'left:20pt;right:-20pt' if side == "ot" else 'left:-20pt;right:20pt'
     return f'<div class="tlh {side}"><span class="hs-line" style="{line}"></span>{"".join(out)}</div>'
 
@@ -372,7 +373,7 @@ pages.append(f'''<section class="page ref-page spread"><div class="inner">
 </div></section>''')
 pages.append(f'''<section class="page ref-page spread"><div class="inner">
   <div class="ptitle">New Testament</div>
-  <div class="psub">27 books. The King arrives and the story keeps going.</div>
+  <div class="psub">27 books. The King arrives and points to a new creation.</div>
   <div class="case">{shelves(NT, 14)}</div>
   <div class="legend">{legend(NT)}</div>
   {timeline_half(TIMELINE[SPLIT:], "nt")}
