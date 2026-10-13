@@ -645,9 +645,10 @@
   ol.tl { background: transparent; }
 
   /* QR resources page */
-  .qr-list { flex: 1; display: flex; flex-direction: column; gap: 9pt; margin-top: 4pt; }
-  .qr-card { flex: 1; display: flex; align-items: center; gap: 14pt; background: #fff; border: 2.2pt solid #111; border-radius: 10pt; padding: 10pt 14pt 10pt 12pt; }
-  .qr-card .qr { width: 78pt; height: 78pt; flex: none; }
+  .qr-list { flex: 1; display: flex; flex-direction: column; gap: 6pt; margin-top: 6pt; }
+  .qr-card { flex: 1; display: flex; align-items: center; gap: 16pt; padding: 4pt 2pt; border-bottom: 1.2pt solid #b9bdc4; }
+  .qr-card:last-child { border-bottom: none; }
+  .qr-card .qr { width: 74pt; height: 74pt; flex: none; background: #fff; padding: 6pt; border-radius: 6pt; box-sizing: content-box; }
   .qr-t { font-family: var(--display), sans-serif; font-weight: 700; font-size: 13pt; line-height: 1.1; margin-bottom: 4pt; }
   .qr-body p { margin: 0 0 7pt; font-size: 9pt; line-height: 1.4; color: #2d3138; }
   .qr-meta { display: flex; align-items: center; gap: 8pt; flex-wrap: wrap; }
