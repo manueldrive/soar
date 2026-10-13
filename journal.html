@@ -583,6 +583,9 @@
   .cover-card .mini-brand, .cover-card .mini-box { visibility: hidden; }
   .cover-card .mini-circle { background: #47494f; border-color: #47494f; }
   .cover-card .mini-label { color: #fff; }
+  .cover-card .mini-circle { gap: 9pt; padding: 0; }
+  .cover-logo { height: 40pt; width: auto; display: block; margin-left: -6pt; }
+  .cover-word { font-family: var(--display), sans-serif; font-weight: 600; font-size: 11pt; letter-spacing: 5pt; padding-left: 5pt; color: #fff; line-height: 1; }
   .cover-circle { width: 176pt; height: 176pt; border-radius: 50%; background: #47494f; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30pt; }
   .cover-circle .lbl { font-family: var(--display), sans-serif; font-weight: 700; font-size: 15pt; color: #fff; letter-spacing: 0.3pt; }
   .back { background: #2e2f33; }
@@ -716,7 +719,7 @@
 
 
 document.querySelectorAll('[data-card="leader"]').forEach(function (p) { p.appendChild(buildLeaderCard()); });
-document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); p.appendChild(c); });
+document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="guided-soar-logo-white.png" alt="Guided SOAR"><div class="cover-word">JOURNAL</div>'; p.appendChild(c); });
 document.querySelectorAll('[data-card="blank"]').forEach(function (p) { p.appendChild(buildMiniCard()); });
 </script>
 </body>
