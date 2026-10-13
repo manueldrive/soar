@@ -138,6 +138,8 @@ JOURNAL_CSS = r"""
 
   /* reference pages get a light grey page so they stand apart from journaling pages */
   .ref-page { background: #e4e6ea; }
+  .ref-page .win, .ref-page .case { background: #fff; }
+  ol.tl { background: transparent; }
 
   /* resources card */
   .res-title { font-family: var(--display), sans-serif; font-weight: 700; font-size: 16pt; line-height: 1; padding-top: 4pt; }
@@ -183,7 +185,7 @@ pages.append('''<section class="page inside-cover" data-card="inside">
     <div class="owner-note">If found, please return. It&rsquo;s full of good stuff.</div>
   </div>
 </section>''')
-pages.append('''<section class="page"><div class="inner">
+pages.append('''<section class="page ref-page"><div class="inner">
   <div class="ptitle">Why We&rsquo;re Here</div>
   <p class="lede">We create a place where every student can have fun, find community, and <b>learn how to read their Bible for themselves.</b></p>
   <div class="sec-h">Goals</div>
@@ -202,7 +204,7 @@ pages.append('''<section class="page"><div class="inner">
     <li>Students memorize scripture: verses that help them place their identity in Christ, because the knowledge of God and the knowledge of self go hand in hand.</li>
   </ul>
 </div></section>''')
-pages.append(f'''<section class="page"><div class="inner">
+pages.append(f'''<section class="page ref-page"><div class="inner">
   <div class="ptitle">66 Books, One Story</div>
   <div class="psub">The Bible is a library. Here&rsquo;s where every book lives.</div>
   <div class="case"><div class="case-h">Old Testament <small>39 books</small></div>{shelves(OT, 17)}</div>
@@ -210,7 +212,7 @@ pages.append(f'''<section class="page"><div class="inner">
   <div class="case"><div class="case-h">New Testament <small>27 books</small></div>{shelves(NT, 14)}</div>
   <div class="legend">{legend(NT)}</div>
 </div></section>''')
-pages.append(f'''<section class="page"><div class="inner">
+pages.append(f'''<section class="page ref-page"><div class="inner">
   <div class="ptitle">The Big Story</div>
   <div class="psub">Where each book fits in the story of God and His people.</div>
   {timeline()}
