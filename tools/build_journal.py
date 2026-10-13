@@ -99,6 +99,16 @@ JOURNAL_CSS = r"""
   .cover-circle .lbl { font-family: var(--display), sans-serif; font-weight: 700; font-size: 15pt; color: #fff; letter-spacing: 0.3pt; }
   .back { background: #2e2f33; }
 
+  /* inside cover */
+  .inside-cover { background: #e4e6ea; }
+  .ic-circle-wrap { position: relative; flex: 1; }
+  .owner { background: #fff; border: 3pt solid #111; border-radius: 14pt; padding: 20pt 20pt 18pt; height: 205pt; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
+  .owner-h { font-family: var(--display), sans-serif; font-weight: 700; font-size: 14pt; }
+  .owner-line { display: flex; align-items: flex-end; gap: 8pt; }
+  .owner-line span { font-family: var(--display), sans-serif; font-weight: 600; font-size: 9pt; letter-spacing: 0.5pt; line-height: 1; padding-bottom: 2pt; width: 44pt; text-align: right; }
+  .owner-line i { flex: 1; border-bottom: 1.3pt solid #111; }
+  .owner-note { font-size: 8pt; color: #4a5568; }
+
   /* content pages */
   .inner { width: 356pt; height: 572pt; display: flex; flex-direction: column; font-family: 'DM Sans', Arial, sans-serif; color: #111; }
   .ptitle { font-family: var(--display), sans-serif; font-weight: 700; font-size: 20pt; line-height: 1; margin: 2pt 0 2pt; }
@@ -133,6 +143,15 @@ JOURNAL_CSS = r"""
 
 pages = []
 pages.append('<section class="page cover" data-card="cover"></section>')
+pages.append('''<section class="page inside-cover"><div class="inner">
+  <div class="ic-circle-wrap" data-circle></div>
+  <div class="owner">
+    <div class="owner-h">This journal belongs to</div>
+    <div class="owner-line"><span>NAME</span><i></i></div>
+    <div class="owner-line"><span>PHONE</span><i></i></div>
+    <div class="owner-note">If found, please return. It&rsquo;s full of good stuff.</div>
+  </div>
+</div></section>''')
 pages.append(f'''<section class="page"><div class="inner">
   <div class="ptitle">66 Books, One Story</div>
   <div class="psub">The Bible is a library. Here&rsquo;s where every book lives.</div>
@@ -165,6 +184,7 @@ html = f'''<!doctype html>
 {builders}
 document.querySelectorAll('[data-card="leader"]').forEach(function (p) {{ p.appendChild(buildLeaderCard()); }});
 document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="guided-soar-logo-white.png" alt="Guided SOAR">'; p.appendChild(c); }});
+document.querySelectorAll('[data-circle]').forEach(function (w) {{ w.appendChild(buildMiniCard().querySelector('.mini-circle')); }});
 document.querySelectorAll('[data-card="blank"]').forEach(function (p) {{ p.appendChild(buildMiniCard()); }});
 </script>
 </body>
