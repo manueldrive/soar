@@ -772,7 +772,6 @@
 
 document.querySelectorAll('[data-card="leader"]').forEach(function (p) { p.appendChild(buildLeaderCard()); });
 document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="guided-soar-logo-white.png" alt="Guided SOAR">'; p.appendChild(c); });
-document.querySelectorAll('[data-card="inside"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('inside-card'); p.insertBefore(c, p.firstChild); });
 document.querySelectorAll('[data-card="blank"]').forEach(function (p) { p.appendChild(buildMiniCard()); });
 </script>
 </body>
