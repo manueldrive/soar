@@ -546,6 +546,8 @@
   .mtl .mini-prompts, .mtr .mini-prompts { top: 36pt; }
 
   /* ---------- Guided SOAR wordmark ---------- */
+  .gs-logo { height: 32pt; width: auto; display: block; flex: none; }
+  #card .gs-logo { height: 44pt; }
   .gs-mark { display: flex; flex-direction: row; align-items: center; gap: 1.2pt; line-height: 1; width: 104pt; flex: none; }
   .gs-mark .gs-main { font-family: var(--display), sans-serif; font-weight: 600; font-size: 34pt; letter-spacing: -0.6pt; color: #111; line-height: 0.8; display: flex; align-items: center; }
   .gs-mark .gs-o { width: 0.94em; height: 0.94em; flex: none; margin: 0 -0.055em; position: relative; top: 0.055em; }
@@ -600,7 +602,7 @@
   <div class="stage" id="editStage">
     <div class="card" id="card">
       <div class="brand-row">
-        <div class="gs-mark" aria-label="Guided SOAR"><div class="gs-subwrap"><div class="gs-sub">Guided</div></div><div class="gs-main">S<img class="gs-o" src="soar-o.png" alt="O">AR</div></div>
+        <img class="gs-logo" src="guided-soar-logo.png" alt="Guided SOAR">
         <div class="header">
           <div class="field">
             <span>PASSAGE:</span>
@@ -668,7 +670,7 @@
       const el = document.createElement('div');
       el.className = 'mini-card';
       el.innerHTML =
-        '<div class="mini-brand"><div class="gs-mark" aria-label="Guided SOAR"><div class="gs-subwrap"><div class="gs-sub">Guided</div></div><div class="gs-main">S<img class="gs-o" src="soar-o.png" alt="O">AR</div></div>' +
+        '<div class="mini-brand"><img class="gs-logo" src="guided-soar-logo.png" alt="Guided SOAR">' +
         '<div class="mini-header">' +
           '<div class="mini-field"><span>PASSAGE:</span><span class="mini-line"></span></div>' +
           '<div class="mini-field"><span>NAME:</span><span class="mini-line"></span></div>' +
