@@ -621,6 +621,13 @@
   .goals { margin: 0; padding-left: 13pt; font-size: 9.4pt; line-height: 1.42; }
   .goals li { margin-bottom: 4pt; }
 
+  /* resources card */
+  .res-title { font-family: var(--display), sans-serif; font-weight: 700; font-size: 16pt; line-height: 1; padding-top: 4pt; }
+  .mini-prompts.res { font-size: 9.6pt; }
+  .mini-prompts.res ul { margin-bottom: 4pt; }
+  .mini-prompts.res li { margin-bottom: 2.5pt; }
+  .res-h { font-family: var(--display), sans-serif; font-weight: 600; font-size: 7.5pt; letter-spacing: 1pt; text-transform: uppercase; color: #111; margin: 0 0 2pt; }
+
   /* bookshelves */
   .case { border: 3pt solid #111; border-radius: 10pt; padding: 6pt 7pt 0; margin-bottom: 6pt; }
   .case-h { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--display), sans-serif; font-weight: 700; font-size: 11pt; margin: 0 2pt 4pt; }
@@ -691,6 +698,7 @@
   <div class="tl-note">Dates are approximate; scholars differ on some. &#9675; Old Testament &nbsp; &#9679; New Testament</div>
 </div></section>
 <section class="page" data-card="leader"></section>
+<section class="page" data-card="resources"></section>
 <section class="page" data-card="blank"></section>
 <section class="page" data-card="blank"></section>
 <section class="page" data-card="blank"></section>
@@ -772,6 +780,32 @@
 
 document.querySelectorAll('[data-card="leader"]').forEach(function (p) { p.appendChild(buildLeaderCard()); });
 document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="guided-soar-logo-white.png" alt="Guided SOAR">'; p.appendChild(c); });
+function resList(groups) {
+  return '<div class="mini-prompts res">' + groups.map(function (g) {
+    return '<div class="res-h">' + g[0] + '</div><ul>' + g[1].map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>';
+  }).join('') + '</div>';
+}
+function buildResourceCard() {
+  var el = buildMiniCard();
+  el.querySelector('.mini-header').innerHTML = '<div class="res-title">Where to Find Answers</div>';
+  el.querySelector('.mtl').insertAdjacentHTML('beforeend', resList([
+    ['In print', ['Study Bible book introductions', 'Bible handbook or atlas']],
+    ['Online', ['BibleProject overview videos', 'YouVersion Bible App book intros']]]));
+  el.querySelector('.mtr').insertAdjacentHTML('beforeend', resList([
+    ['In print', ['Cross-references in the margin', 'Bible dictionary or concordance']],
+    ['Online', ['Compare translations: Bible Gateway', 'Word studies: Blue Letter Bible']]]));
+  el.querySelector('.mbl').insertAdjacentHTML('afterbegin', resList([
+    ['With people', ['Talk it through with your leader or a friend']],
+    ['Everyday', ['Write the truth on a card or your lock screen', 'Memorize one verse with a Bible app plan']]]));
+  el.querySelector('.mbr').insertAdjacentHTML('afterbegin', resList([
+    ['With people', ['Bring questions to a leader', 'Pray with a friend']],
+    ['On your own', ['Keep a prayer list', 'Pray the passage back to God']]]));
+  var spaces = el.querySelectorAll('.mini-circle .mini-write-space');
+  spaces[0].outerHTML = '<div class="mini-hint god-hint"><span>Check your answer with<br>a study Bible note or<br>a trusted commentary.</span></div>';
+  spaces[1].outerHTML = '<div class="mini-hint"><span>Ask a leader what this<br>could look like this week.</span></div>';
+  return el;
+}
+document.querySelectorAll('[data-card="resources"]').forEach(function (p) { p.appendChild(buildResourceCard()); });
 document.querySelectorAll('[data-card="blank"]').forEach(function (p) { p.appendChild(buildMiniCard()); });
 </script>
 </body>
