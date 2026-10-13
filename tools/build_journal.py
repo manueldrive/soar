@@ -55,9 +55,9 @@ def mountains_svg():
         return pts
     layers = [
         # far ridge: crosses the lower part of the circle and climbs to the right, like the photo
-        ("#28292d", ridge(5, 425, [(30, 75, 120), (150, 22, 110), (348, 140, 170)], 1.8)),
+        ("#28292d", ridge(5, 442, [(-40, 80, 200), (440, 185, 330)], 2.6, step=(8, 16))),
         # near ridge: darkest, low rolling hills in front
-        ("#1f2023", ridge(9, 495, [(40, 45, 140), (210, 22, 120), (370, 70, 150)], 1.4)),
+        ("#1f2023", ridge(9, 545, [(-30, 120, 270), (430, 70, 210)], 2.2, step=(9, 18))),
     ]
     paths = []
     for color, pts in layers:
