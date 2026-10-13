@@ -72,6 +72,12 @@ def mountains_svg(light=False):
     cls, g = ("ref-mtn", ' transform="translate(0 120)"') if light else ("cover-mtn", "")
     return f'<svg class="{cls}" viewBox="0 0 {W} {H}" preserveAspectRatio="none" aria-hidden="true"><g{g}>{"".join(paths)}</g></svg>'
 
+def resources_grid():
+    cells = []
+    for title, desc, helps, url, src in RESOURCES:
+        cells.append(f'<div class="qg-cell">{qr_svg(url)}<div class="qg-t">{title}</div><div class="qg-src">{src}</div></div>')
+    return '<div class="ic-res"><div class="ic-res-h">Resources</div><div class="ic-res-sub">Scan with your phone camera.</div><div class="qg">' + "".join(cells) + '</div></div>'
+
 def resources_page():
     cards = []
     for title, desc, helps, url, src in RESOURCES:
@@ -224,6 +230,16 @@ JOURNAL_CSS = r"""
   .ref-page .win, .ref-page .case { background: #fff; }
   ol.tl { background: transparent; }
 
+  /* QR grid on the inside cover */
+  .ic-res { position: absolute; left: 20pt; right: 20pt; top: 20pt; z-index: 1; }
+  .ic-res-h { font-family: var(--display), sans-serif; font-weight: 700; font-size: 16pt; line-height: 1; }
+  .ic-res-sub { font-family: 'DM Sans', sans-serif; font-size: 8.5pt; color: #4a5568; margin: 3pt 0 12pt; }
+  .qg { display: grid; grid-template-columns: 1fr 1fr; gap: 16pt 12pt; }
+  .qg-cell { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .qg-cell .qr { width: 70pt; height: 70pt; background: #fff; padding: 6pt; border-radius: 6pt; box-sizing: content-box; margin-bottom: 6pt; }
+  .qg-t { font-family: var(--display), sans-serif; font-weight: 600; font-size: 10pt; line-height: 1.15; }
+  .qg-src { font-family: 'DM Sans', sans-serif; font-size: 7.5pt; color: #4a5568; margin-top: 2pt; }
+
   /* QR resources page */
   .qr-list { flex: 1; display: flex; flex-direction: column; gap: 6pt; margin-top: 6pt; }
   .qr-card { flex: 1; display: flex; align-items: center; gap: 16pt; padding: 4pt 2pt; border-bottom: 1.2pt solid #b9bdc4; }
@@ -271,7 +287,8 @@ JOURNAL_CSS = r"""
 
 pages = []
 pages.append(f'<section class="page cover" data-card="cover">{mountains_svg()}</section>')
-pages.append('''<section class="page inside-cover" data-card="inside">
+pages.append(f'''<section class="page inside-cover" data-card="inside">
+  {resources_grid()}
   <div class="owner">
     <div class="owner-h">This journal belongs to</div>
     <div class="owner-line"><span>NAME</span><i></i></div>
