@@ -133,8 +133,7 @@ def legend(groups):
 # No dates on purpose: many are debated, and the story is the point.
 TIMELINE = [
     ("creation", "Creation", "Genesis 1&ndash;2"),
-    ("sin", "Sin", "Genesis 3&ndash;5"),
-    ("flood", "Flood", "Genesis 6&ndash;11"),
+    ("sin", "Sin", "Genesis 3&ndash;11"),
     ("abraham", "Abraham", "Genesis 12&ndash;50 &middot; Job is often set here"),
     ("exodus", "Exodus", "Exodus &middot; Leviticus &middot; Numbers &middot; Deuteronomy"),
     ("land", "Promised Land", "Joshua &middot; Judges &middot; Ruth"),
@@ -160,11 +159,11 @@ def timeline():
 # gutter and picks up again on the right page, so the story reads as one piece.
 SPLIT = next(i for i, t in enumerate(TIMELINE) if t[0] == "birth")
 def timeline_half(stops, side):
-    W, LBL, PAD = 356, 80, 20                       # content width, label width, inset of end stops
+    W, LBL, PAD = 356, 88, 20                       # content width, label width, inset of end stops
     stops = [t for t in stops if t[0] != "silence"]   # the gap at the gutter says it on its own
     n = len(stops)
     first = PAD if side == "ot" else 60               # NT starts a little in, so the line visibly arrives
-    last = W - 44 if side == "ot" else W - PAD
+    last = W - 50 if side == "ot" else W - PAD
     out = []
     for i, (icon, title, books) in enumerate(stops):
         x = first + i * (last - first) / (n - 1)
@@ -311,16 +310,16 @@ JOURNAL_CSS = r"""
   .shelf-block { margin-top: auto; }
   .spread .legend { margin-bottom: 0; }
   .hs-line { position: absolute; top: 50%; height: 2pt; margin-top: -1pt; background: #111; }
-  .hs-ic { position: absolute; top: 50%; width: 28pt; height: 28pt; margin: -14pt 0 0 -14pt; box-sizing: border-box; border: 1.8pt solid #111; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; z-index: 2; }
-  .hs-ic img { width: 20pt; height: 20pt; display: block; }
+  .hs-ic { position: absolute; top: 50%; width: 30pt; height: 30pt; margin: -15pt 0 0 -15pt; box-sizing: border-box; border: 1.8pt solid #111; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; z-index: 2; }
+  .hs-ic img { width: 21pt; height: 21pt; display: block; }
   .hs-ic.small { width: 18pt; height: 18pt; margin: -9pt 0 0 -9pt; border-width: 2.2pt; }
   .hs-ic.small img { width: 11pt; height: 11pt; }
   .hs-stem { position: absolute; width: 1pt; margin-left: -0.5pt; height: 10pt; background: #111; }
-  .hs-stem.up { bottom: calc(50% + 14pt); } .hs-stem.down { top: calc(50% + 14pt); }
+  .hs-stem.up { bottom: calc(50% + 15pt); } .hs-stem.down { top: calc(50% + 15pt); }
   .hs-stem.up.small { bottom: calc(50% + 9pt); height: 16pt; } .hs-stem.down.small { top: calc(50% + 9pt); height: 16pt; }
-  .hs-lbl { position: absolute; width: 80pt; }
-  .hs-lbl.up { bottom: calc(50% + 27pt); } .hs-lbl.down { top: calc(50% + 27pt); }
-  .hs-lbl .what { font-family: var(--display), sans-serif; font-weight: 600; font-size: 9.5pt; line-height: 1.1; }
+  .hs-lbl { position: absolute; width: 88pt; }
+  .hs-lbl.up { bottom: calc(50% + 28pt); } .hs-lbl.down { top: calc(50% + 28pt); }
+  .hs-lbl .what { font-family: var(--display), sans-serif; font-weight: 600; font-size: 10pt; line-height: 1.1; }
   .hs-lbl .books { font-size: 7pt; color: #4a5568; line-height: 1.3; margin-top: 1pt; }
 
   /* icon timeline */
