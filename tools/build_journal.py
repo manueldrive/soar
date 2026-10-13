@@ -88,6 +88,10 @@ JOURNAL_CSS = r"""
 
   /* cover */
   .cover { background: #2e2f33; }
+  /* cover reuses the blank card so the circle sits exactly where it does on every template */
+  .cover-card .mini-brand, .cover-card .mini-box { visibility: hidden; }
+  .cover-card .mini-circle { background: #47494f; border-color: #47494f; }
+  .cover-card .mini-label { color: #fff; }
   .cover-circle { width: 176pt; height: 176pt; border-radius: 50%; background: #47494f; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30pt; }
   .cover-circle .lbl { font-family: var(--display), sans-serif; font-weight: 700; font-size: 15pt; color: #fff; letter-spacing: 0.3pt; }
   .back { background: #2e2f33; }
@@ -125,7 +129,7 @@ JOURNAL_CSS = r"""
 """
 
 pages = []
-pages.append('<section class="page cover"><div class="cover-circle"><div class="lbl">GOD IS&hellip;</div><div class="lbl">THEREFORE, I&hellip;</div></div></section>')
+pages.append('<section class="page cover" data-card="cover"></section>')
 pages.append(f'''<section class="page"><div class="inner">
   <div class="ptitle">66 Books, One Story</div>
   <div class="psub">The Bible is a library. Here&rsquo;s where every book lives.</div>
@@ -157,6 +161,7 @@ html = f'''<!doctype html>
 <script>
 {builders}
 document.querySelectorAll('[data-card="leader"]').forEach(function (p) {{ p.appendChild(buildLeaderCard()); }});
+document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); p.appendChild(c); }});
 document.querySelectorAll('[data-card="blank"]').forEach(function (p) {{ p.appendChild(buildMiniCard()); }});
 </script>
 </body>
