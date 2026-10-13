@@ -172,9 +172,6 @@ def timeline_half(stops, side):
                    f'<span class="hs-stem {pos}{small}" style="left:{x:.1f}pt"></span>'
                    f'<div class="hs-lbl {pos}" style="left:{left:.1f}pt;text-align:{align}">'
                    f'<div class="what">{title}</div></div>')
-        if icon == "church":   # the story isn't finished, and we're living in this part of it
-            out.append(f'<span class="hs-stem down here" style="left:{x:.1f}pt"></span>'
-                       f'<span class="hs-here" style="left:{x:.1f}pt">You are here</span>')
     line = 'left:20pt;right:-20pt' if side == "ot" else 'left:-20pt;right:20pt'
     return f'<div class="tlh {side}"><span class="hs-line" style="{line}"></span>{"".join(out)}</div>'
 
@@ -313,9 +310,6 @@ JOURNAL_CSS = r"""
   .hs-stem { position: absolute; width: 1pt; margin-left: -0.5pt; height: 10pt; background: #111; }
   .hs-stem.up { bottom: calc(50% + 15pt); } .hs-stem.down { top: calc(50% + 15pt); }
   .hs-stem.up.small { bottom: calc(50% + 9pt); height: 16pt; } .hs-stem.down.small { top: calc(50% + 9pt); height: 16pt; }
-  .hs-stem.down.here { height: 36pt; border-left: 0; background: repeating-linear-gradient(#111 0 2pt, transparent 2pt 4pt); }
-  .hs-here { position: absolute; top: calc(50% + 55pt); transform: translateX(-50%); background: #111; color: #fff; font-family: var(--display), sans-serif; font-weight: 600; font-size: 7.5pt; letter-spacing: 1pt; text-transform: uppercase; white-space: nowrap; border-radius: 99pt; padding: 3pt 8pt 2.6pt; }
-  .hs-here::before { content: ''; position: absolute; left: 50%; top: -5pt; margin-left: -5pt; border-bottom: 5.5pt solid #111; border-left: 5pt solid transparent; border-right: 5pt solid transparent; }
   .hs-lbl { position: absolute; width: 92pt; }
   .hs-lbl.up { bottom: calc(50% + 28pt); } .hs-lbl.down { top: calc(50% + 28pt); }
   .hs-lbl .what { font-family: var(--display), sans-serif; font-weight: 600; font-size: 10pt; line-height: 1.1; }
