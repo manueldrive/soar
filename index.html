@@ -820,6 +820,19 @@
     }
     [tabBlank, tabLeader, tabEdit].forEach(function (t) { t.addEventListener('click', updatePageStyle); });
     updatePageStyle();
+
+    // ---------- deep links: #blank, #leader, #digital open that tab ----------
+    const tabByHash = { blank: tabBlank, leader: tabLeader, digital: tabEdit };
+    const hashForMode = { blank: 'blank', leader: 'leader', edit: 'digital' };
+    function openFromHash() {
+      const t = tabByHash[location.hash.slice(1).toLowerCase()];
+      if (t) t.click();
+    }
+    [tabBlank, tabLeader, tabEdit].forEach(function (t) {
+      t.addEventListener('click', function () { history.replaceState(null, '', '#' + hashForMode[currentMode]); });
+    });
+    window.addEventListener('hashchange', openFromHash);
+    openFromHash();
   </script>
 </body>
 </html>
