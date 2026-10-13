@@ -1,0 +1,718 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Guided SOAR Journal</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Fredoka:wght@600;700&family=Nunito:wght@800;900&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #e9edf2;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border-bottom: 1px solid #dde2e8;
+  }
+  .tabs {
+    display: flex;
+    background: #eef1f5;
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .tabs button {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #4a5568;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    cursor: pointer;
+  }
+  .tabs button.active {
+    background: #16345c;
+    color: #ffffff;
+  }
+  .divider-v {
+    width: 1px;
+    height: 26px;
+    background: #dde2e8;
+  }
+  .format-toolbar {
+    display: flex;
+    gap: 4px;
+    background: #eef1f5;
+    border-radius: 10px;
+    padding: 3px;
+  }
+  .format-toolbar button {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: #333;
+    background: #ffffff;
+    border: 1px solid #dde2e8;
+    border-radius: 7px;
+    padding: 7px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .format-toolbar button:hover { background: #f4f6f8; }
+  .format-toolbar button:active { background: #e5e9ee; }
+  .download-btn {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    color: #ffffff;
+    background: #16345c;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .download-btn:hover { background: #0f2544; }
+  .hint {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #808894;
+  }
+
+  .stage {
+    display: none;
+    justify-content: center;
+    padding: 28px 14px 50px;
+  }
+  .stage.visible { display: flex; }
+
+  /* ---------- Edit card (single, big, fillable) ---------- */
+  .card {
+    width: 612pt;
+    height: 792pt;
+    background: #ffffff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    padding: 40pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12pt;
+    align-items: center;
+    margin-bottom: 20pt;
+  }
+  .field {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+    font-weight: 700;
+    font-size: 11pt;
+    letter-spacing: 1pt;
+    color: #111111;
+  }
+  .field input {
+    flex: 1;
+    border: none;
+    border-bottom: 1.3pt solid #111111;
+    background: transparent;
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    font-size: 16pt;
+    color: #16345c;
+    padding: 0 2pt 2pt;
+    outline: none;
+  }
+  .field input::placeholder { color: #b7b7b7; font-family: Arial, sans-serif; font-size: 10pt; }
+
+  .grid {
+    position: relative;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12pt;
+  }
+  .box {
+    position: relative;
+    border: 3pt solid #111111;
+    border-radius: 16pt;
+  }
+  .tl, .tr, .bl, .br { background: #ffffff; }
+
+  .caption {
+    position: absolute;
+    left: 6pt;
+    right: 6pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5pt;
+    white-space: nowrap;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .tl .caption, .tr .caption { top: 9pt; }
+  .bl .caption, .br .caption { bottom: 9pt; }
+  .caption .name {
+    font-weight: 800;
+    font-size: 10.5pt;
+    letter-spacing: 0.1pt;
+    color: #111111;
+  }
+  .caption .sep { color: #b0b0b0; font-size: 8pt; }
+  .ind {
+    display: flex;
+    align-items: center;
+    gap: 2.5pt;
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.1pt;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ind i { width: 8pt; font-size: 9pt; text-align: center; margin-right: 2pt; }
+  .s .ind, .s .ind i { color: #2f6fd6; }
+  .o .ind, .o .ind i { color: #2f6fd6; }
+  .a .ind, .a .ind i { color: #8551c9; }
+  .r .ind, .r .ind i { color: #8551c9; }
+
+  .notes {
+    position: absolute;
+    left: 12pt;
+    right: 12pt;
+    font-family: 'Caveat', cursive;
+    font-weight: 500;
+    font-size: 16pt;
+    line-height: 1.4;
+    color: #16345c;
+    overflow-y: auto;
+    outline: none;
+  }
+  .notes ul { margin: 2pt 0; padding-left: 18pt; }
+  .tl .notes, .tr .notes { top: 34pt; bottom: 10pt; }
+  .bl .notes, .br .notes { top: 10pt; bottom: 34pt; }
+  .notes:focus { box-shadow: 0 0 0 2pt rgba(22,52,92,0.25) inset; border-radius: 6pt; }
+  .notes:not(.has-text):before {
+    content: attr(data-placeholder);
+    color: #9fb3c8;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    font-style: italic;
+  }
+
+  .circle-exclude {
+    width: 120pt;
+    height: 120pt;
+    shape-margin: 6pt;
+    pointer-events: none;
+  }
+  .tl .circle-exclude { float: right; margin-top: 169pt; shape-outside: circle(120pt at 100% 100%); }
+  .tr .circle-exclude { float: left; margin-top: 169pt; shape-outside: circle(120pt at 0% 100%); }
+  .bl .circle-exclude { float: right; shape-outside: circle(120pt at 100% 0%); }
+  .br .circle-exclude { float: left; shape-outside: circle(120pt at 0% 0%); }
+
+  .center-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 240pt;
+    height: 240pt;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3pt solid #111111;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 5pt;
+    padding: 14pt;
+  }
+  .center-circle .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5pt;
+  }
+  .center-circle .label {
+    font-weight: 900;
+    font-size: 17pt;
+    color: #111111;
+  }
+  .center-circle .therefore { margin-top: 6pt; }
+  .center-circle .answer {
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    font-size: 16pt;
+    color: #16345c;
+    line-height: 1.2;
+    width: 100%;
+    outline: none;
+    min-height: 20pt;
+  }
+  .center-circle .answer:focus { box-shadow: 0 0 0 2pt rgba(22,52,92,0.25) inset; border-radius: 6pt; }
+  .center-circle .answer:not(.has-text):before {
+    content: attr(data-placeholder);
+    color: #9fb3c8;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9pt;
+    font-style: italic;
+  }
+
+  /* ---------- Blank 2-up print page ---------- */
+  .mini-page {
+    width: 792pt;
+    height: 612pt;
+    background: #ffffff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    padding: 20pt;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
+  .mini-divider {
+    width: 0;
+    border-left: 1.5pt dashed #bbbbbb;
+    margin: 0 20pt 0 19.25pt;
+  }
+  .mini-card {
+    width: 356pt;
+    height: 572pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .mini-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8pt;
+    align-items: center;
+    margin-bottom: 16pt;
+  }
+  .mini-field {
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+    font-weight: 700;
+    font-size: 9pt;
+    letter-spacing: 1pt;
+    color: #111111;
+  }
+  .mini-line { flex: 1; border-bottom: 1.3pt solid #111111; height: 1pt; }
+
+  .mini-grid {
+    position: relative;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8pt;
+  }
+  .mini-box { position: relative; border: 3pt solid #111111; border-radius: 14pt; }
+  .mtl, .mtr, .mbl, .mbr { background: #ffffff; }
+
+  .mini-caption {
+    position: absolute;
+    left: 4pt;
+    right: 4pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4pt;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .mtl .mini-caption, .mtr .mini-caption { top: 7pt; }
+  .mbl .mini-caption, .mbr .mini-caption { bottom: 7pt; }
+  .mini-caption .name { font-weight: 800; font-size: 8.5pt; letter-spacing: 0.1pt; color: #111111; }
+  .mini-caption .sep { color: #b0b0b0; font-size: 6.5pt; }
+  .mini-ind {
+    display: flex;
+    align-items: center;
+    gap: 2pt;
+    font-weight: 700;
+    font-size: 6.6pt;
+    letter-spacing: 0.1pt;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .mini-ind i { width: 7pt; font-size: 7.4pt; text-align: center; margin-right: 1.5pt; }
+  .ms .mini-ind, .ms .mini-ind i { color: #2f6fd6; }
+  .mo .mini-ind, .mo .mini-ind i { color: #2f6fd6; }
+  .ma .mini-ind, .ma .mini-ind i { color: #8551c9; }
+  .mr .mini-ind, .mr .mini-ind i { color: #8551c9; }
+
+  .mini-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 184pt;
+    height: 184pt;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3pt solid #111111;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0;
+    padding: 0 14pt 14pt;
+  }
+  .mini-label { font-weight: 900; font-size: 12pt; color: #111111; }
+  .mini-therefore { margin-top: 8pt; }
+  .mini-write-space { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .mini-write-line { width: 132pt; height: 25pt; }
+
+  /* ---------- Leader guide ---------- */
+  .week-note {
+    text-align: center;
+    font-size: 9pt;
+    color: #4a5568;
+    margin: -8pt 0 12pt;
+  }
+  .week-note b { color: #16345c; }
+  .field .line { flex: 1; border-bottom: 1.3pt solid #111111; height: 1pt; }
+  .day-tag {
+    font-size: 7pt;
+    font-weight: 800;
+    letter-spacing: 0.6pt;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #16345c;
+    border-radius: 5pt;
+    padding: 2pt 5pt;
+    white-space: nowrap;
+  }
+  .prompts {
+    position: absolute;
+    left: 12pt;
+    right: 14pt;
+    font-size: 15.5pt;
+    line-height: 1.28;
+    color: #4a5568;
+  }
+  .prompts ul { margin: 0; padding-left: 16pt; }
+  .prompts li { margin-bottom: 8pt; }
+  .tl .prompts, .tr .prompts { top: 52pt; }
+  .bl .prompts, .br .prompts { bottom: 54pt; }
+  .leader-circle { justify-content: flex-start; padding: 30pt 18pt 0; gap: 4pt; }
+  .leader-circle .circle-prompt {
+    font-size: 12.5pt;
+    font-style: italic;
+    line-height: 1.3;
+    color: #5b6878;
+    max-width: 190pt;
+  }
+  .leader-circle .label { margin-top: 2pt; }
+  .leader-circle .write-gap { height: 26pt; }
+
+  /* ---------- Section titles (big letter + key words) ---------- */
+  .tblock {
+    position: absolute;
+    top: 9pt;
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+    pointer-events: none;
+  }
+  .tblock.left { left: 12pt; }
+  .tblock.bottom { top: auto; bottom: 9pt; }
+  .tblock.right { right: 12pt; flex-direction: row-reverse; text-align: right; }
+  .tblock .big {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 30pt;
+    line-height: 1;
+  }
+  .tblock .tword { font-weight: 800; font-size: 12pt; color: #111111; line-height: 1.1; }
+  .tblock .kw { font-size: 9.5pt; color: #4a5568; line-height: 1.2; margin-top: 1pt; }
+  .tblock .big { color: #111111; }
+  .mini-box .tblock { top: 7pt; gap: 4pt; }
+  .mini-box .tblock.left { left: 9pt; }
+  .mini-box .tblock.bottom { top: auto; bottom: 7pt; }
+  .mini-box .tblock.right { right: 9pt; }
+  .mini-box .tblock .big { font-size: 22pt; }
+  .mini-box .tblock .tword { font-size: 9.5pt; }
+  .mini-box .tblock .kw { font-size: 8pt; }
+
+  /* ---------- Brand row (logo + passage/name) ---------- */
+  .brand-row { display: flex; align-items: center; gap: 30pt; margin-bottom: 16pt; }
+  .brand-logo { height: 64pt; width: auto; display: block; }
+  .brand-row .header { flex: 1; grid-template-columns: 1fr; gap: 14pt; margin-bottom: 0; }
+  .mini-brand { display: flex; align-items: center; gap: 22pt; margin-bottom: 8pt; }
+  .mini-brand .brand-logo { height: 36pt; }
+  .mini-brand .mini-header { flex: 1; grid-template-columns: 1fr; gap: 12pt; margin-bottom: 0; }
+  .brand-row .field > span:first-child { width: 74pt; flex: none; text-align: right; }
+  .mini-brand .mini-field > span:first-child { width: 58pt; flex: none; text-align: right; }
+
+  /* ---------- Fonts: rounded display font (matches logo) + DM Sans (text) ---------- */
+  :root { --display: 'Fredoka'; --w-big: 700; --w-head: 600; --w-label: 700; }
+  body, .prompts, .tblock .kw, .circle-prompt { font-family: 'DM Sans', Arial, Helvetica, sans-serif; }
+  .tblock .big { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-big); font-size: 34pt; }
+  .mini-box .tblock .big { font-size: 25pt; }
+  .tblock .tword { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-head); font-size: 12pt; letter-spacing: 0.2pt; }
+  .mini-box .tblock .tword { font-size: 9.5pt; }
+  .center-circle .label, .mini-label { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-label); }
+  .center-circle .label { font-size: 18pt; }
+  .mini-label { font-size: 14pt; }
+  .field > span:first-child, .mini-field > span:first-child { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-head); letter-spacing: 0.5pt; }
+  .field > span:first-child { font-size: 11pt; }
+  .mini-field > span:first-child { font-size: 9pt; }
+
+  /* ---------- Leader guide 2-up prompts ---------- */
+  .mini-prompts {
+    position: absolute;
+    left: 8pt;
+    right: 9pt;
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.25;
+    color: #4a5568;
+  }
+  .mini-prompts ul { margin: 0; padding-left: 0; list-style: none; }
+  .mini-prompts li { margin-bottom: 4pt; padding-left: 11pt; position: relative; }
+  .mini-prompts li::before { content: ''; position: absolute; left: 1pt; top: 0.55em; width: 4pt; height: 4pt; border-radius: 50%; background: #4a5568; }
+  .mtl .mini-prompts, .mtr .mini-prompts { top: 40pt; }
+  .mbl .mini-prompts, .mbr .mini-prompts { bottom: 40pt; }
+  .mini-circle .mini-hint {
+    height: 50pt;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-size: 10pt;
+    font-style: italic;
+    line-height: 1.2;
+    color: #4a5568;
+    padding: 0 2pt;
+  }
+
+  /* ---------- Digital template ---------- */
+  #card .tl .notes, #card .tr .notes { top: 58pt; bottom: 10pt; }
+  #card .bl .notes, #card .br .notes { top: 10pt; bottom: 58pt; }
+  #card .tl .circle-exclude, #card .tr .circle-exclude { margin-top: 122pt; }
+  .digital-circle { justify-content: flex-start; padding: 40pt 22pt 0; gap: 4pt; }
+  .digital-circle .answer { min-height: 52pt; display: flex; align-items: center; justify-content: center; }
+  .digital-circle .therefore { margin-top: 0; }
+
+  .mini-circle .mini-hint.god-hint { padding-top: 12pt; }
+
+  /* ---------- Print / PDF export cleanup ---------- */
+  .exporting .notes:not(.has-text):before,
+  .exporting .answer:not(.has-text):before { content: none; }
+  .exporting .field input::placeholder { color: transparent; }
+  .exporting .notes:focus, .exporting .answer:focus { box-shadow: none; }
+
+  /* Passage/Name lines sit on the baseline of their labels */
+  .mini-field { align-items: flex-end; }
+  .mini-field > span:first-child { line-height: 1; }
+  .mini-line { margin-bottom: 1.5pt; }
+  .field { align-items: flex-end; }
+  .field > span:first-child { line-height: 1; padding-bottom: 2pt; }
+  .field input { line-height: 1; padding-bottom: 0; }
+
+  .mini-prompts .mini-intro { margin: 0 0 5pt; }
+  .mtl .mini-prompts, .mtr .mini-prompts { top: 36pt; }
+
+  /* ---------- Guided SOAR wordmark ---------- */
+  .gs-logo { height: 36pt; width: auto; display: block; flex: none; }
+  #card .gs-logo { height: 50pt; }
+  .gs-mark { display: flex; flex-direction: row; align-items: center; gap: 1.2pt; line-height: 1; width: 104pt; flex: none; }
+  .gs-mark .gs-main { font-family: var(--display), sans-serif; font-weight: 600; font-size: 34pt; letter-spacing: -0.6pt; color: #111; line-height: 0.8; display: flex; align-items: center; }
+  .gs-mark .gs-o { width: 0.94em; height: 0.94em; flex: none; margin: 0 -0.055em; position: relative; top: 0.055em; }
+  .gs-mark .gs-subwrap { position: relative; width: 9pt; height: 23.7pt; flex: none; background: #111; border-radius: 1.5pt; top: 1.9pt; margin-right: 0; }
+  .gs-mark .gs-sub { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); white-space: nowrap; font-family: var(--display), sans-serif; font-weight: 600; font-size: 5pt; letter-spacing: 0.5pt; text-transform: uppercase; color: #fff; padding-left: 0.5pt; line-height: 1; }
+  .mini-brand .gs-mark { margin-top: -4.5pt; margin-bottom: -4.5pt; }
+  #card .gs-mark { width: auto; gap: 1.7pt; }
+  #card .gs-mark .gs-main { font-size: 48pt; letter-spacing: -0.85pt; }
+  #card .gs-mark .gs-subwrap { width: 12.7pt; height: 33.4pt; border-radius: 2pt; top: 2.7pt; margin-right: 0; }
+  #card .gs-mark .gs-sub { font-size: 7pt; letter-spacing: 0.7pt; padding-left: 0.7pt; }
+
+  @media print {
+    html, body { background: #ffffff; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .toolbar { display: none; }
+    .stage { padding: 0; }
+    .card, .mini-page { box-shadow: none; }
+    .notes:not(.has-text):before, .answer:not(.has-text):before { content: none; }
+    .field input::placeholder { color: transparent; }
+    .notes:focus, .answer:focus { box-shadow: none; }
+    .notes, .answer { overflow: visible; }
+  }
+
+  @page { size: 5.5in 8.5in; margin: 0; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 396pt; height: 612pt; position: relative; overflow: hidden; page-break-after: always; break-after: page; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .page .mini-card { margin: 0; }
+  @media screen { body { background: #9aa0a6; } .page { margin: 16px auto; box-shadow: 0 4px 18px rgba(0,0,0,.25); background: #fff; } }
+
+  /* cover */
+  .cover { background: #2e2f33; }
+  .cover-circle { width: 250pt; height: 250pt; border-radius: 50%; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 46pt; }
+  .cover-circle .lbl { font-family: var(--display), sans-serif; font-weight: 700; font-size: 21pt; color: #2e2f33; letter-spacing: 0.3pt; }
+  .back { background: #2e2f33; }
+
+  /* content pages */
+  .inner { width: 356pt; height: 572pt; display: flex; flex-direction: column; font-family: 'DM Sans', Arial, sans-serif; color: #111; }
+  .ptitle { font-family: var(--display), sans-serif; font-weight: 700; font-size: 20pt; line-height: 1; margin: 2pt 0 2pt; }
+  .psub { font-size: 9pt; color: #4a5568; margin: 0 0 10pt; }
+
+  /* bookshelves */
+  .case { border: 3pt solid #111; border-radius: 10pt; padding: 6pt 7pt 0; margin-bottom: 6pt; }
+  .case-h { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--display), sans-serif; font-weight: 700; font-size: 11pt; margin: 0 2pt 4pt; }
+  .case-h small { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 8pt; color: #4a5568; }
+  .shelf { height: 102pt; display: flex; align-items: flex-end; gap: 1.2pt; border-bottom: 3.5pt solid #111; margin-bottom: 7pt; padding: 0 1pt; }
+  .spine { flex: 1 1 0; border: 0.9pt solid #111; border-bottom: none; border-radius: 2pt 2pt 0 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .spine span { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 6.3pt; font-weight: 500; white-space: nowrap; letter-spacing: 0.1pt; }
+  .g1 { background: #111; color: #fff; } .g2 { background: #4a4d55; color: #fff; } .g3 { background: #9a9ea6; color: #111; }
+  .g4 { background: #cfd2d7; color: #111; } .g5 { background: #fff; color: #111; }
+  .legend { display: flex; flex-wrap: wrap; gap: 3pt 9pt; font-size: 7.5pt; margin: -1pt 2pt 7pt; }
+  .key { display: inline-flex; align-items: center; gap: 3pt; white-space: nowrap; }
+  .key i { width: 8pt; height: 8pt; border: 0.9pt solid #111; border-radius: 1.5pt; display: inline-block; }
+  .key b { color: #4a5568; font-weight: 500; }
+
+  /* timeline */
+  .tl { list-style: none; margin: 0; padding: 0 0 0 16pt; position: relative; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+  .tl::before { content: ''; position: absolute; left: 4pt; top: 4pt; bottom: 4pt; width: 2.5pt; background: #111; border-radius: 2pt; }
+  .ev { position: relative; }
+  .ev::before { content: ''; position: absolute; left: -16pt; top: 2pt; width: 7pt; height: 7pt; border-radius: 50%; background: #fff; border: 2.2pt solid #111; }
+  .ev.nt::before { background: #111; }
+  .ev .date { font-size: 7.5pt; font-weight: 700; color: #4a5568; letter-spacing: 0.3pt; text-transform: uppercase; }
+  .ev .what { font-family: var(--display), sans-serif; font-weight: 600; font-size: 10.5pt; line-height: 1.15; }
+  .ev .books { font-size: 7.6pt; color: #4a5568; line-height: 1.25; }
+  .tl-note { font-size: 7pt; color: #6b7280; margin-top: 6pt; }
+  .divider { display: flex; align-items: center; gap: 6pt; font-size: 7pt; font-weight: 700; letter-spacing: 1pt; text-transform: uppercase; color: #4a5568; margin: 0 0 0 -16pt; }
+</style>
+</head>
+<body>
+<section class="page cover"><div class="cover-circle"><div class="lbl">GOD IS&hellip;</div><div class="lbl">THEREFORE, I&hellip;</div></div></section>
+<section class="page"><div class="inner">
+  <div class="ptitle">66 Books, One Story</div>
+  <div class="psub">The Bible is a library. Here&rsquo;s where every book lives.</div>
+  <div class="case"><div class="case-h">Old Testament <small>39 books</small></div><div class="shelf"><div class="spine g1" style="height:86%"><span>Genesis</span></div><div class="spine g1" style="height:92%"><span>Exodus</span></div><div class="spine g1" style="height:98%"><span>Leviticus</span></div><div class="spine g1" style="height:89%"><span>Numbers</span></div><div class="spine g1" style="height:95%"><span>Deuteronomy</span></div><div class="spine g2" style="height:86%"><span>Joshua</span></div><div class="spine g2" style="height:92%"><span>Judges</span></div><div class="spine g2" style="height:98%"><span>Ruth</span></div><div class="spine g2" style="height:89%"><span>1 Samuel</span></div><div class="spine g2" style="height:95%"><span>2 Samuel</span></div><div class="spine g2" style="height:86%"><span>1 Kings</span></div><div class="spine g2" style="height:92%"><span>2 Kings</span></div><div class="spine g2" style="height:98%"><span>1 Chronicles</span></div><div class="spine g2" style="height:89%"><span>2 Chronicles</span></div><div class="spine g2" style="height:95%"><span>Ezra</span></div><div class="spine g2" style="height:86%"><span>Nehemiah</span></div><div class="spine g2" style="height:92%"><span>Esther</span></div></div><div class="shelf"><div class="spine g3" style="height:95%"><span>Job</span></div><div class="spine g3" style="height:86%"><span>Psalms</span></div><div class="spine g3" style="height:92%"><span>Proverbs</span></div><div class="spine g3" style="height:98%"><span>Ecclesiastes</span></div><div class="spine g3" style="height:89%"><span>Song of Songs</span></div><div class="spine g4" style="height:95%"><span>Isaiah</span></div><div class="spine g4" style="height:86%"><span>Jeremiah</span></div><div class="spine g4" style="height:92%"><span>Lamentations</span></div><div class="spine g4" style="height:98%"><span>Ezekiel</span></div><div class="spine g4" style="height:89%"><span>Daniel</span></div><div class="spine g5" style="height:95%"><span>Hosea</span></div><div class="spine g5" style="height:86%"><span>Joel</span></div><div class="spine g5" style="height:92%"><span>Amos</span></div><div class="spine g5" style="height:98%"><span>Obadiah</span></div><div class="spine g5" style="height:89%"><span>Jonah</span></div><div class="spine g5" style="height:95%"><span>Micah</span></div><div class="spine g5" style="height:86%"><span>Nahum</span></div><div class="spine g5" style="height:92%"><span>Habakkuk</span></div><div class="spine g5" style="height:98%"><span>Zephaniah</span></div><div class="spine g5" style="height:89%"><span>Haggai</span></div><div class="spine g5" style="height:95%"><span>Zechariah</span></div><div class="spine g5" style="height:86%"><span>Malachi</span></div></div></div>
+  <div class="legend"><span class="key"><i class="g1"></i>Law <b>5</b></span><span class="key"><i class="g2"></i>History <b>12</b></span><span class="key"><i class="g3"></i>Poetry &amp; Wisdom <b>5</b></span><span class="key"><i class="g4"></i>Major Prophets <b>5</b></span><span class="key"><i class="g5"></i>Minor Prophets <b>12</b></span></div>
+  <div class="case"><div class="case-h">New Testament <small>27 books</small></div><div class="shelf"><div class="spine g1" style="height:86%"><span>Matthew</span></div><div class="spine g1" style="height:92%"><span>Mark</span></div><div class="spine g1" style="height:98%"><span>Luke</span></div><div class="spine g1" style="height:89%"><span>John</span></div><div class="spine g2" style="height:95%"><span>Acts</span></div><div class="spine g3" style="height:86%"><span>Romans</span></div><div class="spine g3" style="height:92%"><span>1 Corinthians</span></div><div class="spine g3" style="height:98%"><span>2 Corinthians</span></div><div class="spine g3" style="height:89%"><span>Galatians</span></div><div class="spine g3" style="height:95%"><span>Ephesians</span></div><div class="spine g3" style="height:86%"><span>Philippians</span></div><div class="spine g3" style="height:92%"><span>Colossians</span></div><div class="spine g3" style="height:98%"><span>1 Thessalonians</span></div><div class="spine g3" style="height:89%"><span>2 Thessalonians</span></div></div><div class="shelf"><div class="spine g3" style="height:95%"><span>1 Timothy</span></div><div class="spine g3" style="height:86%"><span>2 Timothy</span></div><div class="spine g3" style="height:92%"><span>Titus</span></div><div class="spine g3" style="height:98%"><span>Philemon</span></div><div class="spine g4" style="height:89%"><span>Hebrews</span></div><div class="spine g4" style="height:95%"><span>James</span></div><div class="spine g4" style="height:86%"><span>1 Peter</span></div><div class="spine g4" style="height:92%"><span>2 Peter</span></div><div class="spine g4" style="height:98%"><span>1 John</span></div><div class="spine g4" style="height:89%"><span>2 John</span></div><div class="spine g4" style="height:95%"><span>3 John</span></div><div class="spine g4" style="height:86%"><span>Jude</span></div><div class="spine g5" style="height:92%"><span>Revelation</span></div></div></div>
+  <div class="legend"><span class="key"><i class="g1"></i>Gospels <b>4</b></span><span class="key"><i class="g2"></i>History <b>1</b></span><span class="key"><i class="g3"></i>Paul&rsquo;s Letters <b>13</b></span><span class="key"><i class="g4"></i>General Letters <b>8</b></span><span class="key"><i class="g5"></i>Prophecy <b>1</b></span></div>
+</div></section>
+<section class="page"><div class="inner">
+  <div class="ptitle">The Big Story</div>
+  <div class="psub">Where each book fits in the story of God and His people.</div>
+  <ol class="tl"><li class="ev"><div class="date">The beginning</div><div class="what">Creation &amp; the Fall</div><div class="books">Genesis 1&ndash;11</div></li><li class="ev"><div class="date">c. 2000&ndash;1800 BC</div><div class="what">Abraham, Isaac &amp; Jacob</div><div class="books">Genesis 12&ndash;50 &middot; (Job may be set here)</div></li><li class="ev"><div class="date">c. 1446 BC</div><div class="what">Exodus &amp; the Law</div><div class="books">Exodus &middot; Leviticus &middot; Numbers &middot; Deuteronomy</div></li><li class="ev"><div class="date">c. 1400&ndash;1050 BC</div><div class="what">Into the Promised Land</div><div class="books">Joshua &middot; Judges &middot; Ruth</div></li><li class="ev"><div class="date">c. 1050&ndash;930 BC</div><div class="what">United Kingdom: Saul, David, Solomon</div><div class="books">1&ndash;2 Samuel &middot; 1 Kings &middot; 1 Chronicles &middot; Psalms &middot; Proverbs &middot; Ecclesiastes &middot; Song of Songs</div></li><li class="ev"><div class="date">930&ndash;722 BC</div><div class="what">Divided Kingdom: Israel &amp; Judah</div><div class="books">1&ndash;2 Kings &middot; 2 Chronicles &middot; Isaiah &middot; Hosea &middot; Amos &middot; Jonah &middot; Micah</div></li><li class="ev"><div class="date">722&ndash;586 BC</div><div class="what">Judah Alone, Then Exile</div><div class="books">Jeremiah &middot; Lamentations &middot; Nahum &middot; Habakkuk &middot; Zephaniah</div></li><li class="ev"><div class="date">586&ndash;538 BC</div><div class="what">Exile in Babylon</div><div class="books">Ezekiel &middot; Daniel &middot; Obadiah</div></li><li class="ev"><div class="date">538&ndash;430 BC</div><div class="what">Return &amp; Rebuild</div><div class="books">Ezra &middot; Nehemiah &middot; Esther &middot; Haggai &middot; Zechariah &middot; Malachi</div></li><li class="ev"><div class="date">c. 430&ndash;5 BC</div><div class="what">400 Quiet Years</div><div class="books">Between the Testaments</div></li><li class="ev nt"><div class="date">c. 5 BC &ndash; AD 30</div><div class="what">Jesus</div><div class="books">Matthew &middot; Mark &middot; Luke &middot; John</div></li><li class="ev nt"><div class="date">c. AD 30&ndash;95</div><div class="what">The Church Spreads</div><div class="books">Acts &middot; the Letters &middot; Revelation</div></li></ol>
+  <div class="tl-note">Dates are approximate; scholars differ on some. &#9675; Old Testament &nbsp; &#9679; New Testament</div>
+</div></section>
+<section class="page" data-card="leader"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="blank"></section>
+<section class="page back"></section>
+<script>
+    // ---------- shared caption builder ----------
+    function captionHTML(prefix, letterClass, name, icon1, word1, icon2, word2) {
+      return '<div class="' + prefix + 'caption ' + letterClass + '">' +
+        '<span class="name">' + name + '</span>' +
+        '<div class="' + prefix + 'ind"><i class="fa-solid ' + icon1 + '"></i> <span>' + word1 + '</span></div>' +
+        '<span class="sep">&bull;</span>' +
+        '<div class="' + prefix + 'ind"><i class="fa-solid ' + icon2 + '"></i> <span>' + word2 + '</span></div>' +
+      '</div>';
+    }
+
+    function titleHTML(side, color, letter, word, kw) {
+      return '<div class="tblock ' + side + ' ' + color + '"><span class="big">' + letter + '</span>' +
+        '<div><div class="tword">' + word + '</div><div class="kw">' + kw + '</div></div></div>';
+    }
+
+    function buildMiniCard() {
+      const el = document.createElement('div');
+      el.className = 'mini-card';
+      el.innerHTML =
+        '<div class="mini-brand"><img class="gs-logo" src="guided-soar-logo.png" alt="Guided SOAR">' +
+        '<div class="mini-header">' +
+          '<div class="mini-field"><span>PASSAGE:</span><span class="mini-line"></span></div>' +
+          '<div class="mini-field"><span>NAME:</span><span class="mini-line"></span></div>' +
+        '</div></div>' +
+        '<div class="mini-grid">' +
+          '<div class="mini-box mtl">' + titleHTML('left', 'blue', 'S', 'Scripture', 'author &middot; time &middot; purpose') + '</div>' +
+          '<div class="mini-box mtr">' + titleHTML('right', 'blue', 'O', 'Observation', 'words &middot; concepts &middot; connections') + '</div>' +
+          '<div class="mini-box mbl">' + titleHTML('left bottom', 'purple', 'A', 'Application', 'thoughts &middot; words &middot; actions') + '</div>' +
+          '<div class="mini-box mbr">' + titleHTML('right bottom', 'purple', 'R', 'Reflection', 'prayers &middot; questions &middot; insights') + '</div>' +
+          '<div class="mini-circle">' +
+            '<div class="mini-label">GOD IS&hellip;</div>' +
+            '<div class="mini-write-space"><div class="mini-write-line"></div><div class="mini-write-line"></div></div>' +
+            '<div class="mini-label mini-therefore">THEREFORE, I&hellip;</div>' +
+            '<div class="mini-write-space"><div class="mini-write-line"></div><div class="mini-write-line"></div></div>' +
+          '</div>' +
+        '</div>';
+      return el;
+    }
+
+    function promptList(items, intro) {
+      return '<div class="mini-prompts">' + (intro ? '<p class="mini-intro">' + intro + '</p>' : '') + '<ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+    }
+
+    function buildLeaderCard() {
+      const el = buildMiniCard();
+      el.querySelector('.mtl').insertAdjacentHTML('beforeend', promptList([
+        'Author', 'Time', 'Purpose', 'What comes before/after'], 'Review 2&ndash;3 items before reading to gain perspective:'));
+      el.querySelector('.mtr').insertAdjacentHTML('beforeend', promptList([
+        'Define confusing terms',
+        'Explain difficult concepts',
+        'Make connections to other parts of the Bible'],
+        'Review 2&ndash;3 observations while reading to bring clarity:'));
+      el.querySelector('.mbl').insertAdjacentHTML('afterbegin', promptList([
+        'Do you believe the central truth?',
+        'What lies might keep a person from seeing this truth?',
+        'How can you live it out this week?']));
+      el.querySelector('.mbr').insertAdjacentHTML('afterbegin', promptList([
+        'How can you ask God to help you live this out?', 'What questions do you still have about this passage?', 'Who can you tell about what God is teaching you?']));
+      const spaces = el.querySelectorAll('.mini-circle .mini-write-space');
+      spaces[0].outerHTML = '<div class="mini-hint god-hint"><span>What does <b>this</b> passage<br>reveal about God&rsquo;s<br>character and purpose?</span></div>';
+      spaces[1].outerHTML = '<div class="mini-hint"><span>What does this reveal<br>about who He made<br>me to be?</span></div>';
+      return el;
+    }
+
+
+document.querySelectorAll('[data-card="leader"]').forEach(function (p) { p.appendChild(buildLeaderCard()); });
+document.querySelectorAll('[data-card="blank"]').forEach(function (p) { p.appendChild(buildMiniCard()); });
+</script>
+</body>
+</html>
