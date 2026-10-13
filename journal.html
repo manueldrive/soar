@@ -574,6 +574,10 @@
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .page { width: 396pt; height: 612pt; position: relative; overflow: hidden; page-break-after: always; break-after: page; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
   .page:last-child { page-break-after: auto; break-after: auto; }
+  /* page numbers on every inside page (not the front or back cover) so printed sheets are easy to check */
+  body { counter-reset: pg; }
+  .page { counter-increment: pg; }
+  section.page:not(:first-of-type):not(:last-of-type)::after { content: counter(pg); position: absolute; left: 0; right: 0; bottom: 7pt; text-align: center; font-family: 'DM Sans', sans-serif; font-size: 6.5pt; font-weight: 500; color: #8e929b; z-index: 3; }
   .page .mini-card { margin: 0; }
   @media screen { body { background: #9aa0a6; } .page { margin: 16px auto; box-shadow: 0 4px 18px rgba(0,0,0,.25); background: #fff; } }
 
