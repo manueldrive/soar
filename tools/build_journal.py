@@ -277,9 +277,10 @@ JOURNAL_CSS = r"""
   .tl2 { list-style: none; margin: 0; padding: 0; position: relative; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
   .tl2::before { content: ''; position: absolute; left: 16pt; top: 16pt; bottom: 16pt; width: 2pt; margin-left: -1pt; background: #111; }
   .st { display: flex; align-items: center; gap: 11pt; position: relative; }
-  .st-ic { flex: none; width: 32pt; height: 32pt; display: flex; align-items: center; justify-content: center; }
-  .st-ic img { width: 32pt; height: 32pt; display: block; }
-  .st-ic.small img { width: 20pt; height: 20pt; }
+  .st-ic { flex: none; width: 32pt; height: 32pt; box-sizing: border-box; border: 1.8pt solid #111; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; }
+  .st-ic img { width: 23pt; height: 23pt; display: block; }
+  .st-ic.small { width: 21pt; height: 21pt; margin: 0 5.5pt; border-width: 2.2pt; }
+  .st-ic.small img { width: 13pt; height: 13pt; }
   .st .what { font-family: var(--display), sans-serif; font-weight: 600; font-size: 10.5pt; line-height: 1.1; }
   .st .books { font-size: 7.6pt; color: #4a5568; line-height: 1.3; margin-top: 1pt; }
 
