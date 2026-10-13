@@ -15,6 +15,37 @@ builders = js[js.index("    // ---------- shared caption builder") : js.index(" 
 
 BLANKS = 12
 
+RESOURCES = [
+    ("How to Read the Bible", "BibleProject video series on reading the Bible well: genre, story, poetry, and more.",
+     "Scripture &middot; Observation", "https://www.youtube.com/playlist?list=PLH0Szn1yYNedn4FbBMMtOlGN-BPLQ54IH", "YouTube &middot; BibleProject"),
+    ("Old Testament Overviews", "A short video for every Old Testament book: its big ideas, structure, and flow.",
+     "Scripture", "https://www.youtube.com/playlist?list=PLH0Szn1yYNeeVFodkI9J_WEATHQCwRZ0u", "YouTube &middot; BibleProject"),
+    ("New Testament Overviews", "A short video for every New Testament book: who wrote it, why, and how it fits.",
+     "Scripture", "https://www.youtube.com/playlist?list=PLH0Szn1yYNecanpQqdixWAm3zHdhY2kPR", "YouTube &middot; BibleProject"),
+    ("Bible Hub", "Free commentaries, cross-references, and original-language word studies for any verse.",
+     "Observation", "https://biblehub.com", "biblehub.com"),
+]
+
+def qr_svg(url):
+    import segno, io
+    buf = io.BytesIO()
+    segno.make(url, error='m').save(buf, kind='svg', scale=1, border=0, xmldecl=False, svgns=True, dark='#111', nl=False)
+    import re
+    svg = buf.getvalue().decode()
+    w = re.search(r'width="(\d+)"', svg).group(1); h = re.search(r'height="(\d+)"', svg).group(1)
+    svg = re.sub(r' (width|height)="\d+"', '', svg, count=2)
+    if 'viewBox' not in svg:
+        svg = svg.replace('<svg ', f'<svg viewBox="0 0 {w} {h}" ', 1)
+    return svg.replace('<svg ', '<svg class="qr" preserveAspectRatio="xMidYMid meet" shape-rendering="crispEdges" ', 1)
+
+def resources_page():
+    cards = []
+    for title, desc, helps, url, src in RESOURCES:
+        cards.append(f'''<div class="qr-card">{qr_svg(url)}<div class="qr-body">
+      <div class="qr-t">{title}</div><p>{desc}</p>
+      <div class="qr-meta"><span class="why-tag">{helps}</span><span class="qr-src">{src}</span></div></div></div>''')
+    return "".join(cards)
+
 OT = [
     ("Law", ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy"]),
     ("History", ["Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings", "2 Kings",
@@ -153,6 +184,16 @@ JOURNAL_CSS = r"""
   .ref-page .win, .ref-page .case { background: #fff; }
   ol.tl { background: transparent; }
 
+  /* QR resources page */
+  .qr-list { flex: 1; display: flex; flex-direction: column; gap: 9pt; margin-top: 4pt; }
+  .qr-card { flex: 1; display: flex; align-items: center; gap: 14pt; background: #fff; border: 2.2pt solid #111; border-radius: 10pt; padding: 10pt 14pt 10pt 12pt; }
+  .qr-card .qr { width: 78pt; height: 78pt; flex: none; }
+  .qr-t { font-family: var(--display), sans-serif; font-weight: 700; font-size: 13pt; line-height: 1.1; margin-bottom: 4pt; }
+  .qr-body p { margin: 0 0 7pt; font-size: 9pt; line-height: 1.4; color: #2d3138; }
+  .qr-meta { display: flex; align-items: center; gap: 8pt; flex-wrap: wrap; }
+  .qr-meta .why-tag { margin: 0; font-size: 6.6pt; }
+  .qr-src { font-size: 7.5pt; color: #4a5568; }
+
   /* resources card */
   .res-title { font-family: var(--display), sans-serif; font-weight: 700; font-size: 16pt; line-height: 1; padding-top: 4pt; }
   .mini-prompts.res { font-size: 9.6pt; }
@@ -227,8 +268,12 @@ pages.append(f'''<section class="page ref-page"><div class="inner">
   {timeline()}
   <div class="tl-note">Dates are approximate; scholars differ on some. &#9675; Old Testament &nbsp; &#9679; New Testament</div>
 </div></section>''')
+pages.append(f'''<section class="page ref-page"><div class="inner">
+  <div class="ptitle">Resources</div>
+  <div class="psub">Point your phone camera at a code to open it.</div>
+  <div class="qr-list">{resources_page()}</div>
+</div></section>''')
 pages.append('<section class="page ref-page" data-card="leader"></section>')
-pages.append('<section class="page ref-page" data-card="resources"></section>')
 pages += ['<section class="page" data-card="blank"></section>'] * BLANKS
 # reference pages that live at the back of the journal, with the timeline last
 for marker in ("66 Books, One Story", "The Big Story"):
