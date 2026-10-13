@@ -368,7 +368,7 @@ pages.append('''<section class="page ref-page"><div class="inner">
 </div></section>''')
 def spread_page(side, title, sub, shelf_html, legend_html, stops):
     # timeline header lives on the left page; the right page keeps the same space so both lines align
-    head = ('<div class="ptitle">Bible Timeline</div><div class="psub">66 books, one unified story that leads to Jesus.</div>'
+    head = ('<div class="ptitle">Bible Timeline</div><div class="psub">One unified story that leads to Jesus.</div>'
             if side == "ot" else '<div class="ptitle">&nbsp;</div><div class="psub">&nbsp;</div>')
     return f'''<section class="page ref-page spread"><div class="inner">
   <div class="tl-head">{head}</div>
@@ -382,7 +382,7 @@ def spread_page(side, title, sub, shelf_html, legend_html, stops):
 </div></section>'''
 pages.append(spread_page("ot", "Old Testament", "39 books. The story begins and points to a coming King.",
                          shelves(OT, 17), legend(OT), TIMELINE[:SPLIT]))
-pages.append(spread_page("nt", "New Testament", "27 books. The King arrives and points to a new creation.",
+pages.append(spread_page("nt", "New Testament", "27 books. The King arrives and announces the kingdom of God.",
                          shelves(NT, 14), legend(NT), TIMELINE[SPLIT:]))
 pages.append(f'''<section class="page ref-page"><div class="inner">
   <div class="ptitle">Resources</div>
