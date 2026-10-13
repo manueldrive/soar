@@ -76,7 +76,9 @@ def mountains_svg(light=False):
     return f'<svg class="{cls}" viewBox="0 0 {W} {H}" preserveAspectRatio="none" aria-hidden="true"><g{g}>{"".join(paths)}</g></svg>'
 
 def resources_qr():
-    code = qr_svg(RESOURCES_URL) if RESOURCES_URL else '<div class="qr-ph">QR code<br>coming soon</div>'
+    if not RESOURCES_URL:   # nothing on the inside cover until the resources page exists
+        return ""
+    code = qr_svg(RESOURCES_URL)
     return f'''<div class="ic-res">{code}
     <div class="ic-res-h">Resources</div>
     <div class="ic-res-sub">Scan for videos, study tools, and more.</div></div>'''
