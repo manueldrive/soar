@@ -625,6 +625,15 @@
   .ref-head { font-family: 'DM Sans', Arial, sans-serif; color: #111; }
   .ref-head .psub { margin-bottom: 8pt; }
 
+  /* reversed reference cards (leader guide + resources) */
+  .rev .mini-box { background: #3d3f45; border-color: #3d3f45; }
+  .rev .tblock .big, .rev .tblock .tword, .rev .res-h { color: #fff; }
+  .rev .tblock .kw, .rev .mini-prompts { color: #dcdee2; }
+  .rev .mini-prompts li::before { background: #dcdee2; }
+  .rev .mini-circle { background: #3d3f45; border-color: #fff; }
+  .rev .mini-label { color: #fff; }
+  .rev .mini-circle .mini-hint { color: #dcdee2; }
+
   /* resources card */
   .res-title { font-family: var(--display), sans-serif; font-weight: 700; font-size: 16pt; line-height: 1; padding-top: 4pt; }
   .mini-prompts.res { font-size: 9.6pt; }
@@ -782,7 +791,7 @@
     }
 
 
-document.querySelectorAll('[data-card="leader"]').forEach(function (p) { var c = buildLeaderCard(); setRefHead(c, 'Leader Guide', 'Questions to guide your prep in each section.'); p.appendChild(c); });
+document.querySelectorAll('[data-card="leader"]').forEach(function (p) { var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'Leader Guide', 'Questions to guide your prep in each section.'); p.appendChild(c); });
 document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="guided-soar-logo-white.png" alt="Guided SOAR">'; p.appendChild(c); });
 function setRefHead(card, title, sub) {
   card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
@@ -794,6 +803,7 @@ function resList(groups) {
 }
 function buildResourceCard() {
   var el = buildMiniCard();
+  el.classList.add('rev');
   setRefHead(el, 'Where to Find Answers', 'Tools in print and online for each section.');
   el.querySelector('.mtl').insertAdjacentHTML('beforeend', resList([
     ['In print', ['Study Bible book introductions', 'Bible handbook or atlas']],
@@ -813,7 +823,11 @@ function buildResourceCard() {
   return el;
 }
 document.querySelectorAll('[data-card="resources"]').forEach(function (p) { p.appendChild(buildResourceCard()); });
-document.querySelectorAll('[data-card="blank"]').forEach(function (p) { p.appendChild(buildMiniCard()); });
+document.querySelectorAll('[data-card="blank"]').forEach(function (p) {
+  var c = buildMiniCard();
+  c.querySelectorAll('.mini-field > span:first-child').forEach(function (l) { if (l.textContent.trim() === 'NAME:') l.textContent = 'DATE:'; });
+  p.appendChild(c);
+});
 </script>
 </body>
 </html>
