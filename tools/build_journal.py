@@ -38,6 +38,33 @@ def qr_svg(url):
         svg = svg.replace('<svg ', f'<svg viewBox="0 0 {w} {h}" ', 1)
     return svg.replace('<svg ', '<svg class="qr" preserveAspectRatio="xMidYMid meet" shape-rendering="crispEdges" ', 1)
 
+def mountains_svg():
+    """Three faint mountain ranges, each a shade lighter than the cover, behind the circle."""
+    import math, random
+    W, H = 396, 612
+    def ridge(seed, base, peaks, rough):
+        rnd = random.Random(seed)
+        pts = []
+        x = -10
+        while x <= W + 10:
+            y = base
+            for (px, ph, pw) in peaks:            # big mountain shapes
+                y -= ph * max(0.0, 1 - abs(x - px) / pw) ** 1.15
+            y += rnd.uniform(-rough, rough)       # rocky texture
+            pts.append((x, y))
+            x += rnd.uniform(5, 11)
+        return pts
+    layers = [
+        ("#34363b", ridge(3, 360, [(40, 70, 110), (150, 40, 90), (300, 95, 120), (380, 50, 80)], 3.5)),
+        ("#393b41", ridge(7, 430, [(90, 75, 120), (215, 45, 100), (340, 60, 110)], 3.0)),
+        ("#3f4147", ridge(11, 500, [(20, 40, 90), (150, 60, 120), (290, 35, 100), (396, 55, 100)], 2.5)),
+    ]
+    paths = []
+    for color, pts in layers:
+        d = f"M-10 {H} " + " ".join(f"L{x:.1f} {y:.1f}" for x, y in pts) + f" L{W + 10} {H} Z"
+        paths.append(f'<path d="{d}" fill="{color}"/>')
+    return f'<svg class="cover-mtn" viewBox="0 0 {W} {H}" preserveAspectRatio="none" aria-hidden="true">{"".join(paths)}</svg>'
+
 def resources_page():
     cards = []
     for title, desc, helps, url, src in RESOURCES:
@@ -129,6 +156,8 @@ JOURNAL_CSS = r"""
   .cover-circle { width: 176pt; height: 176pt; border-radius: 50%; background: #47494f; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30pt; }
   .cover-circle .lbl { font-family: var(--display), sans-serif; font-weight: 700; font-size: 15pt; color: #fff; letter-spacing: 0.3pt; }
   .back { background: #2e2f33; }
+  .cover-mtn { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  .cover .mini-card { position: relative; z-index: 1; }
 
   /* inside cover */
   .inside-cover { background: #e4e6ea; }
@@ -230,7 +259,7 @@ JOURNAL_CSS = r"""
 """
 
 pages = []
-pages.append('<section class="page cover" data-card="cover"></section>')
+pages.append(f'<section class="page cover" data-card="cover">{mountains_svg()}</section>')
 pages.append('''<section class="page inside-cover" data-card="inside">
   <div class="owner">
     <div class="owner-h">This journal belongs to</div>
