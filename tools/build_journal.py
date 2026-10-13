@@ -15,6 +15,10 @@ builders = js[js.index("    // ---------- shared caption builder") : js.index(" 
 
 BLANKS = 12
 
+# v1 keeps it simple: cover -> name page -> leader guide. These pages are saved for a later version.
+INCLUDE_WHY = False
+INCLUDE_RESOURCES = False
+
 RESOURCES = [
     ("How to Read the Bible", "BibleProject video series on reading the Bible well: genre, story, poetry, and more.",
      "Scripture &middot; Observation", "https://www.youtube.com/playlist?list=PLH0Szn1yYNedn4FbBMMtOlGN-BPLQ54IH", "YouTube &middot; BibleProject"),
@@ -316,6 +320,12 @@ pages += ['<section class="page" data-card="blank"></section>'] * BLANKS
 for marker in ("66 Books, One Story", "The Big Story"):
     i = next(k for k, pg in enumerate(pages) if marker in pg)
     pages.append(pages.pop(i))
+# drop pages that are saved for later versions
+if not INCLUDE_WHY:
+    pages = [pg for pg in pages if 'Why Guided SOAR' not in pg]
+if not INCLUDE_RESOURCES:
+    pages = [pg for pg in pages if '<div class="ptitle">Resources</div>' not in pg]
+
 # faint mountain range along the bottom of every grey reference page
 pages = [pg.replace('class="page ref-page"', 'class="page ref-page"', 1) for pg in pages]
 pages = [re.sub(r'(<section class="page ref-page[^>]*>)', lambda m: m.group(1) + mountains_svg(light=True), pg, count=1)
