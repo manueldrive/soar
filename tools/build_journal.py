@@ -117,8 +117,11 @@ JOURNAL_CSS = r"""
 
   /* why guided soar */
   .why { display: flex; flex-direction: column; gap: 9pt; flex: 1; margin-top: 4pt; }
-  .why-row { flex: 1; display: flex; gap: 11pt; align-items: center; background: #fff; border: 2.2pt solid #111; border-radius: 10pt; padding: 10pt 12pt 10pt 10pt; }
+  .why-row { flex: 1; display: flex; align-items: center; background: #fff; border: 2.2pt solid #111; border-radius: 10pt; padding: 10pt 12pt 10pt 10pt; }
   .why-row.center { background: #fff; border-width: 3pt; }
+  .why-tag { display: inline-block; font-family: var(--display), sans-serif; font-weight: 600; font-size: 7.5pt; letter-spacing: 1.4pt; text-transform: uppercase; color: #111; border: 1.4pt solid #111; border-radius: 99pt; padding: 2pt 8pt 1.6pt; margin-bottom: 6pt; }
+  .why-tag.dark { background: #111; color: #fff; }
+  .why-row.center { background: #fff; }
   .why-badge { flex: none; width: 26pt; height: 26pt; display: flex; align-items: center; justify-content: center; font-family: var(--display), sans-serif; font-weight: 700; font-size: 22pt; line-height: 1; color: #111; }
   .why-badge.ring { box-sizing: border-box; border: 3pt solid #111; border-radius: 50%; width: 24pt; height: 24pt; margin: 1pt; }
   .why-t { font-family: var(--display), sans-serif; font-weight: 600; font-size: 12.5pt; line-height: 1.15; margin: 0 0 4pt; }
@@ -198,15 +201,15 @@ pages.append('''<section class="page ref-page"><div class="inner">
   <div class="ptitle">Why Guided SOAR</div>
   <p class="lede">The Bible is a book about God. Guided SOAR is a simple way to read it so that, passage by passage, you see Him more clearly and let that change you.</p>
   <div class="why">
-    <div class="why-row"><span class="why-badge">S</span><div><div class="why-t">Step back before you dive in.</div>
+    <div class="why-row"><div><span class="why-tag">Scripture</span><div class="why-t">Step back before you dive in.</div>
       <p>Knowing who wrote a book, when, and why gives you perspective to read it the way it was meant to be read, not just the way it sounds to us today.</p></div></div>
-    <div class="why-row"><span class="why-badge">O</span><div><div class="why-t">Slow down.</div>
+    <div class="why-row"><div><span class="why-tag">Observation</span><div class="why-t">Slow down.</div>
       <p>Notice words, wrestle with hard ideas, follow connections. It&rsquo;s okay not to have every answer today. Understanding grows a little at a time.</p></div></div>
-    <div class="why-row center"><span class="why-badge ring"></span><div><div class="why-t">Keep the main thing the main thing.</div>
+    <div class="why-row center"><div><span class="why-tag dark">Central Truth</span><div class="why-t">Keep the main thing the main thing.</div>
       <p>We read to know God, not just to find tips for life. That&rsquo;s why every page has His character at the center, and why who He is shapes who we are.</p></div></div>
-    <div class="why-row"><span class="why-badge">A</span><div><div class="why-t">Understand first, then apply.</div>
+    <div class="why-row"><div><span class="why-tag">Application</span><div class="why-t">Understand first, then apply.</div>
       <p>Ask what it says, then what it means, and only then what it means for you. Application built on the text will hold up.</p></div></div>
-    <div class="why-row"><span class="why-badge">R</span><div><div class="why-t">Pray the whole way through.</div>
+    <div class="why-row"><div><span class="why-tag">Reflection</span><div class="why-t">Pray the whole way through.</div>
       <p>Before, during, and after. The same Spirit who inspired these words helps us understand them and live them out.</p></div></div>
   </div>
 </div></section>''')
