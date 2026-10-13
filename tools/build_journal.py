@@ -168,9 +168,8 @@ pages.append('''<section class="page inside-cover" data-card="inside">
   </div>
 </section>''')
 pages.append('''<section class="page"><div class="inner">
-  <div class="eyebrow">MS Hang</div>
   <div class="ptitle">Why We&rsquo;re Here</div>
-  <p class="lede">Each weekend during every GFC service, we create a place for 6th&ndash;8th graders. This environment is designed for every student to have fun, find community, and <b>learn how to read their Bible for themselves.</b></p>
+  <p class="lede">We create a place where every student can have fun, find community, and <b>learn how to read their Bible for themselves.</b></p>
   <div class="sec-h">What winning looks like</div>
   <div class="win"><span class="num">1</span><div><div class="win-t">Students are having fun and finding community.</div>
     <div class="chips"><span>Energized (not just compliant)</span><span>Laughing</span><span>Competing</span><span>Talking</span></div></div></div>
