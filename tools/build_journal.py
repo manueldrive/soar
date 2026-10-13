@@ -130,6 +130,10 @@ JOURNAL_CSS = r"""
   .goals { margin: 0; padding-left: 13pt; font-size: 9.4pt; line-height: 1.42; }
   .goals li { margin-bottom: 4pt; }
 
+  /* reference-page header on cards */
+  .ref-head { font-family: 'DM Sans', Arial, sans-serif; color: #111; }
+  .ref-head .psub { margin-bottom: 8pt; }
+
   /* resources card */
   .res-title { font-family: var(--display), sans-serif; font-weight: 700; font-size: 16pt; line-height: 1; padding-top: 4pt; }
   .mini-prompts.res { font-size: 9.6pt; }
@@ -223,8 +227,11 @@ html = f'''<!doctype html>
 {chr(10).join(pages)}
 <script>
 {builders}
-document.querySelectorAll('[data-card="leader"]').forEach(function (p) {{ p.appendChild(buildLeaderCard()); }});
+document.querySelectorAll('[data-card="leader"]').forEach(function (p) {{ var c = buildLeaderCard(); setRefHead(c, 'Leader Guide', 'Questions to guide your prep in each section.'); p.appendChild(c); }});
 document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="guided-soar-logo-white.png" alt="Guided SOAR">'; p.appendChild(c); }});
+function setRefHead(card, title, sub) {{
+  card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
+}}
 function resList(groups) {{
   return '<div class="mini-prompts res">' + groups.map(function (g) {{
     return '<div class="res-h">' + g[0] + '</div><ul>' + g[1].map(function (t) {{ return '<li>' + t + '</li>'; }}).join('') + '</ul>';
@@ -232,7 +239,7 @@ function resList(groups) {{
 }}
 function buildResourceCard() {{
   var el = buildMiniCard();
-  el.querySelector('.mini-header').innerHTML = '<div class="res-title">Where to Find Answers</div>';
+  setRefHead(el, 'Where to Find Answers', 'Tools in print and online for each section.');
   el.querySelector('.mtl').insertAdjacentHTML('beforeend', resList([
     ['In print', ['Study Bible book introductions', 'Bible handbook or atlas']],
     ['Online', ['BibleProject overview videos', 'YouVersion Bible App book intros']]]));
