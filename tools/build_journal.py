@@ -55,9 +55,9 @@ def mountains_svg():
         return pts
     layers = [
         # far ridge: crosses the lower part of the circle and climbs to the right, like the photo
-        ("#28292d", ridge(5, 442, [(-40, 80, 200), (440, 185, 330)], 2.6, step=(8, 16))),
+        ("#1d1e21", ridge(5, 388, [(-30, 14, 160), (150, -4, 120), (330, 26, 200)], 1.3, step=(5, 10))),
         # near ridge: darkest, low rolling hills in front
-        ("#1f2023", ridge(9, 545, [(-30, 120, 270), (430, 70, 210)], 2.2, step=(9, 18))),
+        ("#111214", ridge(9, 478, [(30, 22, 170), (200, 6, 120), (380, 30, 170)], 1.1, step=(5, 10))),
     ]
     paths = []
     for color, pts in layers:
@@ -148,7 +148,7 @@ JOURNAL_CSS = r"""
   .cover { background: #2e2f33; }
   /* cover reuses the blank card so the circle sits exactly where it does on every template */
   .cover-card .mini-brand, .cover-card .mini-box { visibility: hidden; }
-  .cover-card .mini-circle { background: #47494f; border-color: #47494f; }
+  .cover-card .mini-circle { background: #ececee; border-color: #ececee; box-shadow: 0 0 40pt 14pt rgba(236,236,238,0.18); }
   .cover-card .mini-label { color: #fff; }
   .cover-card .mini-circle { gap: 9pt; padding: 0; }
   .cover-logo { height: 40pt; width: auto; display: block; }
@@ -156,7 +156,7 @@ JOURNAL_CSS = r"""
   .cover-circle { width: 176pt; height: 176pt; border-radius: 50%; background: #47494f; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30pt; }
   .cover-circle .lbl { font-family: var(--display), sans-serif; font-weight: 700; font-size: 15pt; color: #fff; letter-spacing: 0.3pt; }
   .back { background: #2e2f33; }
-  .cover { background: linear-gradient(180deg, #2a2b2f 0%, #2e2f33 45%, #3a3b40 72%); }
+  .cover { background: radial-gradient(circle at 50% 54%, #6a6c72 0%, #4a4c52 22%, #2f3034 48%, #1f2023 80%); }
   .cover-mtn { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
   .cover .mini-card { position: relative; z-index: 1; }
 
@@ -325,7 +325,7 @@ html = f'''<!doctype html>
 <script>
 {builders}
 document.querySelectorAll('[data-card="leader"]').forEach(function (p) {{ var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'Leader Guide', 'Questions to guide your prep in each section.'); p.appendChild(c); }});
-document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="guided-soar-logo-white.png" alt="Guided SOAR">'; p.appendChild(c); }});
+document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="guided-soar-logo.png" alt="Guided SOAR">'; p.appendChild(c); }});
 function setRefHead(card, title, sub) {{
   card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
 }}
