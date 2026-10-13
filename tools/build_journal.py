@@ -38,7 +38,7 @@ def qr_svg(url):
         svg = svg.replace('<svg ', f'<svg viewBox="0 0 {w} {h}" ', 1)
     return svg.replace('<svg ', '<svg class="qr" preserveAspectRatio="xMidYMid meet" shape-rendering="crispEdges" ', 1)
 
-def mountains_svg():
+def mountains_svg(light=False):
     """Sunset-style landscape: the circle sits like a setting sun, half-hidden by hazy ridges
     that get darker toward the front (inspired by a mountain sunset photo)."""
     import random
@@ -59,11 +59,14 @@ def mountains_svg():
         # near ridge: darkest, low rolling hills in front
         ("#1f2023", ridge(9, 505, [(60, 22, 110), (200, 14, 120), (345, 38, 130)], 1.2)),
     ]
+    if light:   # same ranges, pale and lower, for the grey reference pages
+        layers = [(c, pts) for c, (_, pts) in zip(("#d9dbe0", "#cfd2d8"), layers)]
     paths = []
     for color, pts in layers:
         d = f"M-10 {H} " + " ".join(f"L{x:.1f} {y:.1f}" for x, y in pts) + f" L{W + 10} {H} Z"
         paths.append(f'<path d="{d}" fill="{color}"/>')
-    return f'<svg class="cover-mtn" viewBox="0 0 {W} {H}" preserveAspectRatio="none" aria-hidden="true">{"".join(paths)}</svg>'
+    cls, g = ("ref-mtn", ' transform="translate(0 120)"') if light else ("cover-mtn", "")
+    return f'<svg class="{cls}" viewBox="0 0 {W} {H}" preserveAspectRatio="none" aria-hidden="true"><g{g}>{"".join(paths)}</g></svg>'
 
 def resources_page():
     cards = []
@@ -211,6 +214,9 @@ JOURNAL_CSS = r"""
 
   /* reference pages get a light grey page so they stand apart from journaling pages */
   .ref-page { background: #e4e6ea; }
+  .ref-mtn { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  .ref-page > .inner, .ref-page > .mini-card, .inside-cover > .owner { position: relative; z-index: 1; }
+  .inside-cover > .owner { position: absolute; }
   .ref-page .win, .ref-page .case { background: #fff; }
   ol.tl { background: transparent; }
 
@@ -310,6 +316,12 @@ pages += ['<section class="page" data-card="blank"></section>'] * BLANKS
 for marker in ("66 Books, One Story", "The Big Story"):
     i = next(k for k, pg in enumerate(pages) if marker in pg)
     pages.append(pages.pop(i))
+# faint mountain range along the bottom of every grey reference page
+pages = [pg.replace('class="page ref-page"', 'class="page ref-page"', 1) for pg in pages]
+pages = [re.sub(r'(<section class="page ref-page[^>]*>)', lambda m: m.group(1) + mountains_svg(light=True), pg, count=1)
+         if 'ref-page' in pg else pg for pg in pages]
+pages = [re.sub(r'(<section class="page inside-cover"[^>]*>)', lambda m: m.group(1) + mountains_svg(light=True), pg, count=1)
+         if 'inside-cover' in pg else pg for pg in pages]
 pages.append('<section class="page back"></section>')
 
 html = f'''<!doctype html>
