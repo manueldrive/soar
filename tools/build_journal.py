@@ -113,6 +113,20 @@ assert sum(len(b) for _, b in OT) == 39 and sum(len(b) for _, b in NT) == 27
 
 SHADES = ["g1", "g2", "g3", "g4", "g5"]  # black → white
 
+# chapter counts give each spine a width that hints at how long the book is
+CHAPTERS = {
+    "Genesis": 50, "Exodus": 40, "Leviticus": 27, "Numbers": 36, "Deuteronomy": 34, "Joshua": 24, "Judges": 21,
+    "Ruth": 4, "1 Samuel": 31, "2 Samuel": 24, "1 Kings": 22, "2 Kings": 25, "1 Chronicles": 29, "2 Chronicles": 36,
+    "Ezra": 10, "Nehemiah": 13, "Esther": 10, "Job": 42, "Psalms": 150, "Proverbs": 31, "Ecclesiastes": 12,
+    "Song of Songs": 8, "Isaiah": 66, "Jeremiah": 52, "Lamentations": 5, "Ezekiel": 48, "Daniel": 12, "Hosea": 14,
+    "Joel": 3, "Amos": 9, "Obadiah": 1, "Jonah": 4, "Micah": 7, "Nahum": 3, "Habakkuk": 3, "Zephaniah": 3,
+    "Haggai": 2, "Zechariah": 14, "Malachi": 4, "Matthew": 28, "Mark": 16, "Luke": 24, "John": 21, "Acts": 28,
+    "Romans": 16, "1 Corinthians": 16, "2 Corinthians": 13, "Galatians": 6, "Ephesians": 6, "Philippians": 4,
+    "Colossians": 4, "1 Thessalonians": 5, "2 Thessalonians": 3, "1 Timothy": 6, "2 Timothy": 4, "Titus": 3,
+    "Philemon": 1, "Hebrews": 13, "James": 5, "1 Peter": 5, "2 Peter": 3, "1 John": 5, "2 John": 1, "3 John": 1,
+    "Jude": 1, "Revelation": 22,
+}
+
 def shelves(groups, split_at):
     flat = [(name, SHADES[i]) for i, (_, books) in enumerate(groups) for name in books]
     rows = [flat[:split_at], flat[split_at:]]
@@ -120,8 +134,10 @@ def shelves(groups, split_at):
     for r, row in enumerate(rows):
         spines = []
         for k, (name, shade) in enumerate(row):
-            h = 86 + ((k * 37 + r * 13 + len(name) * 5) % 5) * 3   # gentle, repeatable height variety
-            spines.append(f'<div class="spine {shade}" style="height:{h}%"><span>{name}</span></div>')
+            h = 84 + ((k * 37 + r * 13 + len(name) * 5) % 6) * 3   # gentle, repeatable height variety
+            grow = 1 + CHAPTERS[name] ** 0.5 / 3                    # longer books, wider spines
+            style = f"height:{h}%;flex-grow:{grow:.2f}"
+            spines.append(f'<div class="spine {shade}" style="{style}"><span>{name}</span></div>')
         out.append('<div class="shelf">' + "".join(spines) + "</div>")
     return "".join(out)
 
@@ -144,7 +160,7 @@ TIMELINE = [
     ("cross", "Life, Death &amp; Resurrection", "Matthew &middot; Mark &middot; Luke &middot; John"),
     ("church", "Church", "Acts &middot; Romans&ndash;Jude"),
     ("return", "Jesus&rsquo; Return", "Revelation"),
-    ("restoration", "Restoration", "Revelation 21&ndash;22"),
+    ("restoration", "New Creation", "Revelation 21&ndash;22"),
 ]
 
 def timeline():
@@ -294,8 +310,11 @@ JOURNAL_CSS = r"""
   .case-h { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--display), sans-serif; font-weight: 700; font-size: 11pt; margin: 0 2pt 4pt; }
   .case-h small { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 8pt; color: #4a5568; }
   .shelf { height: 102pt; display: flex; align-items: flex-end; gap: 1.2pt; border-bottom: 3.5pt solid #111; margin-bottom: 7pt; padding: 0 1pt; }
-  .spine { flex: 1 1 0; border: 0.9pt solid #111; border-bottom: none; border-radius: 2pt 2pt 0 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  .spine span { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 6.3pt; font-weight: 500; white-space: nowrap; letter-spacing: 0.1pt; }
+  .spine { flex: 1 1 0; min-width: 11pt; position: relative; box-sizing: border-box; border: 1pt solid #111; border-bottom: none; border-radius: 1.5pt 1.5pt 0 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  /* bound-book detail: a pair of bands near the head and foot of every spine */
+  .spine::before, .spine::after { content: ''; position: absolute; left: 0; right: 0; height: 2.2pt; border-top: 0.7pt solid currentColor; border-bottom: 0.7pt solid currentColor; opacity: 0.55; }
+  .spine::before { top: 6pt; } .spine::after { bottom: 6pt; }
+  .spine span { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 6.3pt; font-weight: 600; white-space: nowrap; letter-spacing: 0.1pt; }
   .g1 { background: #111; color: #fff; } .g2 { background: #4a4d55; color: #fff; } .g3 { background: #9a9ea6; color: #111; }
   .g4 { background: #cfd2d7; color: #111; } .g5 { background: #fff; color: #111; }
   .legend { display: flex; flex-wrap: wrap; gap: 3pt 9pt; font-size: 7.5pt; margin: -1pt 2pt 7pt; }
