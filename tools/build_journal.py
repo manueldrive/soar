@@ -20,7 +20,7 @@ INCLUDE_WHY = False
 INCLUDE_RESOURCES = False
 
 # Inside-cover QR code. Set this to your resources page URL and rebuild; until then a placeholder box prints.
-RESOURCES_URL = None
+RESOURCES_URL = "https://dwellmethod.vercel.app/guidedsoar"   # Guided SOAR landing page on the Dwell site
 
 RESOURCES = [
     ("How to Read the Bible", "BibleProject video series on reading the Bible well: genre, story, poetry, and more.",
@@ -81,7 +81,7 @@ def resources_qr():
     code = qr_svg(RESOURCES_URL)
     return f'''<div class="ic-res">{code}
     <div class="ic-res-h">Resources</div>
-    <div class="ic-res-sub">Scan for videos, study tools, and more.</div></div>'''
+    <div class="ic-res-sub">Scan for templates, podcasts, and study tools.</div></div>'''
 
 def resources_page():
     cards = []
