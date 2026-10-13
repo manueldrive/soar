@@ -134,14 +134,8 @@ JOURNAL_CSS = r"""
   .ref-head { font-family: 'DM Sans', Arial, sans-serif; color: #111; }
   .ref-head .psub { margin-bottom: 8pt; }
 
-  /* reversed reference cards (leader guide + resources) */
-  .rev .mini-box { background: #3d3f45; border-color: #3d3f45; }
-  .rev .tblock .big, .rev .tblock .tword, .rev .res-h { color: #fff; }
-  .rev .tblock .kw, .rev .mini-prompts { color: #dcdee2; }
-  .rev .mini-prompts li::before { background: #dcdee2; }
-  .rev .mini-circle { background: #3d3f45; border-color: #fff; }
-  .rev .mini-label { color: #fff; }
-  .rev .mini-circle .mini-hint { color: #dcdee2; }
+  /* reference pages get a light grey page so they stand apart from journaling pages */
+  .ref-page { background: #e4e6ea; }
 
   /* resources card */
   .res-title { font-family: var(--display), sans-serif; font-weight: 700; font-size: 16pt; line-height: 1; padding-top: 4pt; }
@@ -219,8 +213,8 @@ pages.append(f'''<section class="page"><div class="inner">
   {timeline()}
   <div class="tl-note">Dates are approximate; scholars differ on some. &#9675; Old Testament &nbsp; &#9679; New Testament</div>
 </div></section>''')
-pages.append('<section class="page" data-card="leader"></section>')
-pages.append('<section class="page" data-card="resources"></section>')
+pages.append('<section class="page ref-page" data-card="leader"></section>')
+pages.append('<section class="page ref-page" data-card="resources"></section>')
 pages += ['<section class="page" data-card="blank"></section>'] * BLANKS
 pages.append('<section class="page back"></section>')
 
