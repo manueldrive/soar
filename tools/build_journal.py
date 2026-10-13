@@ -299,7 +299,9 @@ JOURNAL_CSS = r"""
   /* horizontal timeline across the back spread */
   .spread .inner { display: flex; flex-direction: column; }
   .spread .shelf { height: 122pt; }
-  .tlh { position: relative; flex: 1; margin: 2pt 0 0; }
+  .tlh { position: relative; flex: none; height: 150pt; margin: 0; }
+  .shelf-block { margin-top: auto; }
+  .spread .legend { margin-bottom: 0; }
   .hs-line { position: absolute; top: 50%; height: 2pt; margin-top: -1pt; background: #111; }
   .hs-ic { position: absolute; top: 50%; width: 30pt; height: 30pt; margin: -15pt 0 0 -15pt; box-sizing: border-box; border: 1.8pt solid #111; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; z-index: 2; }
   .hs-ic img { width: 21pt; height: 21pt; display: block; }
@@ -364,20 +366,24 @@ pages.append('''<section class="page ref-page"><div class="inner">
       <p>Before, during, and after. The same Spirit who inspired these words helps us understand them and live them out.</p></div></div>
   </div>
 </div></section>''')
-pages.append(f'''<section class="page ref-page spread"><div class="inner">
-  <div class="ptitle">Old Testament</div>
-  <div class="psub">39 books. The story begins and points to a coming King.</div>
-  <div class="case">{shelves(OT, 17)}</div>
-  <div class="legend">{legend(OT)}</div>
-  {timeline_half(TIMELINE[:SPLIT], "ot")}
-</div></section>''')
-pages.append(f'''<section class="page ref-page spread"><div class="inner">
-  <div class="ptitle">New Testament</div>
-  <div class="psub">27 books. The King arrives and points to a new creation.</div>
-  <div class="case">{shelves(NT, 14)}</div>
-  <div class="legend">{legend(NT)}</div>
-  {timeline_half(TIMELINE[SPLIT:], "nt")}
-</div></section>''')
+def spread_page(side, title, sub, shelf_html, legend_html, stops):
+    # timeline header lives on the left page; the right page keeps the same space so both lines align
+    head = ('<div class="ptitle">Bible Timeline</div><div class="psub">66 books, one unified story that leads to Jesus.</div>'
+            if side == "ot" else '<div class="ptitle">&nbsp;</div><div class="psub">&nbsp;</div>')
+    return f'''<section class="page ref-page spread"><div class="inner">
+  <div class="tl-head">{head}</div>
+  {timeline_half(stops, side)}
+  <div class="shelf-block">
+    <div class="ptitle" data-mark="{side}">{title}</div>
+    <div class="psub">{sub}</div>
+    <div class="case">{shelf_html}</div>
+    <div class="legend">{legend_html}</div>
+  </div>
+</div></section>'''
+pages.append(spread_page("ot", "Old Testament", "39 books. The story begins and points to a coming King.",
+                         shelves(OT, 17), legend(OT), TIMELINE[:SPLIT]))
+pages.append(spread_page("nt", "New Testament", "27 books. The King arrives and points to a new creation.",
+                         shelves(NT, 14), legend(NT), TIMELINE[SPLIT:]))
 pages.append(f'''<section class="page ref-page"><div class="inner">
   <div class="ptitle">Resources</div>
   <div class="psub">Point your phone camera at a code to open it.</div>
@@ -386,7 +392,7 @@ pages.append(f'''<section class="page ref-page"><div class="inner">
 pages.append('<section class="page ref-page" data-card="leader"></section>')
 pages += ['<section class="page" data-card="blank"></section>'] * BLANKS
 # the OT / NT spread lives at the back: OT on an even (left) page, NT on the facing right page
-for marker in ('<div class="ptitle">Old Testament</div>', '<div class="ptitle">New Testament</div>'):
+for marker in ('data-mark="ot"', 'data-mark="nt"'):
     i = next(k for k, pg in enumerate(pages) if marker in pg)
     pages.append(pages.pop(i))
 # drop pages that are saved for later versions
