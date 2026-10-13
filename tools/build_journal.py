@@ -127,29 +127,30 @@ def legend(groups):
     return "".join(f'<span class="key"><i class="{SHADES[i]}"></i>{name} <b>{len(b)}</b></span>'
                    for i, (name, b) in enumerate(groups))
 
+# Big-story timeline. Icons are cut from the timeline graphic (assets/timeline/*.png).
+# No dates on purpose: many are debated, and the story is the point.
 TIMELINE = [
-    ("Creation &amp; the Fall", "The beginning", "Genesis 1&ndash;11"),
-    ("Abraham, Isaac &amp; Jacob", "c. 2000&ndash;1800 BC", "Genesis 12&ndash;50 &middot; (Job may be set here)"),
-    ("Exodus &amp; the Law", "c. 1446 BC", "Exodus &middot; Leviticus &middot; Numbers &middot; Deuteronomy"),
-    ("Into the Promised Land", "c. 1400&ndash;1050 BC", "Joshua &middot; Judges &middot; Ruth"),
-    ("United Kingdom: Saul, David, Solomon", "c. 1050&ndash;930 BC",
-     "1&ndash;2 Samuel &middot; 1 Kings &middot; 1 Chronicles &middot; Psalms &middot; Proverbs &middot; Ecclesiastes &middot; Song of Songs"),
-    ("Divided Kingdom: Israel &amp; Judah", "930&ndash;722 BC",
-     "1&ndash;2 Kings &middot; 2 Chronicles &middot; Isaiah &middot; Hosea &middot; Amos &middot; Jonah &middot; Micah"),
-    ("Judah Alone, Then Exile", "722&ndash;586 BC", "Jeremiah &middot; Lamentations &middot; Nahum &middot; Habakkuk &middot; Zephaniah"),
-    ("Exile in Babylon", "586&ndash;538 BC", "Ezekiel &middot; Daniel &middot; Obadiah"),
-    ("Return &amp; Rebuild", "538&ndash;430 BC", "Ezra &middot; Nehemiah &middot; Esther &middot; Haggai &middot; Zechariah &middot; Malachi"),
-    ("Jesus", "c. 5 BC &ndash; AD 30", "Matthew &middot; Mark &middot; Luke &middot; John"),
-    ("The Church Spreads", "c. AD 30&ndash;90", "Acts &middot; Romans&ndash;Jude"),
-    ("Revelation: All Things Made New", "c. AD 95", "Revelation"),
+    ("creation", "Creation", "Genesis 1&ndash;2"),
+    ("sin", "Sin", "Genesis 3&ndash;5"),
+    ("flood", "Flood", "Genesis 6&ndash;11"),
+    ("abraham", "Abraham", "Genesis 12&ndash;50 &middot; Job is often set here"),
+    ("land", "Promised Land", "Exodus &middot; Leviticus &middot; Numbers &middot; Deuteronomy &middot; Joshua &middot; Judges &middot; Ruth"),
+    ("kings", "Kings", "1&ndash;2 Samuel &middot; 1&ndash;2 Kings &middot; 1&ndash;2 Chronicles &middot; Ezra &middot; Nehemiah &middot; Esther &middot; Psalms&ndash;Song of Songs &middot; the Prophets"),
+    ("silence", "Silence", "Between the Testaments"),
+    ("birth", "Jesus&rsquo; Birth", "Matthew 1&ndash;2 &middot; Luke 1&ndash;2"),
+    ("cross", "Life, Death &amp; Resurrection", "Matthew &middot; Mark &middot; Luke &middot; John"),
+    ("church", "Church", "Acts &middot; Romans&ndash;Jude"),
+    ("return", "Jesus&rsquo; Return", "Revelation"),
+    ("restoration", "Restoration", "Revelation 21&ndash;22"),
 ]
 
 def timeline():
     items = []
-    for i, (title, date, books) in enumerate(TIMELINE):
-        nt = " nt" if i >= 9 else ""
-        items.append(f'<li class="ev{nt}"><div class="date">{date}</div><div class="what">{title}</div><div class="books">{books}</div></li>')
-    return '<ol class="tl">' + "".join(items) + "</ol>"
+    for icon, title, books in TIMELINE:
+        small = " small" if icon == "silence" else ""
+        items.append(f'<li class="st"><span class="st-ic{small}"><img src="assets/timeline/{icon}.png" alt=""></span>'
+                     f'<div><div class="what">{title}</div><div class="books">{books}</div></div></li>')
+    return '<ol class="tl2">' + "".join(items) + "</ol>"
 
 JOURNAL_CSS = r"""
   @page { size: 5.5in 8.5in; margin: 0; }
@@ -272,6 +273,16 @@ JOURNAL_CSS = r"""
   .key i { width: 8pt; height: 8pt; border: 0.9pt solid #111; border-radius: 1.5pt; display: inline-block; }
   .key b { color: #4a5568; font-weight: 500; }
 
+  /* icon timeline */
+  .tl2 { list-style: none; margin: 0; padding: 0; position: relative; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+  .tl2::before { content: ''; position: absolute; left: 16pt; top: 16pt; bottom: 16pt; width: 2pt; margin-left: -1pt; background: #111; }
+  .st { display: flex; align-items: center; gap: 11pt; position: relative; }
+  .st-ic { flex: none; width: 32pt; height: 32pt; display: flex; align-items: center; justify-content: center; }
+  .st-ic img { width: 32pt; height: 32pt; display: block; }
+  .st-ic.small img { width: 20pt; height: 20pt; }
+  .st .what { font-family: var(--display), sans-serif; font-weight: 600; font-size: 10.5pt; line-height: 1.1; }
+  .st .books { font-size: 7.6pt; color: #4a5568; line-height: 1.3; margin-top: 1pt; }
+
   /* timeline */
   .tl { list-style: none; margin: 0; padding: 0 0 0 16pt; position: relative; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
   .tl::before { content: ''; position: absolute; left: 4pt; top: 4pt; bottom: 4pt; width: 2.5pt; background: #111; border-radius: 2pt; }
@@ -324,7 +335,6 @@ pages.append(f'''<section class="page ref-page"><div class="inner">
   <div class="ptitle">The Big Story</div>
   <div class="psub">Where each book fits in the story of God and His people.</div>
   {timeline()}
-  <div class="tl-note">Dates are approximate; scholars differ on some. &#9675; Old Testament &nbsp; &#9679; New Testament</div>
 </div></section>''')
 pages.append(f'''<section class="page ref-page"><div class="inner">
   <div class="ptitle">Resources</div>
