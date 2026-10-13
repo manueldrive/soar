@@ -65,15 +65,15 @@ TIMELINE = [
     ("Judah Alone, Then Exile", "722&ndash;586 BC", "Jeremiah &middot; Lamentations &middot; Nahum &middot; Habakkuk &middot; Zephaniah"),
     ("Exile in Babylon", "586&ndash;538 BC", "Ezekiel &middot; Daniel &middot; Obadiah"),
     ("Return &amp; Rebuild", "538&ndash;430 BC", "Ezra &middot; Nehemiah &middot; Esther &middot; Haggai &middot; Zechariah &middot; Malachi"),
-    ("400 Quiet Years", "c. 430&ndash;5 BC", "Between the Testaments"),
     ("Jesus", "c. 5 BC &ndash; AD 30", "Matthew &middot; Mark &middot; Luke &middot; John"),
-    ("The Church Spreads", "c. AD 30&ndash;95", "Acts &middot; the Letters &middot; Revelation"),
+    ("The Church Spreads", "c. AD 30&ndash;90", "Acts &middot; Romans&ndash;Jude"),
+    ("Revelation: All Things Made New", "c. AD 95", "Revelation"),
 ]
 
 def timeline():
     items = []
     for i, (title, date, books) in enumerate(TIMELINE):
-        nt = " nt" if i >= 10 else ""
+        nt = " nt" if i >= 9 else ""
         items.append(f'<li class="ev{nt}"><div class="date">{date}</div><div class="what">{title}</div><div class="books">{books}</div></li>')
     return '<ol class="tl">' + "".join(items) + "</ol>"
 
