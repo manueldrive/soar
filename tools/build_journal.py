@@ -152,6 +152,28 @@ def timeline():
                      f'<div><div class="what">{title}</div><div class="books">{books}</div></div></li>')
     return '<ol class="tl2">' + "".join(items) + "</ol>"
 
+# Horizontal timeline that runs across the back spread: the line leaves the left page at the
+# gutter and picks up again on the right page, so the story reads as one piece.
+SPLIT = next(i for i, t in enumerate(TIMELINE) if t[0] == "birth")
+def timeline_half(stops, side):
+    W, LBL, PAD = 356, 92, 20                       # content width, label width, inset of end stops
+    n = len(stops)
+    first = PAD if side == "ot" else 46               # NT starts a little in, so the line visibly arrives
+    last = W - 46 if side == "ot" else W - PAD
+    out = []
+    for i, (icon, title, books) in enumerate(stops):
+        x = first + i * (last - first) / (n - 1)
+        left = min(max(x - LBL / 2, 0), W - LBL)
+        align = "left" if left == 0 else "right" if left == W - LBL else "center"
+        pos = "up" if i % 2 == 0 else "down"
+        small = " small" if icon == "silence" else ""
+        out.append(f'<span class="hs-ic{small}" style="left:{x:.1f}pt"><img src="assets/timeline/{icon}.png" alt=""></span>'
+                   f'<span class="hs-stem {pos}{small}" style="left:{x:.1f}pt"></span>'
+                   f'<div class="hs-lbl {pos}" style="left:{left:.1f}pt;text-align:{align}">'
+                   f'<div class="what">{title}</div><div class="books">{books.replace(" &middot; ", "&nbsp;&middot; ")}</div></div>')
+    line = 'left:20pt;right:-20pt' if side == "ot" else 'left:-20pt;right:20pt'
+    return f'<div class="tlh {side}"><span class="hs-line" style="{line}"></span>{"".join(out)}</div>'
+
 JOURNAL_CSS = r"""
   @page { size: 5.5in 8.5in; margin: 0; }
   html, body { margin: 0; padding: 0; background: #fff; }
@@ -273,6 +295,23 @@ JOURNAL_CSS = r"""
   .key i { width: 8pt; height: 8pt; border: 0.9pt solid #111; border-radius: 1.5pt; display: inline-block; }
   .key b { color: #4a5568; font-weight: 500; }
 
+  /* horizontal timeline across the back spread */
+  .spread .inner { display: flex; flex-direction: column; }
+  .spread .shelf { height: 122pt; }
+  .tlh { position: relative; flex: 1; margin: 2pt 0 0; }
+  .hs-line { position: absolute; top: 50%; height: 2pt; margin-top: -1pt; background: #111; }
+  .hs-ic { position: absolute; top: 50%; width: 30pt; height: 30pt; margin: -15pt 0 0 -15pt; box-sizing: border-box; border: 1.8pt solid #111; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; z-index: 2; }
+  .hs-ic img { width: 21pt; height: 21pt; display: block; }
+  .hs-ic.small { width: 18pt; height: 18pt; margin: -9pt 0 0 -9pt; border-width: 2.2pt; }
+  .hs-ic.small img { width: 11pt; height: 11pt; }
+  .hs-stem { position: absolute; width: 1pt; margin-left: -0.5pt; height: 10pt; background: #111; }
+  .hs-stem.up { bottom: calc(50% + 15pt); } .hs-stem.down { top: calc(50% + 15pt); }
+  .hs-stem.up.small { bottom: calc(50% + 9pt); height: 16pt; } .hs-stem.down.small { top: calc(50% + 9pt); height: 16pt; }
+  .hs-lbl { position: absolute; width: 92pt; }
+  .hs-lbl.up { bottom: calc(50% + 28pt); } .hs-lbl.down { top: calc(50% + 28pt); }
+  .hs-lbl .what { font-family: var(--display), sans-serif; font-weight: 600; font-size: 10pt; line-height: 1.1; }
+  .hs-lbl .books { font-size: 7pt; color: #4a5568; line-height: 1.3; margin-top: 1pt; }
+
   /* icon timeline */
   .tl2 { list-style: none; margin: 0; padding: 0; position: relative; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
   .tl2::before { content: ''; position: absolute; left: 16pt; top: 16pt; bottom: 16pt; width: 2pt; margin-left: -1pt; background: #111; }
@@ -324,18 +363,19 @@ pages.append('''<section class="page ref-page"><div class="inner">
       <p>Before, during, and after. The same Spirit who inspired these words helps us understand them and live them out.</p></div></div>
   </div>
 </div></section>''')
-pages.append(f'''<section class="page ref-page"><div class="inner">
-  <div class="ptitle">66 Books, One Story</div>
-  <div class="psub">The Bible is a library. Here&rsquo;s where every book lives.</div>
-  <div class="case"><div class="case-h">Old Testament <small>39 books</small></div>{shelves(OT, 17)}</div>
+pages.append(f'''<section class="page ref-page spread"><div class="inner">
+  <div class="ptitle">Old Testament</div>
+  <div class="psub">39 books. The story begins and points to a coming King.</div>
+  <div class="case">{shelves(OT, 17)}</div>
   <div class="legend">{legend(OT)}</div>
-  <div class="case"><div class="case-h">New Testament <small>27 books</small></div>{shelves(NT, 14)}</div>
-  <div class="legend">{legend(NT)}</div>
+  {timeline_half(TIMELINE[:SPLIT], "ot")}
 </div></section>''')
-pages.append(f'''<section class="page ref-page"><div class="inner">
-  <div class="ptitle">The Big Story</div>
-  <div class="psub">Where each book fits in the story of God and His people.</div>
-  {timeline()}
+pages.append(f'''<section class="page ref-page spread"><div class="inner">
+  <div class="ptitle">New Testament</div>
+  <div class="psub">27 books. The King arrives and the story keeps going.</div>
+  <div class="case">{shelves(NT, 14)}</div>
+  <div class="legend">{legend(NT)}</div>
+  {timeline_half(TIMELINE[SPLIT:], "nt")}
 </div></section>''')
 pages.append(f'''<section class="page ref-page"><div class="inner">
   <div class="ptitle">Resources</div>
@@ -344,8 +384,8 @@ pages.append(f'''<section class="page ref-page"><div class="inner">
 </div></section>''')
 pages.append('<section class="page ref-page" data-card="leader"></section>')
 pages += ['<section class="page" data-card="blank"></section>'] * BLANKS
-# reference pages that live at the back of the journal, with the timeline last
-for marker in ("66 Books, One Story", "The Big Story"):
+# the OT / NT spread lives at the back: OT on an even (left) page, NT on the facing right page
+for marker in ('<div class="ptitle">Old Testament</div>', '<div class="ptitle">New Testament</div>'):
     i = next(k for k, pg in enumerate(pages) if marker in pg)
     pages.append(pages.pop(i))
 # drop pages that are saved for later versions
