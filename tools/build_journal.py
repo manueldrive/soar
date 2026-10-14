@@ -225,6 +225,10 @@ JOURNAL_CSS = r"""
   .cover { background: linear-gradient(180deg, #2a2b2f 0%, #2e2f33 45%, #3a3b40 72%); }
   .cover-mtn { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
   .cover .mini-card { position: relative; z-index: 1; }
+  .inside-back .ic-res { bottom: 20pt; }
+  .inside-back .ic-res .qr { width: 130pt; height: 130pt; }
+  .inside-back .ic-res-h { font-size: 20pt; }
+  .inside-back .ic-res-sub { font-size: 10pt; }
   /* lined notes pages */
   .notes-page .inner { display: flex; flex-direction: column; }
   .notes-page .rules { flex: 1; margin-top: 8pt; background-image: repeating-linear-gradient(180deg, transparent 0 21.4pt, #c9ccd2 21.4pt 22.2pt); }
@@ -378,7 +382,6 @@ JOURNAL_CSS = r"""
 pages = []
 pages.append(f'<section class="page cover{" cover-light" if COVER_STYLE == "light" else ""}" data-card="cover">{mountains_svg(cover_light=COVER_STYLE == "light")}</section>')
 pages.append(f'''<section class="page inside-cover" data-card="inside">
-  {resources_qr()}
   <div class="owner">
     <div class="owner-h">This journal belongs to</div>
     <div class="owner-line"><span>NAME</span><i></i></div>
@@ -446,6 +449,8 @@ pages = [re.sub(r'(<section class="page inside-cover"[^>]*>)', lambda m: m.group
 # two lined notes pages before the back cover: keeps the OT/NT spread off the cover sheet and the count a multiple of 4
 NOTES_PAGES = 2
 pages += ['<section class="page notes-page"><div class="inner"><div class="ptitle">Notes</div><div class="rules"></div></div></section>'] * NOTES_PAGES
+if RESOURCES_URL:   # inside back cover: the Resources QR code takes the place of the second notes page
+    pages[-1] = f'<section class="page inside-cover inside-back">{mountains_svg(light=True)}{resources_qr()}</section>'
 pages.append(f'<section class="page back{" back-light" if COVER_STYLE == "light" else ""}"></section>')
 assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
