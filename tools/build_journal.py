@@ -84,7 +84,7 @@ def resources_qr():
     code = qr_svg(RESOURCES_URL)
     return f'''<div class="ic-res">{code}
     <div class="ic-res-h">Resources</div>
-    <div class="ic-res-sub">Scan for templates, podcasts, and study tools.</div></div>'''
+    <div class="ic-res-sub">Scan for more tools for Bible study.</div></div>'''
 
 def resources_page():
     cards = []
