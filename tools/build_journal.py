@@ -225,6 +225,9 @@ JOURNAL_CSS = r"""
   .cover { background: linear-gradient(180deg, #2a2b2f 0%, #2e2f33 45%, #3a3b40 72%); }
   .cover-mtn { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
   .cover .mini-card { position: relative; z-index: 1; }
+  /* lined notes pages */
+  .notes-page .inner { display: flex; flex-direction: column; }
+  .notes-page .rules { flex: 1; margin-top: 8pt; background-image: repeating-linear-gradient(180deg, transparent 0 21.4pt, #c9ccd2 21.4pt 22.2pt); }
   /* light cover variant */
   .cover.cover-light { background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 50%, #e6e8ec 78%); }
   .cover-light .cover-card .mini-circle { background: #d7d9de; border-color: #d7d9de; }
@@ -440,7 +443,11 @@ pages = [re.sub(r'(<section class="page ref-page[^>]*>)', lambda m: m.group(1) +
          if 'ref-page' in pg else pg for pg in pages]
 pages = [re.sub(r'(<section class="page inside-cover"[^>]*>)', lambda m: m.group(1) + mountains_svg(light=True), pg, count=1)
          if 'inside-cover' in pg else pg for pg in pages]
+# two lined notes pages before the back cover: keeps the OT/NT spread off the cover sheet and the count a multiple of 4
+NOTES_PAGES = 2
+pages += ['<section class="page notes-page"><div class="inner"><div class="ptitle">Notes</div><div class="rules"></div></div></section>'] * NOTES_PAGES
 pages.append(f'<section class="page back{" back-light" if COVER_STYLE == "light" else ""}"></section>')
+assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
 html = f'''<!doctype html>
 <html>

@@ -596,6 +596,9 @@
   .cover { background: linear-gradient(180deg, #2a2b2f 0%, #2e2f33 45%, #3a3b40 72%); }
   .cover-mtn { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
   .cover .mini-card { position: relative; z-index: 1; }
+  /* lined notes pages */
+  .notes-page .inner { display: flex; flex-direction: column; }
+  .notes-page .rules { flex: 1; margin-top: 8pt; background-image: repeating-linear-gradient(180deg, transparent 0 21.4pt, #c9ccd2 21.4pt 22.2pt); }
   /* light cover variant */
   .cover.cover-light { background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 50%, #e6e8ec 78%); }
   .cover-light .cover-card .mini-circle { background: #d7d9de; border-color: #d7d9de; }
@@ -789,6 +792,8 @@
     <div class="legend"><span class="key"><i class="g1"></i>Gospels <b>4</b></span><span class="key"><i class="g2"></i>History <b>1</b></span><span class="key"><i class="g3"></i>Paul&rsquo;s Letters <b>13</b></span><span class="key"><i class="g4"></i>General Letters <b>8</b></span><span class="key"><i class="g5"></i>Prophecy <b>1</b></span></div>
   </div>
 </div></section>
+<section class="page notes-page"><div class="inner"><div class="ptitle">Notes</div><div class="rules"></div></div></section>
+<section class="page notes-page"><div class="inner"><div class="ptitle">Notes</div><div class="rules"></div></div></section>
 <section class="page back back-light"></section>
 <script>
     // ---------- shared caption builder ----------
