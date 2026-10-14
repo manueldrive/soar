@@ -20,7 +20,9 @@ INCLUDE_WHY = False
 INCLUDE_RESOURCES = False
 
 # Inside-cover QR code. Set this to your resources page URL and rebuild; until then a placeholder box prints.
-COVER_STYLE = "light"   # "light" prints cleanly on toner printers; "dark" is the original night-grey cover
+COVER_STYLE = "light"   # set COVER_TINT below for a soft single-color pop on the light cover
+COVER_TINT = __import__("os").environ.get("COVER_TINT", "")   # "", "teal", "orchid" or "blue"
+# "light" prints cleanly on toner printers; "dark" is the original night-grey cover
 RESOURCES_URL = "https://dwellmethod.vercel.app/guidedsoar"   # Guided SOAR landing page on the Dwell site
 
 RESOURCES = [
@@ -46,6 +48,12 @@ def qr_svg(url):
         svg = svg.replace('<svg ', f'<svg viewBox="0 0 {w} {h}" ', 1)
     return svg.replace('<svg ', '<svg class="qr" preserveAspectRatio="xMidYMid meet" shape-rendering="crispEdges" ', 1)
 
+# very light tints of the wristband colors: (sky top, sky bottom, sun, (far ridge, near ridge), back cover)
+TINTS = {
+    "teal":   {"sky": ("#ffffff", "#e3f1f1"), "sun": "#cfe6e6", "ridges": ("#a9cfd0", "#74a9ab"), "back": "#e3f1f1"},
+    "orchid": {"sky": ("#ffffff", "#f5e6f2"), "sun": "#ecd4e7", "ridges": ("#d7b3cf", "#ad83a6"), "back": "#f5e6f2"},
+    "blue":   {"sky": ("#ffffff", "#e7eef5"), "sun": "#d5e1ec", "ridges": ("#b5c8da", "#8aa3bb"), "back": "#e7eef5"},
+}
 def mountains_svg(light=False, cover_light=False):
     """Sunset-style landscape: the circle sits like a setting sun, half-hidden by hazy ridges
     that get darker toward the front (inspired by a mountain sunset photo)."""
@@ -68,7 +76,8 @@ def mountains_svg(light=False, cover_light=False):
         ("#1f2023", ridge(9, 505, [(60, 22, 110), (200, 14, 120), (345, 38, 130)], 1.2)),
     ]
     if cover_light:   # mid greys that print evenly and keep the white edge from showing
-        layers = [(c, pts) for c, (_, pts) in zip(("#b3b6bd", "#868a92"), layers)]
+        far, near = TINTS.get(COVER_TINT, {}).get("ridges", ("#b3b6bd", "#868a92"))
+        layers = [(c, pts) for c, (_, pts) in zip((far, near), layers)]
     if light:   # same ranges, pale and lower, for the grey reference pages
         layers = [(c, pts) for c, (_, pts) in zip(("#d9dbe0", "#cfd2d8"), layers)]
     paths = []
@@ -236,6 +245,7 @@ JOURNAL_CSS = r"""
   .cover.cover-light { background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 50%, #e6e8ec 78%); }
   .cover-light .cover-card .mini-circle { background: #d7d9de; border-color: #d7d9de; }
   .back.back-light { background: #e6e8ec; }
+  {tint_css}
 
   /* inside cover */
   .inside-cover { background: #e4e6ea; }
@@ -454,13 +464,17 @@ if RESOURCES_URL:   # inside back cover: the Resources QR code takes the place o
 pages.append(f'<section class="page back{" back-light" if COVER_STYLE == "light" else ""}"></section>')
 assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
+t = TINTS.get(COVER_TINT)
+tint_css = (f".cover.cover-light {{ background: linear-gradient(180deg, {t['sky'][0]} 0%, {t['sky'][1]} 78%); }} "
+            f".cover-light .cover-card .mini-circle {{ background: {t['sun']}; border-color: {t['sun']}; }} "
+            f".back.back-light {{ background: {t['back']}; }}") if t else ""
 html = f'''<!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
 <title>Guided SOAR Journal</title>
 {head_links}
-<style>{style}{JOURNAL_CSS}</style>
+<style>{style}{JOURNAL_CSS.replace('{tint_css}', tint_css)}</style>
 </head>
 <body>
 {chr(10).join(pages)}
