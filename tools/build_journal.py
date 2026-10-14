@@ -20,6 +20,7 @@ INCLUDE_WHY = False
 INCLUDE_RESOURCES = False
 
 # Inside-cover QR code. Set this to your resources page URL and rebuild; until then a placeholder box prints.
+COVER_STYLE = "light"   # "light" prints cleanly on toner printers; "dark" is the original night-grey cover
 RESOURCES_URL = "https://dwellmethod.vercel.app/guidedsoar"   # Guided SOAR landing page on the Dwell site
 
 RESOURCES = [
@@ -45,7 +46,7 @@ def qr_svg(url):
         svg = svg.replace('<svg ', f'<svg viewBox="0 0 {w} {h}" ', 1)
     return svg.replace('<svg ', '<svg class="qr" preserveAspectRatio="xMidYMid meet" shape-rendering="crispEdges" ', 1)
 
-def mountains_svg(light=False):
+def mountains_svg(light=False, cover_light=False):
     """Sunset-style landscape: the circle sits like a setting sun, half-hidden by hazy ridges
     that get darker toward the front (inspired by a mountain sunset photo)."""
     import random
@@ -66,6 +67,8 @@ def mountains_svg(light=False):
         # near ridge: darkest, low rolling hills in front
         ("#1f2023", ridge(9, 505, [(60, 22, 110), (200, 14, 120), (345, 38, 130)], 1.2)),
     ]
+    if cover_light:   # mid greys that print evenly and keep the white edge from showing
+        layers = [(c, pts) for c, (_, pts) in zip(("#b3b6bd", "#868a92"), layers)]
     if light:   # same ranges, pale and lower, for the grey reference pages
         layers = [(c, pts) for c, (_, pts) in zip(("#d9dbe0", "#cfd2d8"), layers)]
     paths = []
@@ -222,6 +225,10 @@ JOURNAL_CSS = r"""
   .cover { background: linear-gradient(180deg, #2a2b2f 0%, #2e2f33 45%, #3a3b40 72%); }
   .cover-mtn { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
   .cover .mini-card { position: relative; z-index: 1; }
+  /* light cover variant */
+  .cover.cover-light { background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 50%, #e6e8ec 78%); }
+  .cover-light .cover-card .mini-circle { background: #d7d9de; border-color: #d7d9de; }
+  .back.back-light { background: #e6e8ec; }
 
   /* inside cover */
   .inside-cover { background: #e4e6ea; }
@@ -366,7 +373,7 @@ JOURNAL_CSS = r"""
 """
 
 pages = []
-pages.append(f'<section class="page cover" data-card="cover">{mountains_svg()}</section>')
+pages.append(f'<section class="page cover{" cover-light" if COVER_STYLE == "light" else ""}" data-card="cover">{mountains_svg(cover_light=COVER_STYLE == "light")}</section>')
 pages.append(f'''<section class="page inside-cover" data-card="inside">
   {resources_qr()}
   <div class="owner">
@@ -433,7 +440,7 @@ pages = [re.sub(r'(<section class="page ref-page[^>]*>)', lambda m: m.group(1) +
          if 'ref-page' in pg else pg for pg in pages]
 pages = [re.sub(r'(<section class="page inside-cover"[^>]*>)', lambda m: m.group(1) + mountains_svg(light=True), pg, count=1)
          if 'inside-cover' in pg else pg for pg in pages]
-pages.append('<section class="page back"></section>')
+pages.append(f'<section class="page back{" back-light" if COVER_STYLE == "light" else ""}"></section>')
 
 html = f'''<!doctype html>
 <html>
@@ -448,7 +455,7 @@ html = f'''<!doctype html>
 <script>
 {builders}
 document.querySelectorAll('[data-card="leader"]').forEach(function (p) {{ var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'Leader Guide', 'Questions to guide your prep in each section.'); p.appendChild(c); }});
-document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="guided-soar-logo-white.png" alt="Guided SOAR">'; p.appendChild(c); }});
+document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">'; p.appendChild(c); }});
 function setRefHead(card, title, sub) {{
   card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
 }}
