@@ -5,6 +5,7 @@
 <title>Dwell Skills Journal</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Fredoka:wght@600;700&family=Nunito:wght@800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ms+Madi&display=swap">
 <style>
   * { box-sizing: border-box; }
   html, body {
@@ -796,10 +797,13 @@
   .divider { display: flex; align-items: center; gap: 6pt; font-size: 7pt; font-weight: 700; letter-spacing: 1pt; text-transform: uppercase; color: #4a5568; margin: 0 0 0 -16pt; }
 
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
-  .cv-verse { display: flex; flex-direction: column; align-items: center; text-align: center; color: #111; transform: translateY(-17pt); }   /* clear the ridge */
-  .cv-line { font-family: var(--display), sans-serif; font-weight: 600; font-size: 11.5pt; line-height: 1.1; }
-  .cv-dwell { font-family: 'Caveat', cursive; font-weight: 600; font-size: 50pt; line-height: 0.8; margin: 3pt 0 4pt; color: #111; }
-  .cv-ref { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 7.5pt; letter-spacing: 1.6pt; text-transform: uppercase; color: #4a5568; margin-top: 6pt; }
+  .cv-verse { display: flex; flex-direction: column; align-items: center; text-align: center; color: #111; transform: translateY(-14pt); }   /* clear the ridge */
+  .cv-line { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 8pt; letter-spacing: 2.6pt; padding-left: 2.6pt; text-transform: uppercase; line-height: 1; }
+  .cv-dwell-wrap { position: relative; display: block; margin: 4pt 0 9pt; }
+  .cv-dwell { position: relative; display: block; font-family: 'Ms Madi', cursive; font-weight: 400; font-size: 64pt; line-height: 0.85; color: #111; padding: 0 6pt; }
+  /* the swash runs the full page width, through the foot of the word */
+  .cv-swash { position: absolute; left: 50%; top: 50%; width: 396pt; height: 40pt; margin: -12pt 0 0 -198pt; }
+  .cv-ref { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 6.5pt; letter-spacing: 2.4pt; padding-left: 2.4pt; text-transform: uppercase; color: #4a5568; margin-top: 14pt; }
   .reflect-card { margin: 0; }
   .leader-page .ref-head { margin-bottom: 6pt; }
 </style>
@@ -958,7 +962,7 @@
 
 
 document.querySelectorAll('[data-card="leader"]').forEach(function (p) { var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'Leader Guide', 'Questions to guide your prep in each section.'); p.appendChild(c); });
-document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<div class="cv-verse"><span class="cv-line">Let the word of Christ</span><span class="cv-dwell">dwell</span><span class="cv-line">in you richly.</span><span class="cv-ref">Colossians 3:16</span></div>'; p.appendChild(c); });
+document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<div class="cv-verse"><span class="cv-line">Let the word of Christ</span><span class="cv-dwell-wrap"><svg class="cv-swash" viewBox="0 0 396 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 26 C 60 27, 110 30, 150 28 M 250 27 C 290 24, 330 21, 396 20" fill="none" stroke="#111" stroke-width="0.9" stroke-linecap="round"/></svg><span class="cv-dwell">dwell</span></span><span class="cv-line">in you richly</span><span class="cv-ref">Colossians 3:16</span></div>'; p.appendChild(c); });
 function setRefHead(card, title, sub) {
   card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
 }
