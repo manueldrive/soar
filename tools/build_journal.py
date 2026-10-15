@@ -484,21 +484,21 @@ assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
 DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
-  .cv-verse { display: flex; flex-direction: column; align-items: center; gap: 7pt; text-align: center; color: #111; }   /* centered in the sun */
-  /* every line of the verse in the book's rounded display font, all one size */
-  .cv-line, .cv-dwell, .cv-ref { font-family: var(--display), sans-serif; font-weight: 600; font-size: 9pt; letter-spacing: 1.8pt; padding-left: 1.8pt; text-transform: uppercase; line-height: 1; white-space: nowrap; }
-  .cv-line .cv-dwell { font-weight: 700; padding-left: 0; }
-  .cv-ref { color: #4a5568; margin-top: 7pt; }
+  .cv-verse { display: flex; flex-direction: column; align-items: center; gap: 6pt; text-align: center; color: #111; transform: translateY(-8pt); }   /* centered in the sun, nudged up so the reference clears the ridge */
+  /* verse set like the prayer on the inside cover (DM Sans italic); the reference matches the PRAYER label */
+  .cv-line { font-family: 'DM Sans', sans-serif; font-style: italic; font-weight: 400; font-size: 14pt; line-height: 1; white-space: nowrap; color: #111; }
+  .cv-line .cv-dwell { font-weight: 700; }
+  .cv-ref { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; line-height: 1; margin-top: 6pt; }
   .reflect-card { margin: 0; }
   .leader-page .ref-head { margin-bottom: 6pt; }
   .ic-prayer { position: absolute; left: 34pt; right: 34pt; top: 20pt; bottom: 158pt; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 18pt; }
   .pr-h { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; margin-bottom: 7pt; }
   .pr-block p { margin: 0; font-family: 'DM Sans', sans-serif; font-style: italic; font-size: 13pt; line-height: 1.55; color: #111; }
 """
-# Dwell cover: Colossians 3:16 (ESV) on the sun: spaced capitals, all one size, DWELL in bold
+# Dwell cover: Colossians 3:16 (ESV) on the sun, set like the inside-cover prayer, with dwell in bold
 COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word</span>'
-               '<span class="cv-line">of Christ <b class="cv-dwell">Dwell</b></span>'
-               '<span class="cv-line">in you richly</span>'
+               '<span class="cv-line">of Christ <b class="cv-dwell">dwell</b></span>'
+               '<span class="cv-line">in you richly.</span>'
                '<span class="cv-ref">Colossians 3:16</span></div>')
 COVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}';" if DWELL else
     """c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">';""")
