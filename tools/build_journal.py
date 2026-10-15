@@ -27,8 +27,6 @@ INCLUDE_RESOURCES = False
 # Inside-cover QR code. Set this to your resources page URL and rebuild; until then a placeholder box prints.
 COVER_STYLE = "light"   # set COVER_TINT below for a soft single-color pop on the light cover
 COVER_TINT = __import__("os").environ.get("COVER_TINT", "")   # "", "teal", "orchid" or "blue"
-if DWELL and not COVER_TINT:
-    COVER_TINT = "teal"   # Dwell covers use the soft teal tint by default
 # "light" prints cleanly on toner printers; "dark" is the original night-grey cover
 RESOURCES_URL = "https://dwellmethod.vercel.app/guidedsoar"   # Guided SOAR landing page on the Dwell site
 if DWELL:
@@ -475,21 +473,24 @@ if not INCLUDE_RESOURCES:
 
 # faint mountain range along the bottom of every grey reference page
 pages = [pg.replace('class="page ref-page"', 'class="page ref-page"', 1) for pg in pages]
-pages = [re.sub(r'(<section class="page ref-page[^>]*>)', lambda m: m.group(1) + mountains_svg(light=True), pg, count=1)
+INSIDE_MTN = "" if DWELL else mountains_svg(light=True)   # Dwell inside pages stay plain white
+pages = [re.sub(r'(<section class="page ref-page[^>]*>)', lambda m: m.group(1) + INSIDE_MTN, pg, count=1)
          if 'ref-page' in pg else pg for pg in pages]
-pages = [re.sub(r'(<section class="page inside-cover"[^>]*>)', lambda m: m.group(1) + mountains_svg(light=True), pg, count=1)
+pages = [re.sub(r'(<section class="page inside-cover"[^>]*>)', lambda m: m.group(1) + INSIDE_MTN, pg, count=1)
          if 'inside-cover' in pg else pg for pg in pages]
 # two lined notes pages before the back cover: keeps the OT/NT spread off the cover sheet and the count a multiple of 4
 NOTES_PAGES = 2
 pages += ['<section class="page notes-page"><div class="inner"><div class="ptitle">Notes</div><div class="rules"></div></div></section>'] * NOTES_PAGES
 if RESOURCES_URL:   # inside back cover: the Resources QR code takes the place of the second notes page
-    pages[-1] = f'<section class="page inside-cover inside-back">{mountains_svg(light=True)}{resources_qr()}</section>'
+    pages[-1] = f'<section class="page inside-cover inside-back">{INSIDE_MTN}{resources_qr()}</section>'
 pages.append(f'<section class="page back{" back-light" if COVER_STYLE == "light" else ""}"></section>')
 assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
 DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
-  .cover.cover-photo { background: var(--cover-bg, #e3f1f1); }
+  .cover.cover-photo, .back, .back.back-light { background: #fff; }
+  /* no title row on the cover, so lift the layout to sit centered on the page */
+  .cover-photo .cover-card { transform: translateY(-25.5pt); }
   /* the verse sits in the circle, exactly where the central truth sits on every study page; a frosted white lets the photo show through */
   /* the photo is only seen through the study shapes, as if the study pulls back the curtain */
   .cover-photo .cover-card .mini-box, .cover-photo .cover-card .mini-circle { background-image: url(assets/dwell-cover.jpg); background-repeat: no-repeat; border-color: transparent; }
@@ -540,7 +541,7 @@ GUIDE_HEAD = ("'How to Dwell', 'Use the guided questions to help you fill out ea
 t = TINTS.get(COVER_TINT)
 tint_css = (f".cover.cover-light {{ background: linear-gradient(180deg, {t['sky'][0]} 0%, {t['sky'][1]} 78%); }} "
             f".cover-light .cover-card .mini-circle {{ background: {t['sun']}; border-color: {t['sun']}; }} "
-            f".back.back-light {{ background: {t['back']}; }} :root {{ --cover-bg: {t['back']}; }}") if t else ""
+            f".back.back-light {{ background: {t['back']}; }}") if t else ""
 html = f'''<!doctype html>
 <html>
 <head>
