@@ -505,6 +505,9 @@ COVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}';" if D
 REFLECT_JS = ("document.querySelectorAll('[data-card=\"reflect\"]').forEach(function (p) { p.appendChild(buildReflectionCard()); });\n"
               if DWELL else "")
 
+GUIDE_HEAD = ("'How to Dwell', 'What to look for in each box.'" if DWELL else
+              "'Leader Guide', 'Questions to guide your prep in each section.'")
+
 t = TINTS.get(COVER_TINT)
 tint_css = (f".cover.cover-light {{ background: linear-gradient(180deg, {t['sky'][0]} 0%, {t['sky'][1]} 78%); }} "
             f".cover-light .cover-card .mini-circle {{ background: {t['sun']}; border-color: {t['sun']}; }} "
@@ -521,7 +524,7 @@ html = f'''<!doctype html>
 {chr(10).join(pages)}
 <script>
 {builders}
-document.querySelectorAll('[data-card="leader"]').forEach(function (p) {{ var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'Leader Guide', 'Questions to guide your prep in each section.'); p.appendChild(c); }});
+document.querySelectorAll('[data-card="leader"]').forEach(function (p) {{ var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, {GUIDE_HEAD}); p.appendChild(c); }});
 document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); {COVER_JS} p.appendChild(c); }});
 function setRefHead(card, title, sub) {{
   card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';

@@ -623,7 +623,7 @@
   <div class="toolbar">
     <div class="tabs">
       <button id="tabBlank" class="active">Blank Template</button>
-      <button id="tabLeader">Leader Guide</button>
+      <button id="tabLeader">How to Dwell</button>
       <button id="tabEdit">Digital Template</button>
     </div>
     <div class="divider-v" id="formatDivider" style="display:none;"></div>
@@ -774,7 +774,8 @@
         'Author', 'Audience', 'Time', 'Purpose'], 'Use a study Bible to set the scene before you read:'));
       el.querySelector('.mtr').insertAdjacentHTML('beforeend', promptList([
         'Which words or phrases repeat or stand out?',
-        'Which words need clarity? Look them up or compare translations.',
+        'Look up unclear words in a Bible dictionary.',
+        'Compare other translations. What changes?',
         'Sum it up in 1&ndash;2 sentences.'],
         'Reread slowly:'));
       el.querySelector('.mbl').insertAdjacentHTML('afterbegin', promptList([
@@ -841,7 +842,7 @@
       hintText.textContent = mode === 'blank'
         ? 'A blank card and its Reflect page — click Download PDF to save a landscape page for your printer.'
         : mode === 'leader'
-        ? 'Two leader-guide half sheets with prompts for each section — click Download PDF to print a landscape page.'
+        ? 'Two How to Dwell half sheets with prompts for each box — click Download PDF to print a landscape page.'
         : 'Click any box to type. Select text and use Bold / Bullets above to format. Content saves nowhere else, so download when you’re done.';
     }
     tabBlank.addEventListener('click', function () { setMode('blank'); });
@@ -882,7 +883,7 @@
       if (currentMode === 'blank') {
         exportPDF(document.getElementById('blankPage'), 'Dwell Blank Template.pdf', true);
       } else if (currentMode === 'leader') {
-        exportPDF(document.getElementById('leaderPage'), 'Dwell Leader Guide.pdf', true);
+        exportPDF(document.getElementById('leaderPage'), 'How to Dwell.pdf', true);
       } else {
         const card = document.getElementById('card');
         const passage = card.querySelector('.field input').value.trim();
