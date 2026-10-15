@@ -492,6 +492,9 @@ DWELL_CSS = """
   .cover.cover-photo { background: #dfeceb url(assets/dwell-cover.jpg) center / cover no-repeat; }
   /* the verse sits in the circle, exactly where the central truth sits on every study page; a frosted white lets the photo show through */
   .cover-photo .cover-card .mini-circle { background: rgba(255, 255, 255, 0.78); border-color: transparent; }
+  /* the four study boxes show through as soft frosted shapes, no labels */
+  .cover-photo .cover-card .mini-box { visibility: visible; background: rgba(255, 255, 255, 0.4); border-color: transparent; }
+  .cover-photo .cover-card .mini-box .tblock { display: none; }
   .cv-verse { display: flex; flex-direction: column; align-items: center; gap: 6pt; text-align: center; color: #111; }
   /* verse set like the prayer on the inside cover (DM Sans italic); the reference matches the PRAYER label */
   .cv-line { font-family: 'DM Sans', sans-serif; font-style: italic; font-weight: 400; font-size: 15pt; line-height: 1; white-space: nowrap; color: #111; }
