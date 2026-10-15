@@ -405,7 +405,7 @@ PRAYERS = '''
       <p>Lord, grant me the spirit of wisdom and revelation in the knowledge of who You are. Correct any lies I believe. Let my study increase my love for You and others, not my pride. Amen.</p></div>
   </div>'''
 pages = []
-if DWELL:   # Dwell cover: full-bleed mountain photo (assets/dwell-cover.jpg) with the verse in the sky
+if DWELL:   # Dwell cover: full-bleed mountain photo (assets/dwell-cover.jpg) with the verse in the central-truth circle
     pages.append('<section class="page cover cover-photo" data-card="cover"></section>')
 else:
     pages.append(f'<section class="page cover{" cover-light" if COVER_STYLE == "light" else ""}" data-card="cover">{mountains_svg(cover_light=COVER_STYLE == "light")}</section>')
@@ -489,12 +489,12 @@ assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
 DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
-  .cover.cover-photo { background: #dfeceb url(assets/dwell-cover.jpg) center / cover no-repeat; align-items: flex-start; }
-  /* the verse sits in the open sky above the peaks */
-  .cv-top { position: relative; z-index: 1; margin-top: 74pt; }
+  .cover.cover-photo { background: #dfeceb url(assets/dwell-cover.jpg) center / cover no-repeat; }
+  /* the verse sits in the circle, exactly where the central truth sits on every study page; a frosted white lets the photo show through */
+  .cover-photo .cover-card .mini-circle { background: rgba(255, 255, 255, 0.78); border-color: transparent; }
   .cv-verse { display: flex; flex-direction: column; align-items: center; gap: 6pt; text-align: center; color: #111; }
   /* verse set like the prayer on the inside cover (DM Sans italic); the reference matches the PRAYER label */
-  .cv-line { font-family: 'DM Sans', sans-serif; font-style: italic; font-weight: 400; font-size: 16pt; line-height: 1; white-space: nowrap; color: #111; }
+  .cv-line { font-family: 'DM Sans', sans-serif; font-style: italic; font-weight: 400; font-size: 15pt; line-height: 1; white-space: nowrap; color: #111; }
   .cv-line .cv-dwell { font-weight: 700; }
   .cv-ref { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; line-height: 1; margin-top: 6pt; }
   .reflect-card { margin: 0; }
@@ -510,7 +510,7 @@ COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word</span>'
                '<span class="cv-line">of Christ <b class="cv-dwell">dwell</b></span>'
                '<span class="cv-line">in you richly.</span>'
                '<span class="cv-ref">Colossians 3:16</span></div>')
-COVER_JS = (f"c = document.createElement('div'); c.className = 'cv-top'; c.innerHTML = '{COVER_VERSE}';" if DWELL else
+COVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}';" if DWELL else
     """c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">';""")
 REFLECT_JS = ("document.querySelectorAll('[data-card=\"reflect\"]').forEach(function (p) { p.appendChild(buildReflectionCard()); });\n"
               if DWELL else "")
