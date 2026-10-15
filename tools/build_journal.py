@@ -405,7 +405,7 @@ PRAYERS = '''
       <p>Lord, grant me the spirit of wisdom and revelation in the knowledge of who You are. Correct any lies I believe. Let my study increase my love for You and others, not my pride. Amen.</p></div>
   </div>'''
 pages = []
-if DWELL:   # Dwell cover: full-bleed mountain photo (assets/dwell-cover.jpg) with the verse in the central-truth circle
+if DWELL:   # Dwell cover: the mountain photo (assets/dwell-cover.jpg) is seen only through the four boxes and the verse circle
     pages.append('<section class="page cover cover-photo" data-card="cover"></section>')
 else:
     pages.append(f'<section class="page cover{" cover-light" if COVER_STYLE == "light" else ""}" data-card="cover">{mountains_svg(cover_light=COVER_STYLE == "light")}</section>')
@@ -489,11 +489,12 @@ assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
 DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
-  .cover.cover-photo { background: #dfeceb url(assets/dwell-cover.jpg) center / cover no-repeat; }
+  .cover.cover-photo { background: var(--cover-bg, #e3f1f1); }
   /* the verse sits in the circle, exactly where the central truth sits on every study page; a frosted white lets the photo show through */
-  .cover-photo .cover-card .mini-circle { background: rgba(255, 255, 255, 0.78); border-color: transparent; }
-  /* the four study boxes show through as soft frosted shapes, no labels */
-  .cover-photo .cover-card .mini-box { visibility: visible; background: rgba(255, 255, 255, 0.4); border-color: transparent; }
+  /* the photo is only seen through the study shapes, as if the study pulls back the curtain */
+  .cover-photo .cover-card .mini-box, .cover-photo .cover-card .mini-circle { background-image: url(assets/dwell-cover.jpg); background-repeat: no-repeat; border-color: transparent; }
+  .cover-photo .cover-card .mini-circle { box-shadow: inset 0 0 0 999pt rgba(255, 255, 255, 0.8); }   /* frosted so the verse reads */
+  .cover-photo .cover-card .mini-box { visibility: visible; }
   .cover-photo .cover-card .mini-box .tblock { display: none; }
   .cv-verse { display: flex; flex-direction: column; align-items: center; gap: 6pt; text-align: center; color: #111; }
   /* verse set like the prayer on the inside cover (DM Sans italic); the reference matches the PRAYER label */
@@ -517,6 +518,17 @@ COVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}';" if D
     """c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">';""")
 REFLECT_JS = ("document.querySelectorAll('[data-card=\"reflect\"]').forEach(function (p) { p.appendChild(buildReflectionCard()); });\n"
               if DWELL else "")
+# cover windows: each shape shows the part of the photo that sits behind it, so together they read as one picture
+if DWELL:
+    REFLECT_JS += """document.querySelectorAll('.cover-photo').forEach(function (page) {
+  var pr = page.getBoundingClientRect();
+  page.querySelectorAll('.mini-box, .mini-circle').forEach(function (el) {
+    var r = el.getBoundingClientRect();
+    el.style.backgroundSize = pr.width + 'px ' + pr.height + 'px';
+    el.style.backgroundPosition = (pr.left - r.left) + 'px ' + (pr.top - r.top) + 'px';
+  });
+});
+"""
 
 # Guided SOAR cards ask for the DATE where the site asks for a NAME; Dwell cards keep only PASSAGE (DATE is on the facing Reflect page)
 BLANK_FIELDS_JS = ("c.querySelectorAll('.mini-field').forEach(function (f) { if (f.firstElementChild.textContent.trim() === 'NAME:') f.remove(); });" if DWELL else
@@ -528,7 +540,7 @@ GUIDE_HEAD = ("'How to Dwell', 'Use the guided questions to help you fill out ea
 t = TINTS.get(COVER_TINT)
 tint_css = (f".cover.cover-light {{ background: linear-gradient(180deg, {t['sky'][0]} 0%, {t['sky'][1]} 78%); }} "
             f".cover-light .cover-card .mini-circle {{ background: {t['sun']}; border-color: {t['sun']}; }} "
-            f".back.back-light {{ background: {t['back']}; }}") if t else ""
+            f".back.back-light {{ background: {t['back']}; }} :root {{ --cover-bg: {t['back']}; }}") if t else ""
 html = f'''<!doctype html>
 <html>
 <head>

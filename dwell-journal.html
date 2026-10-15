@@ -668,7 +668,7 @@
   .cover.cover-light { background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 50%, #e6e8ec 78%); }
   .cover-light .cover-card .mini-circle { background: #d7d9de; border-color: #d7d9de; }
   .back.back-light { background: #e6e8ec; }
-  .cover.cover-light { background: linear-gradient(180deg, #ffffff 0%, #e3f1f1 78%); } .cover-light .cover-card .mini-circle { background: #cfe6e6; border-color: #cfe6e6; } .back.back-light { background: #e3f1f1; }
+  .cover.cover-light { background: linear-gradient(180deg, #ffffff 0%, #e3f1f1 78%); } .cover-light .cover-card .mini-circle { background: #cfe6e6; border-color: #cfe6e6; } .back.back-light { background: #e3f1f1; } :root { --cover-bg: #e3f1f1; }
 
   /* inside cover */
   .inside-cover { background: #e4e6ea; }
@@ -812,11 +812,12 @@
   .divider { display: flex; align-items: center; gap: 6pt; font-size: 7pt; font-weight: 700; letter-spacing: 1pt; text-transform: uppercase; color: #4a5568; margin: 0 0 0 -16pt; }
 
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
-  .cover.cover-photo { background: #dfeceb url(assets/dwell-cover.jpg) center / cover no-repeat; }
+  .cover.cover-photo { background: var(--cover-bg, #e3f1f1); }
   /* the verse sits in the circle, exactly where the central truth sits on every study page; a frosted white lets the photo show through */
-  .cover-photo .cover-card .mini-circle { background: rgba(255, 255, 255, 0.78); border-color: transparent; }
-  /* the four study boxes show through as soft frosted shapes, no labels */
-  .cover-photo .cover-card .mini-box { visibility: visible; background: rgba(255, 255, 255, 0.4); border-color: transparent; }
+  /* the photo is only seen through the study shapes, as if the study pulls back the curtain */
+  .cover-photo .cover-card .mini-box, .cover-photo .cover-card .mini-circle { background-image: url(assets/dwell-cover.jpg); background-repeat: no-repeat; border-color: transparent; }
+  .cover-photo .cover-card .mini-circle { box-shadow: inset 0 0 0 999pt rgba(255, 255, 255, 0.8); }   /* frosted so the verse reads */
+  .cover-photo .cover-card .mini-box { visibility: visible; }
   .cover-photo .cover-card .mini-box .tblock { display: none; }
   .cv-verse { display: flex; flex-direction: column; align-items: center; gap: 6pt; text-align: center; color: #111; }
   /* verse set like the prayer on the inside cover (DM Sans italic); the reference matches the PRAYER label */
@@ -1042,6 +1043,14 @@ document.querySelectorAll('[data-card="blank"]').forEach(function (p) {
   p.appendChild(c);
 });
 document.querySelectorAll('[data-card="reflect"]').forEach(function (p) { p.appendChild(buildReflectionCard()); });
+document.querySelectorAll('.cover-photo').forEach(function (page) {
+  var pr = page.getBoundingClientRect();
+  page.querySelectorAll('.mini-box, .mini-circle').forEach(function (el) {
+    var r = el.getBoundingClientRect();
+    el.style.backgroundSize = pr.width + 'px ' + pr.height + 'px';
+    el.style.backgroundPosition = (pr.left - r.left) + 'px ' + (pr.top - r.top) + 'px';
+  });
+});
 </script>
 </body>
 </html>
