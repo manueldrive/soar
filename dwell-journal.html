@@ -589,6 +589,11 @@
   .mtl .mini-prompts, .mtr .mini-prompts { top: 20pt; }
   .mbl .mini-prompts, .mbr .mini-prompts { bottom: 20pt; }
 
+  /* How to Dwell: a touch smaller so each box has room for its Tools line */
+  #leaderPage .mini-prompts, .leader-card .mini-prompts { font-size: 10.2pt; }
+  .mini-tools { display: flex; align-items: flex-start; margin: 5pt 0 0; font-size: 8.4pt; line-height: 1.3; color: #4a5568; }
+  .mini-tools b { flex: none; display: inline-block; margin-right: 5pt; font-family: var(--display), sans-serif; font-weight: 600; font-size: 6.6pt; letter-spacing: 1.2pt; text-transform: uppercase; color: #111;
+                  border: 1.1pt solid #111; border-radius: 99pt; padding: 1.2pt 5pt 0.8pt 6.2pt; position: relative; top: -0.6pt; }
   /* reflection page: Learn + Live, faces each template */
   .reflect-card { width: 356pt; height: 572pt; display: flex; flex-direction: column; font-family: 'DM Sans', Arial, sans-serif; }
   .reflect-head { height: 36pt; display: flex; align-items: center; margin-bottom: 15pt; }
@@ -941,23 +946,27 @@
       return el;
     }
 
-    function promptList(items, intro) {
-      return '<div class="mini-prompts">' + (intro ? '<p class="mini-intro">' + intro + '</p>' : '') + '<ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+    function promptList(items, intro, tools) {
+      return '<div class="mini-prompts">' + (intro ? '<p class="mini-intro">' + intro + '</p>' : '') + '<ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>' +
+        (tools ? '<p class="mini-tools"><b>Tools</b><span>' + tools + '</span></p>' : '') + '</div>';
     }
 
     function buildLeaderCard() {
       const el = buildMiniCard();
+      el.classList.add('leader-card');
       el.querySelector('.mtl').insertAdjacentHTML('beforeend', promptList([
-        'Author', 'Audience', 'Time', 'Purpose'], 'Use a study Bible to set the scene before you read:'));
+        'Author', 'Audience', 'Time', 'Purpose'], 'Use a study Bible to set the scene before you read:',
+        'Biblehub.com or a study Bible'));
       el.querySelector('.mtr').insertAdjacentHTML('beforeend', promptList([
         'Which words or phrases repeat or stand out?',
         'Look up unclear words in a Bible dictionary.',
         'Compare other translations. What changes?',
         'Sum it up in 1&ndash;2 sentences.'],
-        'Reread slowly:'));
+        'Reread slowly:', 'Dictionary, other translations'));
       el.querySelector('.mbl').insertAdjacentHTML('afterbegin', promptList([
         'Read the surrounding chapters. How does this fit the whole book?',
-        'Follow cross-references. Where else does this theme show up in Scripture?']));
+        'Follow cross-references. Where else does this theme show up in Scripture?'], '',
+        'Bible Gateway, a cross-reference Bible, BibleProject theme videos'));
       el.querySelector('.mbr').insertAdjacentHTML('afterbegin', promptList([
         'What did you notice for the first time?',
         'What questions came up? Did anything bother you?',
