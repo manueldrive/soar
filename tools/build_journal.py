@@ -400,7 +400,7 @@ JOURNAL_CSS = r"""
 PRAYERS = '''
   <div class="ic-prayer">
     <div class="pr-block"><div class="pr-h">Prayer</div>
-      <p>Lord, grant me the spirit of wisdom and revelation in the knowledge of who You are. Correct any lies I believe. Let this knowledge increase my love for You and others, not my pride. Amen.</p></div>
+      <p>Lord, grant me the spirit of wisdom and revelation in the knowledge of who You are. Correct any lies I believe. Let my study increase my love for You and others, not my pride. Amen.</p></div>
   </div>'''
 pages = []
 pages.append(f'<section class="page cover{" cover-light" if COVER_STYLE == "light" else ""}" data-card="cover">{mountains_svg(cover_light=COVER_STYLE == "light")}</section>')
