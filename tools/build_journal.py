@@ -508,6 +508,8 @@ DWELL_CSS = """
   .cv-line .cv-dwell { font-weight: 700; }
   .cv-ref { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; line-height: 1; margin-top: 6pt; }
   .reflect-card { margin: 0; }
+  /* home inkjets can't print the last ~0.12in of the sheet: keep page numbers clear of the edge */
+  section.page:not(:first-of-type):not(:last-of-type)::after { bottom: 11pt; }
   .leader-page .ref-head { margin-bottom: 6pt; }
   .owner { border-width: 1.5pt; border-radius: 6pt; }
   .case { border-width: 1.5pt; border-radius: 6pt; }
