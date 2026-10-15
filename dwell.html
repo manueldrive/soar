@@ -612,6 +612,10 @@
   .mtr .g-tools { right: 11pt; bottom: 11pt; align-items: flex-end; text-align: right; }
   .mtr .g-tools b { align-self: flex-end; }
   .mbl .g-tools { left: 11pt; top: 11pt; max-width: 84pt; }   /* stays clear of the circle */
+  /* How to Dwell only: box labels as black pills on the border */
+  .leader-card .dlabel { background: #111; color: #fff; border-radius: 99pt; padding: 4pt 11pt 3.6pt 12.8pt; font-size: 10pt; }
+  .leader-card .tblock.dtab { top: -10pt; }
+  .leader-card .tblock.dtab.bottom { top: auto; bottom: -10pt; }
   /* reflection page: Learn + Live, faces each template */
   .reflect-card { width: 356pt; height: 572pt; display: flex; flex-direction: column; font-family: 'DM Sans', Arial, sans-serif; }
   .reflect-head { height: 36pt; display: flex; align-items: center; margin-bottom: 15pt; }
@@ -805,7 +809,11 @@
       const el = buildMiniCard();
       el.classList.add('leader-card');
       el.querySelector('.mtl').insertAdjacentHTML('beforeend',
-        guideBlock('Step out of your modern point of view.', [], [['Author', 'Audience'], ['Time', 'Purpose']]) +
+        guideBlock('Step out of your modern point of view.', [
+          'Who wrote it?',
+          'Who was it written to?',
+          'When was it written?',
+          'Why was it written?']) +
         guideTools(['Biblehub.com', 'A study Bible']));
       el.querySelector('.mtr').insertAdjacentHTML('beforeend',
         guideBlock('Put off assumptions and find the intended meaning.', [
@@ -820,9 +828,9 @@
           'Follow cross-references. Where else does this theme show up?']));
       el.querySelector('.mbr').insertAdjacentHTML('afterbegin',
         guideBlock('Lean in. Don&rsquo;t be afraid to be curious.', [
-          'What did you notice for the first time?',
-          'What questions came up? Did anything bother you?',
-          'Did anything feel like it was written just for you?']));
+          'What questions came up as you read?',
+          'Did anything confuse or bother you? Why?',
+          'Who could help you find answers? (a leader, your group, a commentary)']));
       const spaces = el.querySelectorAll('.mini-circle .mini-write-space');
       spaces[0].outerHTML = '<div class="mini-hint god-hint"><span>What does <b>this</b> passage<br>teach about who God is<br>and how He works?</span></div>';
       spaces[1].outerHTML = '<div class="mini-hint"><span>How will this truth<br>shape my prayers, thoughts,<br>words, or actions?</span></div>';
