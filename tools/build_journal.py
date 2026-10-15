@@ -538,7 +538,7 @@ if DWELL:
 BLANK_FIELDS_JS = ("c.querySelectorAll('.mini-field').forEach(function (f) { if (f.firstElementChild.textContent.trim() === 'NAME:') f.remove(); });" if DWELL else
                    "c.querySelectorAll('.mini-field > span:first-child').forEach(function (l) { if (l.textContent.trim() === 'NAME:') l.textContent = 'DATE:'; });")
 
-GUIDE_HEAD = ("'How to Dwell', 'Pick a passage and work through each section to find its central truth.'" if DWELL else
+GUIDE_HEAD = ("'How to Use This Journal', 'Pick a passage and work through each section to find its central truth.'" if DWELL else
               "'Leader Guide', 'Questions to guide your prep in each section.'")
 
 t = TINTS.get(COVER_TINT)
