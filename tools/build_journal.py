@@ -445,7 +445,9 @@ pages.append(f'''<section class="page ref-page"><div class="inner">
   <div class="psub">Point your phone camera at a code to open it.</div>
   <div class="qr-list">{resources_page()}</div>
 </div></section>''')
-pages.append('<section class="page ref-page" data-card="leader"></section>')
+# Dwell: the leader guide sits on a plain white page like the study cards (Guided SOAR keeps the grey reference page)
+pages.append('<section class="page leader-page" data-card="leader"></section>' if DWELL else
+             '<section class="page ref-page" data-card="leader"></section>')
 if DWELL:   # card on the left page, Reflect on the facing right page (the leader guide is page 3, so pairs start on page 4)
     pages += ['<section class="page" data-card="blank"></section>', '<section class="page" data-card="reflect"></section>'] * STUDIES
 else:
@@ -478,11 +480,7 @@ DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
   .cover-card .mini-circle .ds-mark { transform: scale(1.45); }
   .reflect-card { margin: 0; }
-  /* grey reference pages: each border label is half on the page, half inside the white box */
-  .ref-page .mini-box { background: #fff; }
-  .ref-page .dlabel { background: linear-gradient(180deg, #e4e6ea 50%, #fff 50%); }
-  .ref-page .dtab.bottom .dlabel { background: linear-gradient(180deg, #fff 50%, #e4e6ea 50%); }
-  .ref-page .ref-head { margin-bottom: 6pt; }
+  .leader-page .ref-head { margin-bottom: 6pt; }
 """
 COVER_JS = ("c.querySelector('.mini-circle').innerHTML = dwellMarkHTML();" if DWELL else
     """c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">';""")
