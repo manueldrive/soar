@@ -478,11 +478,18 @@ assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
 DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
-  .cover-card .mini-circle .ds-mark { transform: scale(1.45); }
+  .cv-verse { display: flex; flex-direction: column; align-items: center; text-align: center; color: #111; transform: translateY(-17pt); }   /* clear the ridge */
+  .cv-line { font-family: var(--display), sans-serif; font-weight: 600; font-size: 11.5pt; line-height: 1.1; }
+  .ds-box.cv-dwell { height: auto; font-size: 27pt; letter-spacing: 1pt; padding: 5pt 10pt 4pt 11pt; border-radius: 7pt; margin: 4pt 0; }
+  .cv-ref { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 7.5pt; letter-spacing: 1.6pt; text-transform: uppercase; color: #4a5568; margin-top: 6pt; }
   .reflect-card { margin: 0; }
   .leader-page .ref-head { margin-bottom: 6pt; }
 """
-COVER_JS = ("c.querySelector('.mini-circle').innerHTML = dwellMarkHTML();" if DWELL else
+# Dwell cover: Colossians 3:16 (ESV) on the sun, with DWELL set in the wordmark's black box
+COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word of Christ</span>'
+               '<span class="ds-box cv-dwell">DWELL</span><span class="cv-line">in you richly.</span>'
+               '<span class="cv-ref">Colossians 3:16</span></div>')
+COVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}';" if DWELL else
     """c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">';""")
 REFLECT_JS = ("document.querySelectorAll('[data-card=\"reflect\"]').forEach(function (p) { p.appendChild(buildReflectionCard()); });\n"
               if DWELL else "")
