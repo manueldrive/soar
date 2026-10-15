@@ -18,7 +18,7 @@ js = src[src.index("<script>", src.index("</style>")) + 8 :]
 builders = js[js.index("    // ---------- shared caption builder") : js.index("    document.querySelectorAll('#leaderPage")]
 
 BLANKS = 12   # Guided SOAR: one card per page
-STUDIES = 12  # Dwell: one card + Reflect spread per study (32 pages total)
+STUDIES = int(os.environ.get("STUDIES", 12))  # Dwell: one card + Reflect spread per study (12 -> 32 pages; must be even)
 
 # v1 keeps it simple: cover -> name page -> leader guide. These pages are saved for a later version.
 INCLUDE_WHY = False
