@@ -413,8 +413,10 @@ pages.append(f'''<section class="page inside-cover" data-card="inside">
     <div class="owner-line"><span>NAME</span><i></i></div>
     <div class="owner-line"><span>PHONE</span><i></i></div>
     <div class="owner-note">If found, please return. It&rsquo;s full of good stuff.</div>
-  </div>{PRAYERS if DWELL else ""}
+  </div>
 </section>''')
+if DWELL:   # page 3: the pre-study prayer on its own, so the book opens quietly
+    pages.append(f'<section class="page prayer-page">{PRAYERS}</section>')
 pages.append('''<section class="page ref-page"><div class="inner">
   <div class="ptitle">Why Guided SOAR</div>
   <p class="lede">The Bible is a book about God. Guided SOAR is a simple way to read it so that, passage by passage, you see Him more clearly and let that change you.</p>
@@ -454,10 +456,10 @@ pages.append(f'''<section class="page ref-page"><div class="inner">
   <div class="psub">Point your phone camera at a code to open it.</div>
   <div class="qr-list">{resources_page()}</div>
 </div></section>''')
-# Dwell: the leader guide sits on a plain white page like the study cards (Guided SOAR keeps the grey reference page)
-pages.append('<section class="page leader-page" data-card="leader"></section>' if DWELL else
-             '<section class="page ref-page" data-card="leader"></section>')
-if DWELL:   # card on the left page, Reflect on the facing right page (the leader guide is page 3, so pairs start on page 4)
+# Guided SOAR: the leader guide comes right after the name page. Dwell: it moves to the back (see below)
+if not DWELL:
+    pages.append('<section class="page ref-page" data-card="leader"></section>')
+if DWELL:   # card on the left page, Reflect on the facing right page (the prayer is page 3, so pairs start on page 4)
     pages += ['<section class="page" data-card="blank"></section>', '<section class="page" data-card="reflect"></section>'] * STUDIES
 else:
     pages += ['<section class="page" data-card="blank"></section>'] * BLANKS
@@ -483,6 +485,8 @@ NOTES_PAGES = 2
 pages += ['<section class="page notes-page"><div class="inner"><div class="ptitle">Notes</div><div class="rules"></div></div></section>'] * NOTES_PAGES
 if RESOURCES_URL:   # inside back cover: the Resources QR code takes the place of the second notes page
     pages[-1] = f'<section class="page inside-cover inside-back">{INSIDE_MTN}{resources_qr()}</section>'
+if DWELL:   # How to Use This Journal takes the notes page at the back, so the front of the book isn't overwhelming
+    pages[-2] = '<section class="page leader-page" data-card="leader"></section>'
 pages.append(f'<section class="page back{" back-light" if COVER_STYLE == "light" else ""}"></section>')
 assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
@@ -516,6 +520,7 @@ DWELL_CSS = """
   .owner-line i { border-bottom-width: 0.9pt; }
   /* inside pages stay white (inside covers, timeline spread) so they print cleanly at home; the covers take the teal tint */
   .inside-cover, .ref-page { background: #fff; }
+  .prayer-page .ic-prayer { bottom: 20pt; }   /* the prayer page has no name box, so center in the full page */
   .ic-prayer { position: absolute; left: 34pt; right: 34pt; top: 20pt; bottom: 158pt; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 18pt; }
   .pr-h { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; margin-bottom: 7pt; }
   .pr-block p { margin: 0; font-family: 'DM Sans', sans-serif; font-style: italic; font-size: 13pt; line-height: 1.55; color: #111; }
