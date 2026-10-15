@@ -610,10 +610,11 @@
   .reflect-grid { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: 17pt; }
   .rbox { position: relative; flex: 1 1 0; min-height: 0; border: 3pt solid #111; border-radius: 14pt; display: flex; flex-direction: column; padding: 12pt 12pt 10pt; }
   .rbox .tblock.dtab { top: -9pt; }
-  .rprompt { margin: 0 0 4pt; padding: 0; list-style: none; font-family: 'DM Sans', sans-serif; font-style: italic; font-size: 10pt; line-height: 1.4; color: #111; }   /* set like the pre-study prayer */
-  .rprompt li { position: relative; padding-left: 11pt; margin-bottom: 3pt; }
-  /* open circles read as "pick any", not a checklist to finish */
-  .rprompt li::before { content: ''; position: absolute; left: 0.5pt; top: 0.42em; width: 5pt; height: 5pt; box-sizing: border-box; border: 1.1pt solid #111; border-radius: 50%; }
+  /* three things to consider, side by side, set like the pre-study prayer */
+  .rprompt { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0 0 6pt; padding: 0; list-style: none; font-family: 'DM Sans', sans-serif; font-style: italic; font-size: 9pt; line-height: 1.35; color: #111; }
+  .rprompt li { padding: 0 9pt; border-left: 1pt solid #c9ccd2; }
+  .rprompt li:first-child { padding-left: 0; border-left: none; }
+  .rprompt li:last-child { padding-right: 0; }
   .rpick { margin: 0 0 6pt; font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; text-transform: uppercase; color: #4a5568; }
   /* real lines, not a repeating gradient: Chromium drops some gradient lines when printing to PDF.
      Lines stack up from the bottom and whatever doesn't fit is clipped at the top. */
@@ -745,7 +746,7 @@
           '<div class="mini-header"><div class="mini-field"><span>DATE:</span><span class="mini-line"></span></div></div></div>' +
         '<div class="reflect-grid">' +
           '<div class="rbox">' +
-            '<p class="rpick">Reflect on any of these</p>' +
+            '<p class="rpick">Things to consider</p>' +
             '<ul class="rprompt">' +
               '<li>Reread the passage. What would you add to or change in the central truth you wrote?</li>' +
               '<li>What lies make it hard for a person to believe this truth?</li>' +
