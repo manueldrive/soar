@@ -481,14 +481,14 @@ DWELL_CSS = """
   .cv-verse { display: flex; flex-direction: column; align-items: center; gap: 7pt; text-align: center; color: #111; transform: translateY(-14pt); }   /* sits in the part of the sun above the ridge */
   /* every line of the verse in the book's rounded display font, all one size */
   .cv-line, .cv-dwell, .cv-ref { font-family: var(--display), sans-serif; font-weight: 600; font-size: 9pt; letter-spacing: 1.8pt; padding-left: 1.8pt; text-transform: uppercase; line-height: 1; white-space: nowrap; }
-  .cv-dwell { font-weight: 700; }
+  .cv-line .cv-dwell { font-weight: 700; padding-left: 0; }
   .cv-ref { color: #4a5568; margin-top: 7pt; }
   .reflect-card { margin: 0; }
   .leader-page .ref-head { margin-bottom: 6pt; }
 """
 # Dwell cover: Colossians 3:16 (ESV) on the sun: spaced capitals, all one size, DWELL in bold
-COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word of Christ</span>'
-               '<span class="cv-dwell">Dwell</span>'
+COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word</span>'
+               '<span class="cv-line">of Christ <b class="cv-dwell">Dwell</b></span>'
                '<span class="cv-line">in you richly</span>'
                '<span class="cv-ref">Colossians 3:16</span></div>')
 COVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}';" if DWELL else
