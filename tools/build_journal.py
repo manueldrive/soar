@@ -396,6 +396,15 @@ JOURNAL_CSS = r"""
   .divider { display: flex; align-items: center; gap: 6pt; font-size: 7pt; font-weight: 700; letter-spacing: 1pt; text-transform: uppercase; color: #4a5568; margin: 0 0 0 -16pt; }
 """
 
+# Dwell inside cover: the two prayers from dwellstudy.com, in the order they come in the study
+PRAYERS = '''
+  <div class="ic-prayer">
+    <div class="pr-block"><div class="pr-h">Before you begin</div>
+      <p>Lord, grant me the spirit of wisdom and revelation in the knowledge of who You are. Amen.</p></div>
+    <div class="pr-rule"></div>
+    <div class="pr-block"><div class="pr-h">Before you go deeper</div>
+      <p>Lord, correct any lies I believe. Let this knowledge increase my love for You and others, not my pride. Amen.</p></div>
+  </div>'''
 pages = []
 pages.append(f'<section class="page cover{" cover-light" if COVER_STYLE == "light" else ""}" data-card="cover">{mountains_svg(cover_light=COVER_STYLE == "light")}</section>')
 pages.append(f'''<section class="page inside-cover" data-card="inside">
@@ -404,7 +413,7 @@ pages.append(f'''<section class="page inside-cover" data-card="inside">
     <div class="owner-line"><span>NAME</span><i></i></div>
     <div class="owner-line"><span>PHONE</span><i></i></div>
     <div class="owner-note">If found, please return. It&rsquo;s full of good stuff.</div>
-  </div>
+  </div>{PRAYERS if DWELL else ""}
 </section>''')
 pages.append('''<section class="page ref-page"><div class="inner">
   <div class="ptitle">Why Guided SOAR</div>
@@ -485,6 +494,10 @@ DWELL_CSS = """
   .cv-ref { color: #4a5568; margin-top: 7pt; }
   .reflect-card { margin: 0; }
   .leader-page .ref-head { margin-bottom: 6pt; }
+  .ic-prayer { position: absolute; left: 34pt; right: 34pt; top: 20pt; bottom: 158pt; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 18pt; }
+  .pr-h { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; margin-bottom: 7pt; }
+  .pr-block p { margin: 0; font-family: 'DM Sans', sans-serif; font-style: italic; font-size: 12pt; line-height: 1.5; color: #111; }
+  .pr-rule { width: 28pt; border-top: 1.4pt solid #8e929b; }
 """
 # Dwell cover: Colossians 3:16 (ESV) on the sun: spaced capitals, all one size, DWELL in bold
 COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word</span>'
