@@ -476,26 +476,18 @@ if RESOURCES_URL:   # inside back cover: the Resources QR code takes the place o
 pages.append(f'<section class="page back{" back-light" if COVER_STYLE == "light" else ""}"></section>')
 assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
-DWELL_FONTS = "\n<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Ms+Madi&display=swap\">"
 DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
-  .cover-card .mini-circle { overflow: hidden; }   /* keeps the swash inside the sun */
-  .cv-verse { display: flex; flex-direction: column; align-items: center; text-align: center; color: #111; transform: translateY(-16pt); }   /* sits in the part of the sun above the ridge */
+  .cv-verse { display: flex; flex-direction: column; align-items: center; text-align: center; color: #111; transform: translateY(-14pt); }   /* sits in the part of the sun above the ridge */
   .cv-line { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 6.4pt; letter-spacing: 2.2pt; padding-left: 2.2pt; text-transform: uppercase; line-height: 1; }
-  .cv-dwell-wrap { position: relative; display: block; margin: 5pt 0 7pt; }
-  .cv-dwell { position: relative; display: block; font-family: 'Ms Madi', cursive; font-weight: 400; font-size: 44pt; line-height: 0.85; color: #111; padding: 0 5pt; }
-  /* the swash runs edge to edge across the sun, through the foot of the word */
-  .cv-swash { position: absolute; left: 50%; top: 50%; width: 184pt; height: 28pt; margin: -8pt 0 0 -92pt; }
+  .cv-dwell { font-family: var(--display), sans-serif; font-weight: 700; font-size: 30pt; letter-spacing: 4pt; padding-left: 4pt; text-transform: uppercase; line-height: 1; margin: 7pt 0 8pt; }
   .cv-ref { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 5.4pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; margin-top: 10pt; }
   .reflect-card { margin: 0; }
   .leader-page .ref-head { margin-bottom: 6pt; }
 """
-# Dwell cover: Colossians 3:16 (ESV) on the sun, spaced capitals with "dwell" in calligraphy (Ms Madi)
-# and a fine swash running through it, like a hand-lettered print
-SWASH = ('<svg class="cv-swash" viewBox="0 0 184 28" preserveAspectRatio="none" aria-hidden="true">'
-         '<path d="M0 18 C 20 18.5, 38 20, 56 19.5 M 128 19 C 146 17.5, 164 16, 184 15" fill="none" stroke="#111" stroke-width="0.7" stroke-linecap="round"/></svg>')
+# Dwell cover: Colossians 3:16 (ESV) on the sun: spaced capitals with DWELL set larger and bold
 COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word of Christ</span>'
-               f'<span class="cv-dwell-wrap">{SWASH}<span class="cv-dwell">dwell</span></span>'
+               '<span class="cv-dwell">Dwell</span>'
                '<span class="cv-line">in you richly</span>'
                '<span class="cv-ref">Colossians 3:16</span></div>')
 COVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}';" if DWELL else
@@ -512,7 +504,7 @@ html = f'''<!doctype html>
 <head>
 <meta charset="utf-8">
 <title>{"Dwell Skills Journal" if DWELL else "Guided SOAR Journal"}</title>
-{head_links}{DWELL_FONTS if DWELL else ""}
+{head_links}
 <style>{style}{JOURNAL_CSS.replace('{tint_css}', tint_css)}{DWELL_CSS if DWELL else ""}</style>
 </head>
 <body>
