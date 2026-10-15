@@ -513,7 +513,7 @@ REFLECT_JS = ("document.querySelectorAll('[data-card=\"reflect\"]').forEach(func
 BLANK_FIELDS_JS = ("c.querySelectorAll('.mini-field').forEach(function (f) { if (f.firstElementChild.textContent.trim() === 'NAME:') f.remove(); });" if DWELL else
                    "c.querySelectorAll('.mini-field > span:first-child').forEach(function (l) { if (l.textContent.trim() === 'NAME:') l.textContent = 'DATE:'; });")
 
-GUIDE_HEAD = ("'How to Dwell', 'What to look for in each box.'" if DWELL else
+GUIDE_HEAD = ("'How to Dwell', 'Use the guided questions to help you fill out each section.'" if DWELL else
               "'Leader Guide', 'Questions to guide your prep in each section.'")
 
 t = TINTS.get(COVER_TINT)
