@@ -561,7 +561,7 @@
 
 
   /* ================= Dwell Skills ================= */
-  /* wordmark: built like the Guided SOAR logo (black rounded box + small side word), side word after */
+  /* page marks: black rounded box like the Guided SOAR logo. STUDY on the card, REFLECT on its facing page */
   .ds-mark { display: flex; align-items: center; gap: 2.4pt; height: 36pt; flex: none; }
   .ds-box { height: 100%; display: flex; align-items: center; justify-content: center; background: #111; color: #fff; border-radius: 6.5pt;
             padding: 1pt 7pt 0; font-family: var(--display), sans-serif; font-weight: 700; font-size: 24pt; letter-spacing: 0.4pt; line-height: 1; }
@@ -649,7 +649,7 @@
   <div class="stage" id="editStage">
     <div class="card" id="card">
       <div class="brand-row">
-        <div class="ds-mark" role="img" aria-label="Dwell Skills"><span class="ds-box">DWELL</span><span class="ds-sidewrap"><span class="ds-side">Skills</span></span></div>
+        <div class="ds-mark" role="img" aria-label="Study"><span class="ds-box">STUDY</span></div>
         <div class="header">
           <div class="field">
             <span>PASSAGE:</span>
@@ -714,7 +714,7 @@
     }
 
     function dwellMarkHTML() {
-      return '<div class="ds-mark" role="img" aria-label="Dwell Skills"><span class="ds-box">DWELL</span><span class="ds-sidewrap"><span class="ds-side">Skills</span></span></div>';
+      return '<div class="ds-mark" role="img" aria-label="Study"><span class="ds-box">STUDY</span></div>';
     }
 
     function labelHTML(side, word) {
@@ -727,7 +727,7 @@
       el.className = 'reflect-card';
       const rules = new Array(31).join('<i></i>');
       el.innerHTML =
-        '<div class="reflect-head"><div class="reflect-title">Reflect</div></div>' +
+        '<div class="reflect-head"><div class="ds-mark" role="img" aria-label="Reflect"><span class="ds-box">REFLECT</span></div></div>' +
         '<div class="reflect-grid">' +
           '<div class="rbox">' +
             '<ul class="rprompt">' +
