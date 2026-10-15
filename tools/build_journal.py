@@ -481,6 +481,8 @@ if RESOURCES_URL:   # inside back cover: the Resources QR code takes the place o
     pages[-1] = f'<section class="page inside-cover inside-back">{mountains_svg(light=True)}{resources_qr()}</section>'
 pages.append(f'<section class="page back{" back-light" if COVER_STYLE == "light" else ""}"></section>')
 assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
+# How to Dwell points to the Bible Timeline spread at the back: give its page number
+TIMELINE_PAGE = next(k for k, pg in enumerate(pages, 1) if 'data-mark="ot"' in pg)
 
 DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
@@ -566,5 +568,7 @@ document.querySelectorAll('[data-card="blank"]').forEach(function (p) {{
 </html>
 '''
 out = "dwell-journal.html" if DWELL else "journal.html"
+if DWELL:
+    html = html.replace("'Bible Timeline'", f"'Bible Timeline (p. {TIMELINE_PAGE})'", 1)
 (ROOT / out).write_text(html)
 print("wrote", out, "with", len(pages), "pages")
