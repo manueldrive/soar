@@ -594,9 +594,9 @@
   .reflect-head { height: 36pt; display: flex; align-items: center; margin-bottom: 15pt; }
   .reflect-title { font-family: var(--display), sans-serif; font-weight: 700; font-size: 22pt; color: #111; line-height: 1; }
   .reflect-grid { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: 17pt; }
-  .rbox { position: relative; flex: 1 1 0; min-height: 0; border: 3pt solid #111; border-radius: 14pt; display: flex; flex-direction: column; padding: 15pt 12pt 10pt; }
+  .rbox { position: relative; flex: 1 1 0; min-height: 0; border: 3pt solid #111; border-radius: 14pt; display: flex; flex-direction: column; padding: 12pt 12pt 10pt; }
   .rbox .tblock.dtab { top: -9pt; }
-  .rprompt { margin: 0 0 2pt; text-align: center; font-size: 8.6pt; line-height: 1.3; color: #4a5568; }
+  .rprompt { margin: 0 0 2pt; text-align: center; font-size: 9pt; line-height: 1.45; color: #4a5568; }
   /* real lines, not a repeating gradient: Chromium drops some gradient lines when printing to PDF.
      Lines stack up from the bottom and whatever doesn't fit is clipped at the top. */
   .rrules { flex: 1 1 0; min-height: 0; overflow: hidden; display: flex; flex-direction: column-reverse; }
@@ -888,19 +888,16 @@
       return '<div class="tblock dtab ' + side + '"><div class="dlabel">' + word + '</div></div>';
     }
 
-    // facing page for each template: room to reflect on the Learn and Live steps
+    // facing page for each template: one open box to reflect and live it out
     function buildReflectionCard() {
       const el = document.createElement('div');
       el.className = 'reflect-card';
-      const rules = new Array(21).join('<i></i>');
+      const rules = new Array(31).join('<i></i>');
       el.innerHTML =
         '<div class="reflect-head"><div class="reflect-title">Reflect</div></div>' +
         '<div class="reflect-grid">' +
-          '<div class="rbox">' + labelHTML('', 'Learn') +
-            '<p class="rprompt">Reread the passage. Do you believe the central truth that you wrote? Do you see something new about God&rsquo;s character?<br>What lies might prevent a person from believing this truth?</p>' +
-            '<div class="rrules">' + rules + '</div></div>' +
-          '<div class="rbox">' + labelHTML('', 'Live') +
-            '<p class="rprompt">How will this shape your prayers, thoughts, words, or actions today?</p>' +
+          '<div class="rbox">' +
+            '<p class="rprompt">Reread the passage.<br>What lies might prevent a person from believing this truth?<br>How will this shape your prayers, thoughts, words, or actions today?</p>' +
             '<div class="rrules">' + rules + '</div></div>' +
         '</div>';
       return el;
