@@ -478,14 +478,15 @@ assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
 DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
-  .cv-verse { display: flex; flex-direction: column; align-items: center; text-align: center; color: #111; transform: translateY(-14pt); }   /* sits in the part of the sun above the ridge */
-  .cv-line { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 6.4pt; letter-spacing: 2.2pt; padding-left: 2.2pt; text-transform: uppercase; line-height: 1; }
-  .cv-dwell { font-family: var(--display), sans-serif; font-weight: 700; font-size: 30pt; letter-spacing: 4pt; padding-left: 4pt; text-transform: uppercase; line-height: 1; margin: 7pt 0 8pt; }
-  .cv-ref { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 5.4pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; margin-top: 10pt; }
+  .cv-verse { display: flex; flex-direction: column; align-items: center; gap: 7pt; text-align: center; color: #111; transform: translateY(-14pt); }   /* sits in the part of the sun above the ridge */
+  /* every line of the verse in the book's rounded display font, all one size */
+  .cv-line, .cv-dwell, .cv-ref { font-family: var(--display), sans-serif; font-weight: 600; font-size: 9pt; letter-spacing: 1.8pt; padding-left: 1.8pt; text-transform: uppercase; line-height: 1; white-space: nowrap; }
+  .cv-dwell { font-weight: 700; }
+  .cv-ref { color: #4a5568; margin-top: 7pt; }
   .reflect-card { margin: 0; }
   .leader-page .ref-head { margin-bottom: 6pt; }
 """
-# Dwell cover: Colossians 3:16 (ESV) on the sun: spaced capitals with DWELL set larger and bold
+# Dwell cover: Colossians 3:16 (ESV) on the sun: spaced capitals, all one size, DWELL in bold
 COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word of Christ</span>'
                '<span class="cv-dwell">Dwell</span>'
                '<span class="cv-line">in you richly</span>'
