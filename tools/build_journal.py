@@ -478,7 +478,7 @@ assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
 DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
-  .cv-verse { display: flex; flex-direction: column; align-items: center; gap: 7pt; text-align: center; color: #111; transform: translateY(-14pt); }   /* sits in the part of the sun above the ridge */
+  .cv-verse { display: flex; flex-direction: column; align-items: center; gap: 7pt; text-align: center; color: #111; }   /* centered in the sun */
   /* every line of the verse in the book's rounded display font, all one size */
   .cv-line, .cv-dwell, .cv-ref { font-family: var(--display), sans-serif; font-weight: 600; font-size: 9pt; letter-spacing: 1.8pt; padding-left: 1.8pt; text-transform: uppercase; line-height: 1; white-space: nowrap; }
   .cv-line .cv-dwell { font-weight: 700; padding-left: 0; }
