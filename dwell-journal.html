@@ -1,0 +1,997 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Dwell Skills Journal</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Fredoka:wght@600;700&family=Nunito:wght@800;900&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #e9edf2;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border-bottom: 1px solid #dde2e8;
+  }
+  .tabs {
+    display: flex;
+    background: #eef1f5;
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .tabs button {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #4a5568;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    cursor: pointer;
+  }
+  .tabs button.active {
+    background: #16345c;
+    color: #ffffff;
+  }
+  .divider-v {
+    width: 1px;
+    height: 26px;
+    background: #dde2e8;
+  }
+  .format-toolbar {
+    display: flex;
+    gap: 4px;
+    background: #eef1f5;
+    border-radius: 10px;
+    padding: 3px;
+  }
+  .format-toolbar button {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: #333;
+    background: #ffffff;
+    border: 1px solid #dde2e8;
+    border-radius: 7px;
+    padding: 7px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .format-toolbar button:hover { background: #f4f6f8; }
+  .format-toolbar button:active { background: #e5e9ee; }
+  .download-btn {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    color: #ffffff;
+    background: #16345c;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .download-btn:hover { background: #0f2544; }
+  .hint {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #808894;
+  }
+
+  .stage {
+    display: none;
+    justify-content: center;
+    padding: 28px 14px 50px;
+  }
+  .stage.visible { display: flex; }
+
+  /* ---------- Edit card (single, big, fillable) ---------- */
+  .card {
+    width: 612pt;
+    height: 792pt;
+    background: #ffffff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    padding: 40pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12pt;
+    align-items: center;
+    margin-bottom: 20pt;
+  }
+  .field {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+    font-weight: 700;
+    font-size: 11pt;
+    letter-spacing: 1pt;
+    color: #111111;
+  }
+  .field input {
+    flex: 1;
+    border: none;
+    border-bottom: 1.3pt solid #111111;
+    background: transparent;
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    font-size: 16pt;
+    color: #16345c;
+    padding: 0 2pt 2pt;
+    outline: none;
+  }
+  .field input::placeholder { color: #b7b7b7; font-family: Arial, sans-serif; font-size: 10pt; }
+
+  .grid {
+    position: relative;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12pt;
+  }
+  .box {
+    position: relative;
+    border: 3pt solid #111111;
+    border-radius: 16pt;
+  }
+  .tl, .tr, .bl, .br { background: #ffffff; }
+
+  .caption {
+    position: absolute;
+    left: 6pt;
+    right: 6pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5pt;
+    white-space: nowrap;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .tl .caption, .tr .caption { top: 9pt; }
+  .bl .caption, .br .caption { bottom: 9pt; }
+  .caption .name {
+    font-weight: 800;
+    font-size: 10.5pt;
+    letter-spacing: 0.1pt;
+    color: #111111;
+  }
+  .caption .sep { color: #b0b0b0; font-size: 8pt; }
+  .ind {
+    display: flex;
+    align-items: center;
+    gap: 2.5pt;
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.1pt;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ind i { width: 8pt; font-size: 9pt; text-align: center; margin-right: 2pt; }
+  .s .ind, .s .ind i { color: #2f6fd6; }
+  .o .ind, .o .ind i { color: #2f6fd6; }
+  .a .ind, .a .ind i { color: #8551c9; }
+  .r .ind, .r .ind i { color: #8551c9; }
+
+  .notes {
+    position: absolute;
+    left: 12pt;
+    right: 12pt;
+    font-family: 'Caveat', cursive;
+    font-weight: 500;
+    font-size: 16pt;
+    line-height: 1.4;
+    color: #16345c;
+    overflow-y: auto;
+    outline: none;
+  }
+  .notes ul { margin: 2pt 0; padding-left: 18pt; }
+  .tl .notes, .tr .notes { top: 34pt; bottom: 10pt; }
+  .bl .notes, .br .notes { top: 10pt; bottom: 34pt; }
+  .notes:focus { box-shadow: 0 0 0 2pt rgba(22,52,92,0.25) inset; border-radius: 6pt; }
+  .notes:not(.has-text):before {
+    content: attr(data-placeholder);
+    color: #9fb3c8;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    font-style: italic;
+  }
+
+  .circle-exclude {
+    width: 120pt;
+    height: 120pt;
+    shape-margin: 6pt;
+    pointer-events: none;
+  }
+  .tl .circle-exclude { float: right; margin-top: 169pt; shape-outside: circle(120pt at 100% 100%); }
+  .tr .circle-exclude { float: left; margin-top: 169pt; shape-outside: circle(120pt at 0% 100%); }
+  .bl .circle-exclude { float: right; shape-outside: circle(120pt at 100% 0%); }
+  .br .circle-exclude { float: left; shape-outside: circle(120pt at 0% 0%); }
+
+  .center-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 240pt;
+    height: 240pt;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3pt solid #111111;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 5pt;
+    padding: 14pt;
+  }
+  .center-circle .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5pt;
+  }
+  .center-circle .label {
+    font-weight: 900;
+    font-size: 17pt;
+    color: #111111;
+  }
+  .center-circle .therefore { margin-top: 6pt; }
+  .center-circle .answer {
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    font-size: 16pt;
+    color: #16345c;
+    line-height: 1.2;
+    width: 100%;
+    outline: none;
+    min-height: 20pt;
+  }
+  .center-circle .answer:focus { box-shadow: 0 0 0 2pt rgba(22,52,92,0.25) inset; border-radius: 6pt; }
+  .center-circle .answer:not(.has-text):before {
+    content: attr(data-placeholder);
+    color: #9fb3c8;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9pt;
+    font-style: italic;
+  }
+
+  /* ---------- Blank 2-up print page ---------- */
+  .mini-page {
+    width: 792pt;
+    height: 612pt;
+    background: #ffffff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    padding: 20pt;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
+  .mini-divider {
+    width: 0;
+    border-left: 1.5pt dashed #bbbbbb;
+    margin: 0 20pt 0 19.25pt;
+  }
+  .mini-card {
+    width: 356pt;
+    height: 572pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .mini-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8pt;
+    align-items: center;
+    margin-bottom: 16pt;
+  }
+  .mini-field {
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+    font-weight: 700;
+    font-size: 9pt;
+    letter-spacing: 1pt;
+    color: #111111;
+  }
+  .mini-line { flex: 1; border-bottom: 1.3pt solid #111111; height: 1pt; }
+
+  .mini-grid {
+    position: relative;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8pt;
+  }
+  .mini-box { position: relative; border: 3pt solid #111111; border-radius: 14pt; }
+  .mtl, .mtr, .mbl, .mbr { background: #ffffff; }
+
+  .mini-caption {
+    position: absolute;
+    left: 4pt;
+    right: 4pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4pt;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .mtl .mini-caption, .mtr .mini-caption { top: 7pt; }
+  .mbl .mini-caption, .mbr .mini-caption { bottom: 7pt; }
+  .mini-caption .name { font-weight: 800; font-size: 8.5pt; letter-spacing: 0.1pt; color: #111111; }
+  .mini-caption .sep { color: #b0b0b0; font-size: 6.5pt; }
+  .mini-ind {
+    display: flex;
+    align-items: center;
+    gap: 2pt;
+    font-weight: 700;
+    font-size: 6.6pt;
+    letter-spacing: 0.1pt;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .mini-ind i { width: 7pt; font-size: 7.4pt; text-align: center; margin-right: 1.5pt; }
+  .ms .mini-ind, .ms .mini-ind i { color: #2f6fd6; }
+  .mo .mini-ind, .mo .mini-ind i { color: #2f6fd6; }
+  .ma .mini-ind, .ma .mini-ind i { color: #8551c9; }
+  .mr .mini-ind, .mr .mini-ind i { color: #8551c9; }
+
+  .mini-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 184pt;
+    height: 184pt;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3pt solid #111111;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0;
+    padding: 0 14pt 14pt;
+  }
+  .mini-label { font-weight: 900; font-size: 12pt; color: #111111; }
+  .mini-therefore { margin-top: 8pt; }
+  .mini-write-space { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .mini-write-line { width: 132pt; height: 25pt; }
+
+  /* ---------- Leader guide ---------- */
+  .week-note {
+    text-align: center;
+    font-size: 9pt;
+    color: #4a5568;
+    margin: -8pt 0 12pt;
+  }
+  .week-note b { color: #16345c; }
+  .field .line { flex: 1; border-bottom: 1.3pt solid #111111; height: 1pt; }
+  .day-tag {
+    font-size: 7pt;
+    font-weight: 800;
+    letter-spacing: 0.6pt;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #16345c;
+    border-radius: 5pt;
+    padding: 2pt 5pt;
+    white-space: nowrap;
+  }
+  .prompts {
+    position: absolute;
+    left: 12pt;
+    right: 14pt;
+    font-size: 15.5pt;
+    line-height: 1.28;
+    color: #4a5568;
+  }
+  .prompts ul { margin: 0; padding-left: 16pt; }
+  .prompts li { margin-bottom: 8pt; }
+  .tl .prompts, .tr .prompts { top: 52pt; }
+  .bl .prompts, .br .prompts { bottom: 54pt; }
+  .leader-circle { justify-content: flex-start; padding: 30pt 18pt 0; gap: 4pt; }
+  .leader-circle .circle-prompt {
+    font-size: 12.5pt;
+    font-style: italic;
+    line-height: 1.3;
+    color: #5b6878;
+    max-width: 190pt;
+  }
+  .leader-circle .label { margin-top: 2pt; }
+  .leader-circle .write-gap { height: 26pt; }
+
+  /* ---------- Section titles (big letter + key words) ---------- */
+  .tblock {
+    position: absolute;
+    top: 9pt;
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+    pointer-events: none;
+  }
+  .tblock.left { left: 12pt; }
+  .tblock.bottom { top: auto; bottom: 9pt; }
+  .tblock.right { right: 12pt; flex-direction: row-reverse; text-align: right; }
+  .tblock .big {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 30pt;
+    line-height: 1;
+  }
+  .tblock .tword { font-weight: 800; font-size: 12pt; color: #111111; line-height: 1.1; }
+  .tblock .kw { font-size: 9.5pt; color: #4a5568; line-height: 1.2; margin-top: 1pt; }
+  .tblock .big { color: #111111; }
+  .mini-box .tblock { top: 7pt; gap: 4pt; }
+  .mini-box .tblock.left { left: 9pt; }
+  .mini-box .tblock.bottom { top: auto; bottom: 7pt; }
+  .mini-box .tblock.right { right: 9pt; }
+  .mini-box .tblock .big { font-size: 22pt; }
+  .mini-box .tblock .tword { font-size: 9.5pt; }
+  .mini-box .tblock .kw { font-size: 8pt; }
+
+  /* ---------- Brand row (logo + passage/name) ---------- */
+  .brand-row { display: flex; align-items: center; gap: 30pt; margin-bottom: 16pt; }
+  .brand-logo { height: 64pt; width: auto; display: block; }
+  .brand-row .header { flex: 1; grid-template-columns: 1fr; gap: 14pt; margin-bottom: 0; }
+  .mini-brand { display: flex; align-items: center; gap: 22pt; margin-bottom: 8pt; }
+  .mini-brand .brand-logo { height: 36pt; }
+  .mini-brand .mini-header { flex: 1; grid-template-columns: 1fr; gap: 12pt; margin-bottom: 0; }
+  .brand-row .field > span:first-child { width: 74pt; flex: none; text-align: right; }
+  .mini-brand .mini-field > span:first-child { width: 58pt; flex: none; text-align: right; }
+
+  /* ---------- Fonts: rounded display font (matches logo) + DM Sans (text) ---------- */
+  :root { --display: 'Fredoka'; --w-big: 700; --w-head: 600; --w-label: 700; }
+  body, .prompts, .tblock .kw, .circle-prompt { font-family: 'DM Sans', Arial, Helvetica, sans-serif; }
+  .tblock .big { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-big); font-size: 34pt; }
+  .mini-box .tblock .big { font-size: 25pt; }
+  .tblock .tword { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-head); font-size: 12pt; letter-spacing: 0.2pt; }
+  .mini-box .tblock .tword { font-size: 9.5pt; }
+  .center-circle .label, .mini-label { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-label); }
+  .center-circle .label { font-size: 18pt; }
+  .mini-label { font-size: 14pt; }
+  .field > span:first-child, .mini-field > span:first-child { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-head); letter-spacing: 0.5pt; }
+  .field > span:first-child { font-size: 11pt; }
+  .mini-field > span:first-child { font-size: 9pt; }
+
+  /* ---------- Leader guide 2-up prompts ---------- */
+  .mini-prompts {
+    position: absolute;
+    left: 8pt;
+    right: 9pt;
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.25;
+    color: #4a5568;
+  }
+  .mini-prompts ul { margin: 0; padding-left: 0; list-style: none; }
+  .mini-prompts li { margin-bottom: 4pt; padding-left: 11pt; position: relative; }
+  .mini-prompts li::before { content: ''; position: absolute; left: 1pt; top: 0.55em; width: 4pt; height: 4pt; border-radius: 50%; background: #4a5568; }
+  .mtl .mini-prompts, .mtr .mini-prompts { top: 40pt; }
+  .mbl .mini-prompts, .mbr .mini-prompts { bottom: 40pt; }
+  .mini-circle .mini-hint {
+    height: 50pt;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-size: 10pt;
+    font-style: italic;
+    line-height: 1.2;
+    color: #4a5568;
+    padding: 0 2pt;
+  }
+
+  /* ---------- Digital template ---------- */
+  #card .tl .notes, #card .tr .notes { top: 58pt; bottom: 10pt; }
+  #card .bl .notes, #card .br .notes { top: 10pt; bottom: 58pt; }
+  #card .tl .circle-exclude, #card .tr .circle-exclude { margin-top: 122pt; }
+  .digital-circle { justify-content: flex-start; padding: 40pt 22pt 0; gap: 4pt; }
+  .digital-circle .answer { min-height: 52pt; display: flex; align-items: center; justify-content: center; }
+  .digital-circle .therefore { margin-top: 0; }
+
+  .mini-circle .mini-hint.god-hint { padding-top: 12pt; }
+
+  /* ---------- Print / PDF export cleanup ---------- */
+  .exporting .notes:not(.has-text):before,
+  .exporting .answer:not(.has-text):before { content: none; }
+  .exporting .field input::placeholder { color: transparent; }
+  .exporting .notes:focus, .exporting .answer:focus { box-shadow: none; }
+
+  /* Passage/Name lines sit on the baseline of their labels */
+  .mini-field { align-items: flex-end; }
+  .mini-field > span:first-child { line-height: 1; }
+  .mini-line { margin-bottom: 1.5pt; }
+  .field { align-items: flex-end; }
+  .field > span:first-child { line-height: 1; padding-bottom: 2pt; }
+  .field input { line-height: 1; padding-bottom: 0; }
+
+  .mini-prompts .mini-intro { margin: 0 0 5pt; }
+  .mtl .mini-prompts, .mtr .mini-prompts { top: 36pt; }
+
+  /* ---------- Guided SOAR wordmark ---------- */
+  .gs-logo { height: 36pt; width: auto; display: block; flex: none; }
+  #card .gs-logo { height: 50pt; }
+  .gs-mark { display: flex; flex-direction: row; align-items: center; gap: 1.2pt; line-height: 1; width: 104pt; flex: none; }
+  .gs-mark .gs-main { font-family: var(--display), sans-serif; font-weight: 600; font-size: 34pt; letter-spacing: -0.6pt; color: #111; line-height: 0.8; display: flex; align-items: center; }
+  .gs-mark .gs-o { width: 0.94em; height: 0.94em; flex: none; margin: 0 -0.055em; position: relative; top: 0.055em; }
+  .gs-mark .gs-subwrap { position: relative; width: 9pt; height: 23.7pt; flex: none; background: #111; border-radius: 1.5pt; top: 1.9pt; margin-right: 0; }
+  .gs-mark .gs-sub { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); white-space: nowrap; font-family: var(--display), sans-serif; font-weight: 600; font-size: 5pt; letter-spacing: 0.5pt; text-transform: uppercase; color: #fff; padding-left: 0.5pt; line-height: 1; }
+  .mini-brand .gs-mark { margin-top: -4.5pt; margin-bottom: -4.5pt; }
+  #card .gs-mark { width: auto; gap: 1.7pt; }
+  #card .gs-mark .gs-main { font-size: 48pt; letter-spacing: -0.85pt; }
+  #card .gs-mark .gs-subwrap { width: 12.7pt; height: 33.4pt; border-radius: 2pt; top: 2.7pt; margin-right: 0; }
+  #card .gs-mark .gs-sub { font-size: 7pt; letter-spacing: 0.7pt; padding-left: 0.7pt; }
+
+
+  /* ================= Dwell Skills ================= */
+  /* wordmark: built like the Guided SOAR logo (black rounded box + small side word), side word after */
+  .ds-mark { display: flex; align-items: center; gap: 2.4pt; height: 36pt; flex: none; }
+  .ds-box { height: 100%; display: flex; align-items: center; justify-content: center; background: #111; color: #fff; border-radius: 6.5pt;
+            padding: 1pt 7pt 0; font-family: var(--display), sans-serif; font-weight: 700; font-size: 24pt; letter-spacing: 0.4pt; line-height: 1; }
+  .ds-sidewrap { position: relative; width: 6.5pt; height: 100%; flex: none; }
+  .ds-side { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(90deg); white-space: nowrap;
+             font-family: var(--display), sans-serif; font-weight: 700; font-size: 7.4pt; letter-spacing: 0.9pt; padding-left: 0.9pt;
+             text-transform: uppercase; color: #111; line-height: 1; }
+  #card .ds-mark { height: 50pt; gap: 3.3pt; }
+  #card .ds-box { font-size: 33pt; border-radius: 9pt; padding: 1.4pt 10pt 0; }
+  #card .ds-sidewrap { width: 9pt; }
+  #card .ds-side { font-size: 10.2pt; letter-spacing: 1.25pt; padding-left: 1.25pt; }
+
+  /* box labels sit in a gap in the border, centered (top boxes at the top, bottom boxes at the bottom) */
+  .mini-brand { margin-bottom: 15pt; }
+  .tblock.dtab { left: 50%; right: auto; top: -9pt; transform: translateX(-50%); gap: 0; }
+  .tblock.dtab.bottom { top: auto; bottom: -9pt; }
+  .dlabel { background: #fff; color: #111; font-family: var(--display), Arial, sans-serif; font-weight: 700; font-size: 11pt;
+            letter-spacing: 1.8pt; text-transform: uppercase; line-height: 1; white-space: nowrap; padding: 3pt 7pt 3pt 8.8pt; }
+  .box .tblock.dtab { top: -11pt; }
+  .box .tblock.dtab.bottom { top: auto; bottom: -11pt; }
+  .box .dlabel { font-size: 14pt; letter-spacing: 2.2pt; padding: 3pt 9pt 3pt 11.2pt; }
+  .brand-row { margin-bottom: 24pt; }
+  #card .tl .notes, #card .tr .notes { top: 22pt; bottom: 10pt; }
+  #card .bl .notes, #card .br .notes { top: 10pt; bottom: 22pt; }
+  #card .tl .circle-exclude, #card .tr .circle-exclude { margin-top: 158pt; }
+  /* leader prompts start just under the border label */
+  .mtl .mini-prompts, .mtr .mini-prompts { top: 20pt; }
+  .mbl .mini-prompts, .mbr .mini-prompts { bottom: 20pt; }
+
+  /* reflection page: Learn + Live, faces each template */
+  .reflect-card { width: 356pt; height: 572pt; display: flex; flex-direction: column; font-family: 'DM Sans', Arial, sans-serif; }
+  .reflect-head { height: 36pt; display: flex; align-items: center; margin-bottom: 15pt; }
+  .reflect-title { font-family: var(--display), sans-serif; font-weight: 700; font-size: 22pt; color: #111; line-height: 1; }
+  .reflect-grid { flex: 1; display: flex; flex-direction: column; gap: 17pt; }
+  .rbox { position: relative; flex: 1; border: 3pt solid #111; border-radius: 14pt; display: flex; flex-direction: column; padding: 15pt 12pt 10pt; }
+  .rbox .tblock.dtab { top: -9pt; }
+  .rprompt { margin: 0 0 2pt; text-align: center; font-size: 8.6pt; line-height: 1.3; color: #4a5568; }
+  .rrules { flex: 1; background-image: repeating-linear-gradient(180deg, transparent 0 21.4pt, #c9ccd2 21.4pt 22.2pt); background-position: 0 100%; }
+
+  @media print {
+    html, body { background: #ffffff; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .toolbar { display: none; }
+    .stage { padding: 0; }
+    .card, .mini-page { box-shadow: none; }
+    .notes:not(.has-text):before, .answer:not(.has-text):before { content: none; }
+    .field input::placeholder { color: transparent; }
+    .notes:focus, .answer:focus { box-shadow: none; }
+    .notes, .answer { overflow: visible; }
+  }
+
+  @page { size: 5.5in 8.5in; margin: 0; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 396pt; height: 612pt; position: relative; overflow: hidden; page-break-after: always; break-after: page; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  /* page numbers on every inside page (not the front or back cover) so printed sheets are easy to check */
+  body { counter-reset: pg; }
+  .page { counter-increment: pg; }
+  section.page:not(:first-of-type):not(:last-of-type)::after { content: counter(pg); position: absolute; left: 0; right: 0; bottom: 7pt; text-align: center; font-family: 'DM Sans', sans-serif; font-size: 6.5pt; font-weight: 500; color: #8e929b; z-index: 3; }
+  .page .mini-card { margin: 0; }
+  @media screen { body { background: #9aa0a6; } .page { margin: 16px auto; box-shadow: 0 4px 18px rgba(0,0,0,.25); background: #fff; } }
+
+  /* cover */
+  .cover { background: #2e2f33; }
+  /* cover reuses the blank card so the circle sits exactly where it does on every template */
+  .cover-card .mini-brand, .cover-card .mini-box { visibility: hidden; }
+  .cover-card .mini-circle { background: #47494f; border-color: #47494f; }
+  .cover-card .mini-label { color: #fff; }
+  .cover-card .mini-circle { gap: 9pt; padding: 0; }
+  .cover-logo { height: 40pt; width: auto; display: block; }
+  .cover-word { font-family: var(--display), sans-serif; font-weight: 600; font-size: 11pt; letter-spacing: 5pt; padding-left: 5pt; color: #fff; line-height: 1; }
+  .cover-circle { width: 176pt; height: 176pt; border-radius: 50%; background: #47494f; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30pt; }
+  .cover-circle .lbl { font-family: var(--display), sans-serif; font-weight: 700; font-size: 15pt; color: #fff; letter-spacing: 0.3pt; }
+  .back { background: #2e2f33; }
+  .cover { background: linear-gradient(180deg, #2a2b2f 0%, #2e2f33 45%, #3a3b40 72%); }
+  .cover-mtn { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+  .cover .mini-card { position: relative; z-index: 1; }
+  .inside-back .ic-res { bottom: 20pt; }
+  .inside-back .ic-res .qr { width: 130pt; height: 130pt; }
+  .inside-back .ic-res-h { font-size: 20pt; }
+  .inside-back .ic-res-sub { font-size: 10pt; }
+  /* lined notes pages */
+  .notes-page .inner { display: flex; flex-direction: column; }
+  .notes-page .rules { flex: 1; margin-top: 8pt; background-image: repeating-linear-gradient(180deg, transparent 0 21.4pt, #c9ccd2 21.4pt 22.2pt); }
+  /* light cover variant */
+  .cover.cover-light { background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 50%, #e6e8ec 78%); }
+  .cover-light .cover-card .mini-circle { background: #d7d9de; border-color: #d7d9de; }
+  .back.back-light { background: #e6e8ec; }
+  
+
+  /* inside cover */
+  .inside-cover { background: #e4e6ea; }
+  .ic-circle-wrap { position: relative; flex: 1; }
+  .inside-card .mini-brand, .inside-card .mini-box { visibility: hidden; }
+  .owner { position: absolute; left: 20pt; right: 20pt; bottom: 20pt; background: #fff; border: 3pt solid #111; border-radius: 12pt; padding: 12pt 16pt 11pt; height: 118pt; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
+  .owner-h { font-family: var(--display), sans-serif; font-weight: 700; font-size: 11pt; }
+  .owner-line { display: flex; align-items: flex-end; gap: 8pt; }
+  .owner-line span { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 0.5pt; line-height: 1; padding-bottom: 2pt; width: 38pt; text-align: right; }
+  .owner-line i { flex: 1; border-bottom: 1.3pt solid #111; }
+  .owner-note { font-size: 7pt; color: #4a5568; }
+
+  /* content pages */
+  .inner { width: 356pt; height: 572pt; display: flex; flex-direction: column; font-family: 'DM Sans', Arial, sans-serif; color: #111; }
+  .ptitle { font-family: var(--display), sans-serif; font-weight: 700; font-size: 20pt; line-height: 1; margin: 2pt 0 2pt; }
+  .psub { font-size: 9pt; color: #4a5568; margin: 0 0 10pt; }
+
+  /* why guided soar */
+  .why { display: flex; flex-direction: column; gap: 7pt; flex: 1; margin-top: 2pt; min-height: 0; }
+  .why-row { flex: 1; display: flex; align-items: center; background: #fff; border: 2.2pt solid #111; border-radius: 10pt; padding: 8pt 12pt 8pt 11pt; }
+  .why-row.center { background: #fff; border-width: 3pt; }
+  .why-tag { display: inline-block; font-family: var(--display), sans-serif; font-weight: 600; font-size: 7.5pt; letter-spacing: 1.4pt; text-transform: uppercase; color: #111; border: 1.4pt solid #111; border-radius: 99pt; padding: 2pt 8pt 1.6pt; margin-bottom: 5pt; }
+  .why-tag.dark { background: #111; color: #fff; }
+  .why-row.center { background: #fff; }
+  .why-badge { flex: none; width: 26pt; height: 26pt; display: flex; align-items: center; justify-content: center; font-family: var(--display), sans-serif; font-weight: 700; font-size: 22pt; line-height: 1; color: #111; }
+  .why-badge.ring { box-sizing: border-box; border: 3pt solid #111; border-radius: 50%; width: 24pt; height: 24pt; margin: 1pt; }
+  .why-t { font-family: var(--display), sans-serif; font-weight: 600; font-size: 12.5pt; line-height: 1.15; margin: 0 0 4pt; }
+  .why-row p { margin: 0; font-size: 9.5pt; line-height: 1.4; color: #2d3138; }
+
+  /* why we're here (retired) */
+  .eyebrow { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; text-transform: uppercase; color: #4a5568; margin-bottom: 3pt; }
+  .lede { font-size: 10pt; line-height: 1.45; margin: 8pt 0 14pt; }
+  .lede b { font-weight: 700; }
+  .sec-h { font-family: var(--display), sans-serif; font-weight: 700; font-size: 12.5pt; margin: 4pt 0 8pt; }
+  .win { display: flex; gap: 8pt; border: 2.2pt solid #111; border-radius: 10pt; padding: 10pt 11pt 11pt; margin-bottom: 8pt; }
+  .win .num { flex: none; width: 19pt; height: 19pt; border-radius: 50%; background: #111; color: #fff; font-family: var(--display), sans-serif; font-weight: 700; font-size: 9.5pt; display: flex; align-items: center; justify-content: center; }
+  .win-t { font-weight: 700; font-size: 9.8pt; line-height: 1.32; margin-bottom: 6pt; }
+  .win-p { font-size: 8.8pt; line-height: 1.4; margin: 0 0 6pt; }
+  .win-p b { font-weight: 700; }
+  .chips { display: flex; flex-wrap: wrap; gap: 3pt; }
+  .chips span { font-size: 8.2pt; background: #e4e6ea; border-radius: 99pt; padding: 1.5pt 6pt; }
+  .tq-h { font-size: 7.6pt; font-weight: 700; letter-spacing: 0.8pt; text-transform: uppercase; color: #4a5568; margin: 6pt 0 2pt; }
+  .tq { margin: 0; padding-left: 12pt; font-size: 9pt; line-height: 1.45; }
+  .goals { margin: 0; padding-left: 13pt; font-size: 9.4pt; line-height: 1.42; }
+  .goals li { margin-bottom: 4pt; }
+
+  /* reference-page header on cards */
+  .ref-head { font-family: 'DM Sans', Arial, sans-serif; color: #111; }
+  .ref-head .psub { margin-bottom: 8pt; }
+
+  /* reference pages get a light grey page so they stand apart from journaling pages */
+  .ref-page { background: #e4e6ea; }
+  .ref-mtn { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  .ref-page > .inner, .ref-page > .mini-card, .inside-cover > .owner { position: relative; z-index: 1; }
+  .inside-cover > .owner { position: absolute; }
+  .ref-page .win, .ref-page .case { background: #fff; }
+  ol.tl { background: transparent; }
+
+  /* single QR on the inside cover */
+  .ic-res { position: absolute; left: 20pt; right: 20pt; top: 20pt; bottom: 158pt; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .ic-res .qr, .qr-ph { width: 96pt; height: 96pt; background: #fff; padding: 8pt; border-radius: 8pt; box-sizing: content-box; margin-bottom: 10pt; }
+  .qr-ph { display: flex; align-items: center; justify-content: center; border: 1.5pt dashed #8e929b; padding: 6.5pt; font-family: 'DM Sans', sans-serif; font-size: 8pt; color: #8e929b; letter-spacing: 0.5pt; text-transform: uppercase; line-height: 1.4; }
+  .ic-res-h { font-family: var(--display), sans-serif; font-weight: 700; font-size: 16pt; line-height: 1; }
+  .ic-res-sub { font-family: 'DM Sans', sans-serif; font-size: 8.5pt; color: #4a5568; margin-top: 4pt; }
+
+  /* QR resources page */
+  .qr-list { flex: 1; display: flex; flex-direction: column; gap: 6pt; margin-top: 6pt; }
+  .qr-card { flex: 1; display: flex; align-items: center; gap: 16pt; padding: 4pt 2pt; border-bottom: 1.2pt solid #b9bdc4; }
+  .qr-card:last-child { border-bottom: none; }
+  .qr-card .qr { width: 74pt; height: 74pt; flex: none; background: #fff; padding: 6pt; border-radius: 6pt; box-sizing: content-box; }
+  .qr-t { font-family: var(--display), sans-serif; font-weight: 700; font-size: 13pt; line-height: 1.1; margin-bottom: 4pt; }
+  .qr-body p { margin: 0 0 7pt; font-size: 9pt; line-height: 1.4; color: #2d3138; }
+  .qr-meta { display: flex; align-items: center; gap: 8pt; flex-wrap: wrap; }
+  .qr-meta .why-tag { margin: 0; font-size: 6.6pt; }
+  .qr-src { font-size: 7.5pt; color: #4a5568; }
+
+  /* resources card */
+  .res-title { font-family: var(--display), sans-serif; font-weight: 700; font-size: 16pt; line-height: 1; padding-top: 4pt; }
+  .mini-prompts.res { font-size: 9.6pt; }
+  .mini-prompts.res ul { margin-bottom: 4pt; }
+  .mini-prompts.res li { margin-bottom: 2.5pt; }
+  .res-h { font-family: var(--display), sans-serif; font-weight: 600; font-size: 7.5pt; letter-spacing: 1pt; text-transform: uppercase; color: #111; margin: 0 0 2pt; }
+
+  /* bookshelves */
+  .case { border: 3pt solid #111; border-radius: 10pt; padding: 6pt 7pt 0; margin-bottom: 6pt; }
+  .case-h { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--display), sans-serif; font-weight: 700; font-size: 11pt; margin: 0 2pt 4pt; }
+  .case-h small { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 8pt; color: #4a5568; }
+  .shelf { height: 102pt; display: flex; align-items: flex-end; gap: 1.2pt; border-bottom: 3.5pt solid #111; margin-bottom: 7pt; padding: 0 1pt; }
+  .spine { flex: 1 1 0; min-width: 11pt; position: relative; box-sizing: border-box; border: 1pt solid #111; border-bottom: none; border-radius: 1.5pt 1.5pt 0 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  /* bound-book detail: a pair of bands near the head and foot of every spine */
+  .spine::before, .spine::after { content: ''; position: absolute; left: 0; right: 0; height: 2.2pt; border-top: 0.7pt solid currentColor; border-bottom: 0.7pt solid currentColor; opacity: 0.55; }
+  .spine::before { top: 6pt; } .spine::after { bottom: 6pt; }
+  .spine span { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 6.3pt; font-weight: 600; white-space: nowrap; letter-spacing: 0.1pt; }
+  .g1 { background: #111; color: #fff; } .g2 { background: #4a4d55; color: #fff; } .g3 { background: #9a9ea6; color: #111; }
+  .g4 { background: #cfd2d7; color: #111; } .g5 { background: #fff; color: #111; }
+  .legend { display: flex; flex-wrap: wrap; gap: 3pt 9pt; font-size: 7.5pt; margin: -1pt 2pt 7pt; }
+  .key { display: inline-flex; align-items: center; gap: 3pt; white-space: nowrap; }
+  .key i { width: 8pt; height: 8pt; border: 0.9pt solid #111; border-radius: 1.5pt; display: inline-block; }
+  .key b { color: #4a5568; font-weight: 500; }
+
+  /* horizontal timeline across the back spread */
+  .spread .inner { display: flex; flex-direction: column; }
+  .spread .shelf { height: 122pt; }
+  .tlh { position: relative; flex: none; height: 150pt; margin: 0; }
+  .shelf-block { margin-top: auto; }
+  .spread .legend { margin-bottom: 0; }
+  .hs-line { position: absolute; top: 50%; height: 2pt; margin-top: -1pt; background: #111; }
+  .hs-ic { position: absolute; top: 50%; width: 30pt; height: 30pt; margin: -15pt 0 0 -15pt; box-sizing: border-box; border: 1.8pt solid #111; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; z-index: 2; }
+  .hs-ic img { width: 21pt; height: 21pt; display: block; }
+  .hs-ic.small { width: 18pt; height: 18pt; margin: -9pt 0 0 -9pt; border-width: 2.2pt; }
+  .hs-ic.small img { width: 11pt; height: 11pt; }
+  .hs-stem { position: absolute; width: 1pt; margin-left: -0.5pt; height: 10pt; background: #111; }
+  .hs-stem.up { bottom: calc(50% + 15pt); } .hs-stem.down { top: calc(50% + 15pt); }
+  .hs-stem.up.small { bottom: calc(50% + 9pt); height: 16pt; } .hs-stem.down.small { top: calc(50% + 9pt); height: 16pt; }
+  .hs-lbl { position: absolute; width: 88pt; }
+  .hs-lbl.up { bottom: calc(50% + 28pt); } .hs-lbl.down { top: calc(50% + 28pt); }
+  .hs-lbl .what { font-family: var(--display), sans-serif; font-weight: 600; font-size: 10pt; line-height: 1.1; }
+  .hs-lbl .books { font-size: 7pt; color: #4a5568; line-height: 1.3; margin-top: 1pt; }
+
+  /* icon timeline */
+  .tl2 { list-style: none; margin: 0; padding: 0; position: relative; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+  .tl2::before { content: ''; position: absolute; left: 16pt; top: 16pt; bottom: 16pt; width: 2pt; margin-left: -1pt; background: #111; }
+  .st { display: flex; align-items: center; gap: 11pt; position: relative; }
+  .st-ic { flex: none; width: 32pt; height: 32pt; box-sizing: border-box; border: 1.8pt solid #111; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; }
+  .st-ic img { width: 23pt; height: 23pt; display: block; }
+  .st-ic.small { width: 21pt; height: 21pt; margin: 0 5.5pt; border-width: 2.2pt; }
+  .st-ic.small img { width: 13pt; height: 13pt; }
+  .st .what { font-family: var(--display), sans-serif; font-weight: 600; font-size: 10.5pt; line-height: 1.1; }
+  .st .books { font-size: 7.6pt; color: #4a5568; line-height: 1.3; margin-top: 1pt; }
+
+  /* timeline */
+  .tl { list-style: none; margin: 0; padding: 0 0 0 16pt; position: relative; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+  .tl::before { content: ''; position: absolute; left: 4pt; top: 4pt; bottom: 4pt; width: 2.5pt; background: #111; border-radius: 2pt; }
+  .ev { position: relative; }
+  .ev::before { content: ''; position: absolute; left: -16pt; top: 2pt; width: 7pt; height: 7pt; border-radius: 50%; background: #fff; border: 2.2pt solid #111; }
+  .ev.nt::before { background: #111; }
+  .ev .date { font-size: 7.5pt; font-weight: 700; color: #4a5568; letter-spacing: 0.3pt; text-transform: uppercase; }
+  .ev .what { font-family: var(--display), sans-serif; font-weight: 600; font-size: 10.5pt; line-height: 1.15; }
+  .ev .books { font-size: 7.6pt; color: #4a5568; line-height: 1.25; }
+  .tl-note { font-size: 7pt; color: #6b7280; margin-top: 6pt; }
+  .divider { display: flex; align-items: center; gap: 6pt; font-size: 7pt; font-weight: 700; letter-spacing: 1pt; text-transform: uppercase; color: #4a5568; margin: 0 0 0 -16pt; }
+
+  /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
+  .cover-card .mini-circle .ds-mark { transform: scale(1.45); }
+  .reflect-card { margin: 0; }
+  /* grey reference pages: each border label is half on the page, half inside the white box */
+  .ref-page .mini-box { background: #fff; }
+  .ref-page .dlabel { background: linear-gradient(180deg, #e4e6ea 50%, #fff 50%); }
+  .ref-page .dtab.bottom .dlabel { background: linear-gradient(180deg, #fff 50%, #e4e6ea 50%); }
+  .ref-page .ref-head { margin-bottom: 6pt; }
+</style>
+</head>
+<body>
+<section class="page cover cover-light" data-card="cover"><svg class="cover-mtn" viewBox="0 0 396 612" preserveAspectRatio="none" aria-hidden="true"><g><path d="M-10 612 L-10.0 430.4 L-2.3 430.9 L6.4 430.8 L15.0 428.5 L21.4 431.4 L28.6 431.3 L33.2 429.7 L38.4 429.6 L45.3 427.2 L50.4 427.5 L58.9 428.0 L63.7 427.5 L68.4 426.3 L73.1 423.7 L81.4 423.1 L86.5 424.8 L94.9 421.2 L103.7 420.2 L111.1 416.5 L119.8 414.5 L128.6 411.3 L134.1 407.0 L138.9 404.0 L143.2 402.3 L150.3 397.9 L157.7 398.0 L163.2 398.6 L169.6 396.0 L176.0 396.1 L180.3 396.1 L184.4 394.6 L192.6 390.5 L200.6 389.8 L207.5 387.0 L211.7 386.2 L220.5 381.6 L228.3 379.0 L237.0 371.0 L242.7 367.3 L250.6 360.2 L258.4 362.8 L266.7 360.4 L275.4 359.7 L281.1 360.5 L289.7 358.2 L298.3 357.2 L303.9 355.2 L308.7 353.3 L313.5 354.0 L322.5 349.9 L326.7 351.3 L333.4 351.9 L338.6 357.7 L346.7 365.3 L352.8 369.9 L361.4 377.8 L367.9 386.2 L372.5 389.9 L381.3 396.9 L389.2 401.4 L395.4 406.0 L403.6 411.3 L406 612 Z" fill="#b3b6bd"/><path d="M-10 612 L-10.0 499.0 L-4.1 497.1 L4.2 495.0 L10.7 495.8 L15.1 494.0 L22.2 491.2 L28.1 491.4 L34.4 490.0 L39.1 487.6 L43.7 487.2 L52.3 485.2 L60.2 482.8 L67.9 484.1 L73.4 486.8 L81.0 488.1 L85.4 488.6 L90.5 489.5 L98.5 490.5 L107.0 493.2 L111.2 492.5 L117.7 492.4 L123.8 495.1 L128.4 494.7 L133.0 495.0 L141.5 494.6 L145.5 494.5 L152.2 494.5 L156.6 495.8 L165.2 495.5 L171.2 495.5 L175.7 494.8 L180.6 494.1 L189.3 491.5 L196.1 491.8 L200.9 490.6 L209.8 493.7 L214.5 493.6 L223.2 492.7 L230.3 492.0 L236.1 493.1 L243.0 492.6 L247.5 491.1 L255.8 490.6 L262.1 489.2 L271.0 488.1 L275.1 487.9 L280.7 485.9 L285.8 484.9 L291.4 482.8 L298.6 481.2 L306.5 479.0 L314.4 478.7 L320.9 476.4 L326.1 474.6 L332.2 471.1 L341.1 468.3 L346.9 468.6 L352.8 470.3 L357.6 472.5 L362.9 472.6 L371.8 476.1 L380.5 481.1 L387.6 481.1 L391.9 483.0 L397.8 486.0 L406 612 Z" fill="#868a92"/></g></svg></section>
+<section class="page inside-cover" data-card="inside"><svg class="ref-mtn" viewBox="0 0 396 612" preserveAspectRatio="none" aria-hidden="true"><g transform="translate(0 120)"><path d="M-10 612 L-10.0 430.4 L-2.3 430.9 L6.4 430.8 L15.0 428.5 L21.4 431.4 L28.6 431.3 L33.2 429.7 L38.4 429.6 L45.3 427.2 L50.4 427.5 L58.9 428.0 L63.7 427.5 L68.4 426.3 L73.1 423.7 L81.4 423.1 L86.5 424.8 L94.9 421.2 L103.7 420.2 L111.1 416.5 L119.8 414.5 L128.6 411.3 L134.1 407.0 L138.9 404.0 L143.2 402.3 L150.3 397.9 L157.7 398.0 L163.2 398.6 L169.6 396.0 L176.0 396.1 L180.3 396.1 L184.4 394.6 L192.6 390.5 L200.6 389.8 L207.5 387.0 L211.7 386.2 L220.5 381.6 L228.3 379.0 L237.0 371.0 L242.7 367.3 L250.6 360.2 L258.4 362.8 L266.7 360.4 L275.4 359.7 L281.1 360.5 L289.7 358.2 L298.3 357.2 L303.9 355.2 L308.7 353.3 L313.5 354.0 L322.5 349.9 L326.7 351.3 L333.4 351.9 L338.6 357.7 L346.7 365.3 L352.8 369.9 L361.4 377.8 L367.9 386.2 L372.5 389.9 L381.3 396.9 L389.2 401.4 L395.4 406.0 L403.6 411.3 L406 612 Z" fill="#d9dbe0"/><path d="M-10 612 L-10.0 499.0 L-4.1 497.1 L4.2 495.0 L10.7 495.8 L15.1 494.0 L22.2 491.2 L28.1 491.4 L34.4 490.0 L39.1 487.6 L43.7 487.2 L52.3 485.2 L60.2 482.8 L67.9 484.1 L73.4 486.8 L81.0 488.1 L85.4 488.6 L90.5 489.5 L98.5 490.5 L107.0 493.2 L111.2 492.5 L117.7 492.4 L123.8 495.1 L128.4 494.7 L133.0 495.0 L141.5 494.6 L145.5 494.5 L152.2 494.5 L156.6 495.8 L165.2 495.5 L171.2 495.5 L175.7 494.8 L180.6 494.1 L189.3 491.5 L196.1 491.8 L200.9 490.6 L209.8 493.7 L214.5 493.6 L223.2 492.7 L230.3 492.0 L236.1 493.1 L243.0 492.6 L247.5 491.1 L255.8 490.6 L262.1 489.2 L271.0 488.1 L275.1 487.9 L280.7 485.9 L285.8 484.9 L291.4 482.8 L298.6 481.2 L306.5 479.0 L314.4 478.7 L320.9 476.4 L326.1 474.6 L332.2 471.1 L341.1 468.3 L346.9 468.6 L352.8 470.3 L357.6 472.5 L362.9 472.6 L371.8 476.1 L380.5 481.1 L387.6 481.1 L391.9 483.0 L397.8 486.0 L406 612 Z" fill="#cfd2d8"/></g></svg>
+  <div class="owner">
+    <div class="owner-h">This journal belongs to</div>
+    <div class="owner-line"><span>NAME</span><i></i></div>
+    <div class="owner-line"><span>PHONE</span><i></i></div>
+    <div class="owner-note">If found, please return. It&rsquo;s full of good stuff.</div>
+  </div>
+</section>
+<section class="page ref-page" data-card="leader"><svg class="ref-mtn" viewBox="0 0 396 612" preserveAspectRatio="none" aria-hidden="true"><g transform="translate(0 120)"><path d="M-10 612 L-10.0 430.4 L-2.3 430.9 L6.4 430.8 L15.0 428.5 L21.4 431.4 L28.6 431.3 L33.2 429.7 L38.4 429.6 L45.3 427.2 L50.4 427.5 L58.9 428.0 L63.7 427.5 L68.4 426.3 L73.1 423.7 L81.4 423.1 L86.5 424.8 L94.9 421.2 L103.7 420.2 L111.1 416.5 L119.8 414.5 L128.6 411.3 L134.1 407.0 L138.9 404.0 L143.2 402.3 L150.3 397.9 L157.7 398.0 L163.2 398.6 L169.6 396.0 L176.0 396.1 L180.3 396.1 L184.4 394.6 L192.6 390.5 L200.6 389.8 L207.5 387.0 L211.7 386.2 L220.5 381.6 L228.3 379.0 L237.0 371.0 L242.7 367.3 L250.6 360.2 L258.4 362.8 L266.7 360.4 L275.4 359.7 L281.1 360.5 L289.7 358.2 L298.3 357.2 L303.9 355.2 L308.7 353.3 L313.5 354.0 L322.5 349.9 L326.7 351.3 L333.4 351.9 L338.6 357.7 L346.7 365.3 L352.8 369.9 L361.4 377.8 L367.9 386.2 L372.5 389.9 L381.3 396.9 L389.2 401.4 L395.4 406.0 L403.6 411.3 L406 612 Z" fill="#d9dbe0"/><path d="M-10 612 L-10.0 499.0 L-4.1 497.1 L4.2 495.0 L10.7 495.8 L15.1 494.0 L22.2 491.2 L28.1 491.4 L34.4 490.0 L39.1 487.6 L43.7 487.2 L52.3 485.2 L60.2 482.8 L67.9 484.1 L73.4 486.8 L81.0 488.1 L85.4 488.6 L90.5 489.5 L98.5 490.5 L107.0 493.2 L111.2 492.5 L117.7 492.4 L123.8 495.1 L128.4 494.7 L133.0 495.0 L141.5 494.6 L145.5 494.5 L152.2 494.5 L156.6 495.8 L165.2 495.5 L171.2 495.5 L175.7 494.8 L180.6 494.1 L189.3 491.5 L196.1 491.8 L200.9 490.6 L209.8 493.7 L214.5 493.6 L223.2 492.7 L230.3 492.0 L236.1 493.1 L243.0 492.6 L247.5 491.1 L255.8 490.6 L262.1 489.2 L271.0 488.1 L275.1 487.9 L280.7 485.9 L285.8 484.9 L291.4 482.8 L298.6 481.2 L306.5 479.0 L314.4 478.7 L320.9 476.4 L326.1 474.6 L332.2 471.1 L341.1 468.3 L346.9 468.6 L352.8 470.3 L357.6 472.5 L362.9 472.6 L371.8 476.1 L380.5 481.1 L387.6 481.1 L391.9 483.0 L397.8 486.0 L406 612 Z" fill="#cfd2d8"/></g></svg></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page" data-card="blank"></section>
+<section class="page" data-card="reflect"></section>
+<section class="page ref-page spread"><svg class="ref-mtn" viewBox="0 0 396 612" preserveAspectRatio="none" aria-hidden="true"><g transform="translate(0 120)"><path d="M-10 612 L-10.0 430.4 L-2.3 430.9 L6.4 430.8 L15.0 428.5 L21.4 431.4 L28.6 431.3 L33.2 429.7 L38.4 429.6 L45.3 427.2 L50.4 427.5 L58.9 428.0 L63.7 427.5 L68.4 426.3 L73.1 423.7 L81.4 423.1 L86.5 424.8 L94.9 421.2 L103.7 420.2 L111.1 416.5 L119.8 414.5 L128.6 411.3 L134.1 407.0 L138.9 404.0 L143.2 402.3 L150.3 397.9 L157.7 398.0 L163.2 398.6 L169.6 396.0 L176.0 396.1 L180.3 396.1 L184.4 394.6 L192.6 390.5 L200.6 389.8 L207.5 387.0 L211.7 386.2 L220.5 381.6 L228.3 379.0 L237.0 371.0 L242.7 367.3 L250.6 360.2 L258.4 362.8 L266.7 360.4 L275.4 359.7 L281.1 360.5 L289.7 358.2 L298.3 357.2 L303.9 355.2 L308.7 353.3 L313.5 354.0 L322.5 349.9 L326.7 351.3 L333.4 351.9 L338.6 357.7 L346.7 365.3 L352.8 369.9 L361.4 377.8 L367.9 386.2 L372.5 389.9 L381.3 396.9 L389.2 401.4 L395.4 406.0 L403.6 411.3 L406 612 Z" fill="#d9dbe0"/><path d="M-10 612 L-10.0 499.0 L-4.1 497.1 L4.2 495.0 L10.7 495.8 L15.1 494.0 L22.2 491.2 L28.1 491.4 L34.4 490.0 L39.1 487.6 L43.7 487.2 L52.3 485.2 L60.2 482.8 L67.9 484.1 L73.4 486.8 L81.0 488.1 L85.4 488.6 L90.5 489.5 L98.5 490.5 L107.0 493.2 L111.2 492.5 L117.7 492.4 L123.8 495.1 L128.4 494.7 L133.0 495.0 L141.5 494.6 L145.5 494.5 L152.2 494.5 L156.6 495.8 L165.2 495.5 L171.2 495.5 L175.7 494.8 L180.6 494.1 L189.3 491.5 L196.1 491.8 L200.9 490.6 L209.8 493.7 L214.5 493.6 L223.2 492.7 L230.3 492.0 L236.1 493.1 L243.0 492.6 L247.5 491.1 L255.8 490.6 L262.1 489.2 L271.0 488.1 L275.1 487.9 L280.7 485.9 L285.8 484.9 L291.4 482.8 L298.6 481.2 L306.5 479.0 L314.4 478.7 L320.9 476.4 L326.1 474.6 L332.2 471.1 L341.1 468.3 L346.9 468.6 L352.8 470.3 L357.6 472.5 L362.9 472.6 L371.8 476.1 L380.5 481.1 L387.6 481.1 L391.9 483.0 L397.8 486.0 L406 612 Z" fill="#cfd2d8"/></g></svg><div class="inner">
+  <div class="tl-head"><div class="ptitle">Bible Timeline</div><div class="psub">One unified story that leads to Jesus.</div></div>
+  <div class="tlh ot"><span class="hs-line" style="left:20pt;right:-20pt"></span><span class="hs-ic" style="left:20.0pt"><img src="assets/timeline/creation.png" alt=""></span><span class="hs-stem up" style="left:20.0pt"></span><div class="hs-lbl up" style="left:0.0pt;text-align:left"><div class="what">Creation</div></div><span class="hs-ic" style="left:67.7pt"><img src="assets/timeline/sin.png" alt=""></span><span class="hs-stem down" style="left:67.7pt"></span><div class="hs-lbl down" style="left:23.7pt;text-align:center"><div class="what">Sin</div></div><span class="hs-ic" style="left:115.3pt"><img src="assets/timeline/abraham.png" alt=""></span><span class="hs-stem up" style="left:115.3pt"></span><div class="hs-lbl up" style="left:71.3pt;text-align:center"><div class="what">Abraham</div></div><span class="hs-ic" style="left:163.0pt"><img src="assets/timeline/exodus.png" alt=""></span><span class="hs-stem down" style="left:163.0pt"></span><div class="hs-lbl down" style="left:119.0pt;text-align:center"><div class="what">Exodus</div></div><span class="hs-ic" style="left:210.7pt"><img src="assets/timeline/land.png" alt=""></span><span class="hs-stem up" style="left:210.7pt"></span><div class="hs-lbl up" style="left:166.7pt;text-align:center"><div class="what">Promised Land</div></div><span class="hs-ic" style="left:258.3pt"><img src="assets/timeline/kings.png" alt=""></span><span class="hs-stem down" style="left:258.3pt"></span><div class="hs-lbl down" style="left:214.3pt;text-align:center"><div class="what">Kings</div></div><span class="hs-ic" style="left:306.0pt"><img src="assets/timeline/exile.png" alt=""></span><span class="hs-stem up" style="left:306.0pt"></span><div class="hs-lbl up" style="left:262.0pt;text-align:center"><div class="what">Exile &amp; Return</div></div></div>
+  <div class="shelf-block">
+    <div class="ptitle" data-mark="ot">Old Testament</div>
+    <div class="psub">39 books. The story begins and points to a coming King.</div>
+    <div class="case"><div class="shelf"><div class="spine g1" style="height:99%;flex-grow:3.36"><span>Genesis</span></div><div class="spine g1" style="height:87%;flex-grow:3.11"><span>Exodus</span></div><div class="spine g1" style="height:99%;flex-grow:2.73"><span>Leviticus</span></div><div class="spine g1" style="height:90%;flex-grow:3.00"><span>Numbers</span></div><div class="spine g1" style="height:99%;flex-grow:2.94"><span>Deuteronomy</span></div><div class="spine g2" style="height:99%;flex-grow:2.63"><span>Joshua</span></div><div class="spine g2" style="height:84%;flex-grow:2.53"><span>Judges</span></div><div class="spine g2" style="height:93%;flex-grow:1.67"><span>Ruth</span></div><div class="spine g2" style="height:84%;flex-grow:2.86"><span>1 Samuel</span></div><div class="spine g2" style="height:87%;flex-grow:2.63"><span>2 Samuel</span></div><div class="spine g2" style="height:93%;flex-grow:2.56"><span>1 Kings</span></div><div class="spine g2" style="height:96%;flex-grow:2.67"><span>2 Kings</span></div><div class="spine g2" style="height:84%;flex-grow:2.80"><span>1 Chronicles</span></div><div class="spine g2" style="height:87%;flex-grow:3.00"><span>2 Chronicles</span></div><div class="spine g2" style="height:96%;flex-grow:2.05"><span>Ezra</span></div><div class="spine g2" style="height:87%;flex-grow:2.20"><span>Nehemiah</span></div><div class="spine g2" style="height:96%;flex-grow:2.05"><span>Esther</span></div></div><div class="shelf"><div class="spine g3" style="height:96%;flex-grow:3.16"><span>Job</span></div><div class="spine g3" style="height:90%;flex-grow:5.08"><span>Psalms</span></div><div class="spine g3" style="height:87%;flex-grow:2.86"><span>Proverbs</span></div><div class="spine g3" style="height:96%;flex-grow:2.15"><span>Ecclesiastes</span></div><div class="spine g3" style="height:96%;flex-grow:1.94"><span>Song of Songs</span></div><div class="spine g4" style="height:84%;flex-grow:3.71"><span>Isaiah</span></div><div class="spine g4" style="height:99%;flex-grow:3.40"><span>Jeremiah</span></div><div class="spine g4" style="height:90%;flex-grow:1.75"><span>Lamentations</span></div><div class="spine g4" style="height:90%;flex-grow:3.31"><span>Ezekiel</span></div><div class="spine g4" style="height:96%;flex-grow:2.15"><span>Daniel</span></div><div class="spine g5" style="height:84%;flex-grow:2.25"><span>Hosea</span></div><div class="spine g5" style="height:90%;flex-grow:1.58"><span>Joel</span></div><div class="spine g5" style="height:93%;flex-grow:2.00"><span>Amos</span></div><div class="spine g5" style="height:87%;flex-grow:1.33"><span>Obadiah</span></div><div class="spine g5" style="height:96%;flex-grow:1.67"><span>Jonah</span></div><div class="spine g5" style="height:99%;flex-grow:1.88"><span>Micah</span></div><div class="spine g5" style="height:84%;flex-grow:1.58"><span>Nahum</span></div><div class="spine g5" style="height:96%;flex-grow:1.58"><span>Habakkuk</span></div><div class="spine g5" style="height:96%;flex-grow:1.58"><span>Zephaniah</span></div><div class="spine g5" style="height:90%;flex-grow:1.47"><span>Haggai</span></div><div class="spine g5" style="height:84%;flex-grow:2.25"><span>Zechariah</span></div><div class="spine g5" style="height:93%;flex-grow:1.67"><span>Malachi</span></div></div></div>
+    <div class="legend"><span class="key"><i class="g1"></i>Law <b>5</b></span><span class="key"><i class="g2"></i>History <b>12</b></span><span class="key"><i class="g3"></i>Poetry &amp; Wisdom <b>5</b></span><span class="key"><i class="g4"></i>Major Prophets <b>5</b></span><span class="key"><i class="g5"></i>Minor Prophets <b>12</b></span></div>
+  </div>
+</div></section>
+<section class="page ref-page spread"><svg class="ref-mtn" viewBox="0 0 396 612" preserveAspectRatio="none" aria-hidden="true"><g transform="translate(0 120)"><path d="M-10 612 L-10.0 430.4 L-2.3 430.9 L6.4 430.8 L15.0 428.5 L21.4 431.4 L28.6 431.3 L33.2 429.7 L38.4 429.6 L45.3 427.2 L50.4 427.5 L58.9 428.0 L63.7 427.5 L68.4 426.3 L73.1 423.7 L81.4 423.1 L86.5 424.8 L94.9 421.2 L103.7 420.2 L111.1 416.5 L119.8 414.5 L128.6 411.3 L134.1 407.0 L138.9 404.0 L143.2 402.3 L150.3 397.9 L157.7 398.0 L163.2 398.6 L169.6 396.0 L176.0 396.1 L180.3 396.1 L184.4 394.6 L192.6 390.5 L200.6 389.8 L207.5 387.0 L211.7 386.2 L220.5 381.6 L228.3 379.0 L237.0 371.0 L242.7 367.3 L250.6 360.2 L258.4 362.8 L266.7 360.4 L275.4 359.7 L281.1 360.5 L289.7 358.2 L298.3 357.2 L303.9 355.2 L308.7 353.3 L313.5 354.0 L322.5 349.9 L326.7 351.3 L333.4 351.9 L338.6 357.7 L346.7 365.3 L352.8 369.9 L361.4 377.8 L367.9 386.2 L372.5 389.9 L381.3 396.9 L389.2 401.4 L395.4 406.0 L403.6 411.3 L406 612 Z" fill="#d9dbe0"/><path d="M-10 612 L-10.0 499.0 L-4.1 497.1 L4.2 495.0 L10.7 495.8 L15.1 494.0 L22.2 491.2 L28.1 491.4 L34.4 490.0 L39.1 487.6 L43.7 487.2 L52.3 485.2 L60.2 482.8 L67.9 484.1 L73.4 486.8 L81.0 488.1 L85.4 488.6 L90.5 489.5 L98.5 490.5 L107.0 493.2 L111.2 492.5 L117.7 492.4 L123.8 495.1 L128.4 494.7 L133.0 495.0 L141.5 494.6 L145.5 494.5 L152.2 494.5 L156.6 495.8 L165.2 495.5 L171.2 495.5 L175.7 494.8 L180.6 494.1 L189.3 491.5 L196.1 491.8 L200.9 490.6 L209.8 493.7 L214.5 493.6 L223.2 492.7 L230.3 492.0 L236.1 493.1 L243.0 492.6 L247.5 491.1 L255.8 490.6 L262.1 489.2 L271.0 488.1 L275.1 487.9 L280.7 485.9 L285.8 484.9 L291.4 482.8 L298.6 481.2 L306.5 479.0 L314.4 478.7 L320.9 476.4 L326.1 474.6 L332.2 471.1 L341.1 468.3 L346.9 468.6 L352.8 470.3 L357.6 472.5 L362.9 472.6 L371.8 476.1 L380.5 481.1 L387.6 481.1 L391.9 483.0 L397.8 486.0 L406 612 Z" fill="#cfd2d8"/></g></svg><div class="inner">
+  <div class="tl-head"><div class="ptitle">&nbsp;</div><div class="psub">&nbsp;</div></div>
+  <div class="tlh nt"><span class="hs-line" style="left:-20pt;right:20pt"></span><span class="hs-ic" style="left:60.0pt"><img src="assets/timeline/birth.png" alt=""></span><span class="hs-stem up" style="left:60.0pt"></span><div class="hs-lbl up" style="left:16.0pt;text-align:center"><div class="what">Jesus&rsquo; Birth</div></div><span class="hs-ic" style="left:129.0pt"><img src="assets/timeline/cross.png" alt=""></span><span class="hs-stem down" style="left:129.0pt"></span><div class="hs-lbl down" style="left:85.0pt;text-align:center"><div class="what">Life, Death &amp; Resurrection</div></div><span class="hs-ic" style="left:198.0pt"><img src="assets/timeline/church.png" alt=""></span><span class="hs-stem up" style="left:198.0pt"></span><div class="hs-lbl up" style="left:154.0pt;text-align:center"><div class="what">Church</div></div><span class="hs-ic" style="left:267.0pt"><img src="assets/timeline/return.png" alt=""></span><span class="hs-stem down" style="left:267.0pt"></span><div class="hs-lbl down" style="left:223.0pt;text-align:center"><div class="what">Jesus&rsquo; Return</div></div><span class="hs-ic" style="left:336.0pt"><img src="assets/timeline/restoration.png" alt=""></span><span class="hs-stem up" style="left:336.0pt"></span><div class="hs-lbl up" style="left:268.0pt;text-align:right"><div class="what">New Creation</div></div></div>
+  <div class="shelf-block">
+    <div class="ptitle" data-mark="nt">New Testament</div>
+    <div class="psub">27 books. The King arrives and announces the kingdom of God.</div>
+    <div class="case"><div class="shelf"><div class="spine g1" style="height:99%;flex-grow:2.76"><span>Matthew</span></div><div class="spine g1" style="height:93%;flex-grow:2.33"><span>Mark</span></div><div class="spine g1" style="height:96%;flex-grow:2.63"><span>Luke</span></div><div class="spine g1" style="height:99%;flex-grow:2.53"><span>John</span></div><div class="spine g2" style="height:84%;flex-grow:2.76"><span>Acts</span></div><div class="spine g3" style="height:99%;flex-grow:2.33"><span>Romans</span></div><div class="spine g3" style="height:99%;flex-grow:2.33"><span>1 Corinthians</span></div><div class="spine g3" style="height:84%;flex-grow:2.20"><span>2 Corinthians</span></div><div class="spine g3" style="height:99%;flex-grow:1.82"><span>Galatians</span></div><div class="spine g3" style="height:84%;flex-grow:1.82"><span>Ephesians</span></div><div class="spine g3" style="height:99%;flex-grow:1.67"><span>Philippians</span></div><div class="spine g3" style="height:87%;flex-grow:1.67"><span>Colossians</span></div><div class="spine g3" style="height:93%;flex-grow:1.75"><span>1 Thessalonians</span></div><div class="spine g3" style="height:96%;flex-grow:1.58"><span>2 Thessalonians</span></div></div><div class="shelf"><div class="spine g3" style="height:96%;flex-grow:1.82"><span>1 Timothy</span></div><div class="spine g3" style="height:99%;flex-grow:1.67"><span>2 Timothy</span></div><div class="spine g3" style="height:96%;flex-grow:1.58"><span>Titus</span></div><div class="spine g3" style="height:90%;flex-grow:1.33"><span>Philemon</span></div><div class="spine g4" style="height:96%;flex-grow:2.20"><span>Hebrews</span></div><div class="spine g4" style="height:87%;flex-grow:1.75"><span>James</span></div><div class="spine g4" style="height:84%;flex-grow:1.75"><span>1 Peter</span></div><div class="spine g4" style="height:87%;flex-grow:1.58"><span>2 Peter</span></div><div class="spine g4" style="height:93%;flex-grow:1.75"><span>1 John</span></div><div class="spine g4" style="height:96%;flex-grow:1.33"><span>2 John</span></div><div class="spine g4" style="height:99%;flex-grow:1.33"><span>3 John</span></div><div class="spine g4" style="height:90%;flex-grow:1.33"><span>Jude</span></div><div class="spine g5" style="height:93%;flex-grow:2.56"><span>Revelation</span></div></div></div>
+    <div class="legend"><span class="key"><i class="g1"></i>Gospels <b>4</b></span><span class="key"><i class="g2"></i>History <b>1</b></span><span class="key"><i class="g3"></i>Paul&rsquo;s Letters <b>13</b></span><span class="key"><i class="g4"></i>General Letters <b>8</b></span><span class="key"><i class="g5"></i>Prophecy <b>1</b></span></div>
+  </div>
+</div></section>
+<section class="page notes-page"><div class="inner"><div class="ptitle">Notes</div><div class="rules"></div></div></section>
+<section class="page inside-cover inside-back"><svg class="ref-mtn" viewBox="0 0 396 612" preserveAspectRatio="none" aria-hidden="true"><g transform="translate(0 120)"><path d="M-10 612 L-10.0 430.4 L-2.3 430.9 L6.4 430.8 L15.0 428.5 L21.4 431.4 L28.6 431.3 L33.2 429.7 L38.4 429.6 L45.3 427.2 L50.4 427.5 L58.9 428.0 L63.7 427.5 L68.4 426.3 L73.1 423.7 L81.4 423.1 L86.5 424.8 L94.9 421.2 L103.7 420.2 L111.1 416.5 L119.8 414.5 L128.6 411.3 L134.1 407.0 L138.9 404.0 L143.2 402.3 L150.3 397.9 L157.7 398.0 L163.2 398.6 L169.6 396.0 L176.0 396.1 L180.3 396.1 L184.4 394.6 L192.6 390.5 L200.6 389.8 L207.5 387.0 L211.7 386.2 L220.5 381.6 L228.3 379.0 L237.0 371.0 L242.7 367.3 L250.6 360.2 L258.4 362.8 L266.7 360.4 L275.4 359.7 L281.1 360.5 L289.7 358.2 L298.3 357.2 L303.9 355.2 L308.7 353.3 L313.5 354.0 L322.5 349.9 L326.7 351.3 L333.4 351.9 L338.6 357.7 L346.7 365.3 L352.8 369.9 L361.4 377.8 L367.9 386.2 L372.5 389.9 L381.3 396.9 L389.2 401.4 L395.4 406.0 L403.6 411.3 L406 612 Z" fill="#d9dbe0"/><path d="M-10 612 L-10.0 499.0 L-4.1 497.1 L4.2 495.0 L10.7 495.8 L15.1 494.0 L22.2 491.2 L28.1 491.4 L34.4 490.0 L39.1 487.6 L43.7 487.2 L52.3 485.2 L60.2 482.8 L67.9 484.1 L73.4 486.8 L81.0 488.1 L85.4 488.6 L90.5 489.5 L98.5 490.5 L107.0 493.2 L111.2 492.5 L117.7 492.4 L123.8 495.1 L128.4 494.7 L133.0 495.0 L141.5 494.6 L145.5 494.5 L152.2 494.5 L156.6 495.8 L165.2 495.5 L171.2 495.5 L175.7 494.8 L180.6 494.1 L189.3 491.5 L196.1 491.8 L200.9 490.6 L209.8 493.7 L214.5 493.6 L223.2 492.7 L230.3 492.0 L236.1 493.1 L243.0 492.6 L247.5 491.1 L255.8 490.6 L262.1 489.2 L271.0 488.1 L275.1 487.9 L280.7 485.9 L285.8 484.9 L291.4 482.8 L298.6 481.2 L306.5 479.0 L314.4 478.7 L320.9 476.4 L326.1 474.6 L332.2 471.1 L341.1 468.3 L346.9 468.6 L352.8 470.3 L357.6 472.5 L362.9 472.6 L371.8 476.1 L380.5 481.1 L387.6 481.1 L391.9 483.0 L397.8 486.0 L406 612 Z" fill="#cfd2d8"/></g></svg><div class="ic-res"><svg class="qr" preserveAspectRatio="xMidYMid meet" shape-rendering="crispEdges" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg" class="segno"><path class="qrline" stroke="#111" d="M0 0.5h7m2 0h1m3 0h2m1 0h1m1 0h7m-25 1h1m5 0h1m2 0h1m1 0h2m2 0h1m2 0h1m5 0h1m-25 1h1m1 0h3m1 0h1m1 0h2m1 0h1m2 0h3m1 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m1 0h2m3 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-25 1h1m5 0h1m1 0h2m1 0h1m1 0h4m1 0h1m5 0h1m-25 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-17 1h2m2 0h1m2 0h2m-17 1h1m1 0h5m2 0h2m1 0h5m1 0h5m-23 1h1m1 0h1m2 0h1m1 0h2m1 0h3m3 0h2m1 0h1m3 0h1m-24 1h3m1 0h4m1 0h5m1 0h1m1 0h2m2 0h1m1 0h2m-25 1h2m1 0h1m1 0h1m8 0h4m1 0h1m4 0h1m-24 1h1m2 0h1m1 0h3m3 0h7m1 0h1m1 0h3m-25 1h4m1 0h1m1 0h2m4 0h1m2 0h1m2 0h1m1 0h1m1 0h1m-24 1h1m1 0h2m2 0h2m2 0h12m1 0h2m-25 1h1m4 0h1m1 0h1m1 0h3m2 0h1m2 0h4m3 0h1m-25 1h1m1 0h2m1 0h2m3 0h2m1 0h8m1 0h1m-15 1h1m3 0h2m2 0h1m3 0h2m-22 1h7m7 0h1m1 0h1m1 0h1m1 0h1m1 0h3m-25 1h1m5 0h1m1 0h2m2 0h1m1 0h1m1 0h1m3 0h2m-22 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h6m1 0h3m-25 1h1m1 0h3m1 0h1m1 0h3m4 0h1m1 0h2m1 0h5m-25 1h1m1 0h3m1 0h1m1 0h1m2 0h2m3 0h1m4 0h2m1 0h1m-25 1h1m5 0h1m2 0h1m1 0h1m3 0h3m1 0h3m2 0h1m-25 1h7m1 0h1m1 0h3m5 0h7"/></svg>
+    <div class="ic-res-h">Resources</div>
+    <div class="ic-res-sub">Scan for more tools for Bible study.</div></div></section>
+<section class="page back back-light"></section>
+<script>
+    // ---------- shared caption builder ----------
+    function captionHTML(prefix, letterClass, name, icon1, word1, icon2, word2) {
+      return '<div class="' + prefix + 'caption ' + letterClass + '">' +
+        '<span class="name">' + name + '</span>' +
+        '<div class="' + prefix + 'ind"><i class="fa-solid ' + icon1 + '"></i> <span>' + word1 + '</span></div>' +
+        '<span class="sep">&bull;</span>' +
+        '<div class="' + prefix + 'ind"><i class="fa-solid ' + icon2 + '"></i> <span>' + word2 + '</span></div>' +
+      '</div>';
+    }
+
+    function titleHTML(side, color, letter, word, kw) {
+      return '<div class="tblock ' + side + ' ' + color + '"><span class="big">' + letter + '</span>' +
+        '<div><div class="tword">' + word + '</div><div class="kw">' + kw + '</div></div></div>';
+    }
+
+    function dwellMarkHTML() {
+      return '<div class="ds-mark" role="img" aria-label="Dwell Skills"><span class="ds-box">DWELL</span><span class="ds-sidewrap"><span class="ds-side">Skills</span></span></div>';
+    }
+
+    function labelHTML(side, word) {
+      return '<div class="tblock dtab ' + side + '"><div class="dlabel">' + word + '</div></div>';
+    }
+
+    // facing page for each template: room to reflect on the Learn and Live steps
+    function buildReflectionCard() {
+      const el = document.createElement('div');
+      el.className = 'reflect-card';
+      el.innerHTML =
+        '<div class="reflect-head"><div class="reflect-title">Reflect</div></div>' +
+        '<div class="reflect-grid">' +
+          '<div class="rbox">' + labelHTML('', 'Learn') +
+            '<p class="rprompt">What was the takeaway for the first people who read this?<br>What does this teach us about who God is and how He works?</p>' +
+            '<div class="rrules"></div></div>' +
+          '<div class="rbox">' + labelHTML('', 'Live') +
+            '<p class="rprompt">What cultural or personal lies does this truth expose?<br>How will this shape your prayers, thoughts, words, or actions today?</p>' +
+            '<div class="rrules"></div></div>' +
+        '</div>';
+      return el;
+    }
+
+    function buildMiniCard() {
+      const el = document.createElement('div');
+      el.className = 'mini-card';
+      el.innerHTML =
+        '<div class="mini-brand">' + dwellMarkHTML() +
+        '<div class="mini-header">' +
+          '<div class="mini-field"><span>PASSAGE:</span><span class="mini-line"></span></div>' +
+          '<div class="mini-field"><span>NAME:</span><span class="mini-line"></span></div>' +
+        '</div></div>' +
+        '<div class="mini-grid">' +
+          '<div class="mini-box mtl">' + labelHTML('', 'Perspective') + '</div>' +
+          '<div class="mini-box mtr">' + labelHTML('', 'Words') + '</div>' +
+          '<div class="mini-box mbl">' + labelHTML('bottom', 'Connections') + '</div>' +
+          '<div class="mini-box mbr">' + labelHTML('bottom', 'Questions') + '</div>' +
+          '<div class="mini-circle">' +
+            '<div class="mini-label">GOD IS&hellip;</div>' +
+            '<div class="mini-write-space"><div class="mini-write-line"></div><div class="mini-write-line"></div></div>' +
+            '<div class="mini-label mini-therefore">THEREFORE, I&hellip;</div>' +
+            '<div class="mini-write-space"><div class="mini-write-line"></div><div class="mini-write-line"></div></div>' +
+          '</div>' +
+        '</div>';
+      return el;
+    }
+
+    function promptList(items, intro) {
+      return '<div class="mini-prompts">' + (intro ? '<p class="mini-intro">' + intro + '</p>' : '') + '<ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+    }
+
+    function buildLeaderCard() {
+      const el = buildMiniCard();
+      el.querySelector('.mtl').insertAdjacentHTML('beforeend', promptList([
+        'Author', 'Audience', 'Time', 'Purpose'], 'Use a study Bible to set the scene before you read:'));
+      el.querySelector('.mtr').insertAdjacentHTML('beforeend', promptList([
+        'Which words or phrases repeat or stand out?',
+        'Which words need clarity? Look them up or compare translations.',
+        'Sum it up in 1&ndash;2 sentences.'],
+        'Reread slowly:'));
+      el.querySelector('.mbl').insertAdjacentHTML('afterbegin', promptList([
+        'Read the surrounding chapters. How does this fit the whole book?',
+        'Follow cross-references. Where else does this theme show up in Scripture?']));
+      el.querySelector('.mbr').insertAdjacentHTML('afterbegin', promptList([
+        'What stood out or confused you as you read?',
+        'What questions do you still have?',
+        'Check your findings with your group, notes, or a commentary.']));
+      const spaces = el.querySelectorAll('.mini-circle .mini-write-space');
+      spaces[0].outerHTML = '<div class="mini-hint god-hint"><span>What does <b>this</b> passage<br>teach about who God is<br>and how He works?</span></div>';
+      spaces[1].outerHTML = '<div class="mini-hint"><span>How will this truth<br>shape my prayers, thoughts,<br>words, or actions?</span></div>';
+      return el;
+    }
+
+
+document.querySelectorAll('[data-card="leader"]').forEach(function (p) { var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'Leader Guide', 'Questions to guide your prep in each section.'); p.appendChild(c); });
+document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = dwellMarkHTML(); p.appendChild(c); });
+function setRefHead(card, title, sub) {
+  card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
+}
+function resList(groups) {
+  return '<div class="mini-prompts res">' + groups.map(function (g) {
+    return '<div class="res-h">' + g[0] + '</div><ul>' + g[1].map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>';
+  }).join('') + '</div>';
+}
+function buildResourceCard() {
+  var el = buildMiniCard();
+  el.classList.add('rev');
+  setRefHead(el, 'Resources', 'Tools in print and online for each section.');
+  el.querySelector('.mtl').insertAdjacentHTML('beforeend', resList([
+    ['In print', ['Study Bible book introductions', 'Bible handbook or atlas']],
+    ['Online', ['BibleProject overview videos', 'YouVersion Bible App book intros']]]));
+  el.querySelector('.mtr').insertAdjacentHTML('beforeend', resList([
+    ['In print', ['Cross-references in the margin', 'Bible dictionary or concordance']],
+    ['Online', ['Compare translations: Bible Gateway', 'Word studies: Blue Letter Bible']]]));
+  el.querySelector('.mbl').insertAdjacentHTML('afterbegin', resList([
+    ['With people', ['Talk it through with your leader or a friend']],
+    ['Everyday', ['Write the truth on a card or your lock screen', 'Memorize one verse with a Bible app plan']]]));
+  el.querySelector('.mbr').insertAdjacentHTML('afterbegin', resList([
+    ['With people', ['Bring questions to a leader', 'Pray with a friend']],
+    ['On your own', ['Keep a prayer list', 'Pray the passage back to God']]]));
+  var spaces = el.querySelectorAll('.mini-circle .mini-write-space');
+  spaces[0].outerHTML = '<div class="mini-hint god-hint"><span>Check your answer with<br>a study Bible note or<br>a trusted commentary.</span></div>';
+  spaces[1].outerHTML = '<div class="mini-hint"><span>Ask a leader what this<br>could look like this week.</span></div>';
+  return el;
+}
+document.querySelectorAll('[data-card="resources"]').forEach(function (p) { p.appendChild(buildResourceCard()); });
+document.querySelectorAll('[data-card="blank"]').forEach(function (p) {
+  var c = buildMiniCard();
+  c.querySelectorAll('.mini-field > span:first-child').forEach(function (l) { if (l.textContent.trim() === 'NAME:') l.textContent = 'DATE:'; });
+  p.appendChild(c);
+});
+document.querySelectorAll('[data-card="reflect"]').forEach(function (p) { p.appendChild(buildReflectionCard()); });
+</script>
+</body>
+</html>

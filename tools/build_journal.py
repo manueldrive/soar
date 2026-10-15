@@ -2,18 +2,23 @@
 
 Reuses index.html's styles and card builders so the journal always matches the site.
 Run:  python3 tools/build_journal.py   (then open journal.html and print, or use tools/journal_pdf.py)
+
+Dwell Skills journal:  BOOK=dwell python3 tools/build_journal.py   -> dwell-journal.html, built from dwell.html.
+Same book, but every study is a two-page spread: the Dwell card on the left, its Reflect (Learn + Live) page on the right.
 """
-import re, pathlib
+import os, re, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-src = (ROOT / "index.html").read_text()
+DWELL = os.environ.get("BOOK", "soar").lower() == "dwell"
+src = (ROOT / ("dwell.html" if DWELL else "index.html")).read_text()
 
 head_links = "\n".join(l for l in src.split("\n")[:9] if "fonts.g" in l or "preconnect" in l)
 style = src[src.index("<style>") + 7 : src.index("</style>")]
 js = src[src.index("<script>", src.index("</style>")) + 8 :]
 builders = js[js.index("    // ---------- shared caption builder") : js.index("    document.querySelectorAll('#leaderPage")]
 
-BLANKS = 12
+BLANKS = 12   # Guided SOAR: one card per page
+STUDIES = 12  # Dwell: one card + Reflect spread per study (32 pages total)
 
 # v1 keeps it simple: cover -> name page -> leader guide. These pages are saved for a later version.
 INCLUDE_WHY = False
@@ -24,6 +29,8 @@ COVER_STYLE = "light"   # set COVER_TINT below for a soft single-color pop on th
 COVER_TINT = __import__("os").environ.get("COVER_TINT", "")   # "", "teal", "orchid" or "blue"
 # "light" prints cleanly on toner printers; "dark" is the original night-grey cover
 RESOURCES_URL = "https://dwellmethod.vercel.app/guidedsoar"   # Guided SOAR landing page on the Dwell site
+if DWELL:
+    RESOURCES_URL = "https://dwellstudy.com"
 
 RESOURCES = [
     ("How to Read the Bible", "BibleProject video series on reading the Bible well: genre, story, poetry, and more.",
@@ -439,7 +446,10 @@ pages.append(f'''<section class="page ref-page"><div class="inner">
   <div class="qr-list">{resources_page()}</div>
 </div></section>''')
 pages.append('<section class="page ref-page" data-card="leader"></section>')
-pages += ['<section class="page" data-card="blank"></section>'] * BLANKS
+if DWELL:   # card on the left page, Reflect on the facing right page (the leader guide is page 3, so pairs start on page 4)
+    pages += ['<section class="page" data-card="blank"></section>', '<section class="page" data-card="reflect"></section>'] * STUDIES
+else:
+    pages += ['<section class="page" data-card="blank"></section>'] * BLANKS
 # the OT / NT spread lives at the back: OT on an even (left) page, NT on the facing right page
 for marker in ('data-mark="ot"', 'data-mark="nt"'):
     i = next(k for k, pg in enumerate(pages) if marker in pg)
@@ -464,6 +474,21 @@ if RESOURCES_URL:   # inside back cover: the Resources QR code takes the place o
 pages.append(f'<section class="page back{" back-light" if COVER_STYLE == "light" else ""}"></section>')
 assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
 
+DWELL_CSS = """
+  /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
+  .cover-card .mini-circle .ds-mark { transform: scale(1.45); }
+  .reflect-card { margin: 0; }
+  /* grey reference pages: each border label is half on the page, half inside the white box */
+  .ref-page .mini-box { background: #fff; }
+  .ref-page .dlabel { background: linear-gradient(180deg, #e4e6ea 50%, #fff 50%); }
+  .ref-page .dtab.bottom .dlabel { background: linear-gradient(180deg, #fff 50%, #e4e6ea 50%); }
+  .ref-page .ref-head { margin-bottom: 6pt; }
+"""
+COVER_JS = ("c.querySelector('.mini-circle').innerHTML = dwellMarkHTML();" if DWELL else
+    """c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">';""")
+REFLECT_JS = ("document.querySelectorAll('[data-card=\"reflect\"]').forEach(function (p) { p.appendChild(buildReflectionCard()); });\n"
+              if DWELL else "")
+
 t = TINTS.get(COVER_TINT)
 tint_css = (f".cover.cover-light {{ background: linear-gradient(180deg, {t['sky'][0]} 0%, {t['sky'][1]} 78%); }} "
             f".cover-light .cover-card .mini-circle {{ background: {t['sun']}; border-color: {t['sun']}; }} "
@@ -472,16 +497,16 @@ html = f'''<!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
-<title>Guided SOAR Journal</title>
+<title>{"Dwell Skills Journal" if DWELL else "Guided SOAR Journal"}</title>
 {head_links}
-<style>{style}{JOURNAL_CSS.replace('{tint_css}', tint_css)}</style>
+<style>{style}{JOURNAL_CSS.replace('{tint_css}', tint_css)}{DWELL_CSS if DWELL else ""}</style>
 </head>
 <body>
 {chr(10).join(pages)}
 <script>
 {builders}
 document.querySelectorAll('[data-card="leader"]').forEach(function (p) {{ var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'Leader Guide', 'Questions to guide your prep in each section.'); p.appendChild(c); }});
-document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">'; p.appendChild(c); }});
+document.querySelectorAll('[data-card="cover"]').forEach(function (p) {{ var c = buildMiniCard(); c.classList.add('cover-card'); {COVER_JS} p.appendChild(c); }});
 function setRefHead(card, title, sub) {{
   card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
 }}
@@ -517,9 +542,10 @@ document.querySelectorAll('[data-card="blank"]').forEach(function (p) {{
   c.querySelectorAll('.mini-field > span:first-child').forEach(function (l) {{ if (l.textContent.trim() === 'NAME:') l.textContent = 'DATE:'; }});
   p.appendChild(c);
 }});
-</script>
+{REFLECT_JS}</script>
 </body>
 </html>
 '''
-(ROOT / "journal.html").write_text(html)
-print("wrote journal.html with", len(pages), "pages")
+out = "dwell-journal.html" if DWELL else "journal.html"
+(ROOT / out).write_text(html)
+print("wrote", out, "with", len(pages), "pages")

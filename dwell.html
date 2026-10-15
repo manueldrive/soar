@@ -1,0 +1,909 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Dwell Skills</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Fredoka:wght@600;700&family=Nunito:wght@800;900&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #e9edf2;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border-bottom: 1px solid #dde2e8;
+  }
+  .tabs {
+    display: flex;
+    background: #eef1f5;
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .tabs button {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #4a5568;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 16px;
+    cursor: pointer;
+  }
+  .tabs button.active {
+    background: #16345c;
+    color: #ffffff;
+  }
+  .divider-v {
+    width: 1px;
+    height: 26px;
+    background: #dde2e8;
+  }
+  .format-toolbar {
+    display: flex;
+    gap: 4px;
+    background: #eef1f5;
+    border-radius: 10px;
+    padding: 3px;
+  }
+  .format-toolbar button {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: #333;
+    background: #ffffff;
+    border: 1px solid #dde2e8;
+    border-radius: 7px;
+    padding: 7px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .format-toolbar button:hover { background: #f4f6f8; }
+  .format-toolbar button:active { background: #e5e9ee; }
+  .download-btn {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    color: #ffffff;
+    background: #16345c;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .download-btn:hover { background: #0f2544; }
+  .hint {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #808894;
+  }
+
+  .stage {
+    display: none;
+    justify-content: center;
+    padding: 28px 14px 50px;
+  }
+  .stage.visible { display: flex; }
+
+  /* ---------- Edit card (single, big, fillable) ---------- */
+  .card {
+    width: 612pt;
+    height: 792pt;
+    background: #ffffff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    padding: 40pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12pt;
+    align-items: center;
+    margin-bottom: 20pt;
+  }
+  .field {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+    font-weight: 700;
+    font-size: 11pt;
+    letter-spacing: 1pt;
+    color: #111111;
+  }
+  .field input {
+    flex: 1;
+    border: none;
+    border-bottom: 1.3pt solid #111111;
+    background: transparent;
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    font-size: 16pt;
+    color: #16345c;
+    padding: 0 2pt 2pt;
+    outline: none;
+  }
+  .field input::placeholder { color: #b7b7b7; font-family: Arial, sans-serif; font-size: 10pt; }
+
+  .grid {
+    position: relative;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12pt;
+  }
+  .box {
+    position: relative;
+    border: 3pt solid #111111;
+    border-radius: 16pt;
+  }
+  .tl, .tr, .bl, .br { background: #ffffff; }
+
+  .caption {
+    position: absolute;
+    left: 6pt;
+    right: 6pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5pt;
+    white-space: nowrap;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .tl .caption, .tr .caption { top: 9pt; }
+  .bl .caption, .br .caption { bottom: 9pt; }
+  .caption .name {
+    font-weight: 800;
+    font-size: 10.5pt;
+    letter-spacing: 0.1pt;
+    color: #111111;
+  }
+  .caption .sep { color: #b0b0b0; font-size: 8pt; }
+  .ind {
+    display: flex;
+    align-items: center;
+    gap: 2.5pt;
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.1pt;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ind i { width: 8pt; font-size: 9pt; text-align: center; margin-right: 2pt; }
+  .s .ind, .s .ind i { color: #2f6fd6; }
+  .o .ind, .o .ind i { color: #2f6fd6; }
+  .a .ind, .a .ind i { color: #8551c9; }
+  .r .ind, .r .ind i { color: #8551c9; }
+
+  .notes {
+    position: absolute;
+    left: 12pt;
+    right: 12pt;
+    font-family: 'Caveat', cursive;
+    font-weight: 500;
+    font-size: 16pt;
+    line-height: 1.4;
+    color: #16345c;
+    overflow-y: auto;
+    outline: none;
+  }
+  .notes ul { margin: 2pt 0; padding-left: 18pt; }
+  .tl .notes, .tr .notes { top: 34pt; bottom: 10pt; }
+  .bl .notes, .br .notes { top: 10pt; bottom: 34pt; }
+  .notes:focus { box-shadow: 0 0 0 2pt rgba(22,52,92,0.25) inset; border-radius: 6pt; }
+  .notes:not(.has-text):before {
+    content: attr(data-placeholder);
+    color: #9fb3c8;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    font-style: italic;
+  }
+
+  .circle-exclude {
+    width: 120pt;
+    height: 120pt;
+    shape-margin: 6pt;
+    pointer-events: none;
+  }
+  .tl .circle-exclude { float: right; margin-top: 169pt; shape-outside: circle(120pt at 100% 100%); }
+  .tr .circle-exclude { float: left; margin-top: 169pt; shape-outside: circle(120pt at 0% 100%); }
+  .bl .circle-exclude { float: right; shape-outside: circle(120pt at 100% 0%); }
+  .br .circle-exclude { float: left; shape-outside: circle(120pt at 0% 0%); }
+
+  .center-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 240pt;
+    height: 240pt;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3pt solid #111111;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 5pt;
+    padding: 14pt;
+  }
+  .center-circle .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5pt;
+  }
+  .center-circle .label {
+    font-weight: 900;
+    font-size: 17pt;
+    color: #111111;
+  }
+  .center-circle .therefore { margin-top: 6pt; }
+  .center-circle .answer {
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    font-size: 16pt;
+    color: #16345c;
+    line-height: 1.2;
+    width: 100%;
+    outline: none;
+    min-height: 20pt;
+  }
+  .center-circle .answer:focus { box-shadow: 0 0 0 2pt rgba(22,52,92,0.25) inset; border-radius: 6pt; }
+  .center-circle .answer:not(.has-text):before {
+    content: attr(data-placeholder);
+    color: #9fb3c8;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9pt;
+    font-style: italic;
+  }
+
+  /* ---------- Blank 2-up print page ---------- */
+  .mini-page {
+    width: 792pt;
+    height: 612pt;
+    background: #ffffff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    padding: 20pt;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
+  .mini-divider {
+    width: 0;
+    border-left: 1.5pt dashed #bbbbbb;
+    margin: 0 20pt 0 19.25pt;
+  }
+  .mini-card {
+    width: 356pt;
+    height: 572pt;
+    display: flex;
+    flex-direction: column;
+  }
+  .mini-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8pt;
+    align-items: center;
+    margin-bottom: 16pt;
+  }
+  .mini-field {
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+    font-weight: 700;
+    font-size: 9pt;
+    letter-spacing: 1pt;
+    color: #111111;
+  }
+  .mini-line { flex: 1; border-bottom: 1.3pt solid #111111; height: 1pt; }
+
+  .mini-grid {
+    position: relative;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8pt;
+  }
+  .mini-box { position: relative; border: 3pt solid #111111; border-radius: 14pt; }
+  .mtl, .mtr, .mbl, .mbr { background: #ffffff; }
+
+  .mini-caption {
+    position: absolute;
+    left: 4pt;
+    right: 4pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4pt;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .mtl .mini-caption, .mtr .mini-caption { top: 7pt; }
+  .mbl .mini-caption, .mbr .mini-caption { bottom: 7pt; }
+  .mini-caption .name { font-weight: 800; font-size: 8.5pt; letter-spacing: 0.1pt; color: #111111; }
+  .mini-caption .sep { color: #b0b0b0; font-size: 6.5pt; }
+  .mini-ind {
+    display: flex;
+    align-items: center;
+    gap: 2pt;
+    font-weight: 700;
+    font-size: 6.6pt;
+    letter-spacing: 0.1pt;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .mini-ind i { width: 7pt; font-size: 7.4pt; text-align: center; margin-right: 1.5pt; }
+  .ms .mini-ind, .ms .mini-ind i { color: #2f6fd6; }
+  .mo .mini-ind, .mo .mini-ind i { color: #2f6fd6; }
+  .ma .mini-ind, .ma .mini-ind i { color: #8551c9; }
+  .mr .mini-ind, .mr .mini-ind i { color: #8551c9; }
+
+  .mini-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 184pt;
+    height: 184pt;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3pt solid #111111;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0;
+    padding: 0 14pt 14pt;
+  }
+  .mini-label { font-weight: 900; font-size: 12pt; color: #111111; }
+  .mini-therefore { margin-top: 8pt; }
+  .mini-write-space { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .mini-write-line { width: 132pt; height: 25pt; }
+
+  /* ---------- Leader guide ---------- */
+  .week-note {
+    text-align: center;
+    font-size: 9pt;
+    color: #4a5568;
+    margin: -8pt 0 12pt;
+  }
+  .week-note b { color: #16345c; }
+  .field .line { flex: 1; border-bottom: 1.3pt solid #111111; height: 1pt; }
+  .day-tag {
+    font-size: 7pt;
+    font-weight: 800;
+    letter-spacing: 0.6pt;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #16345c;
+    border-radius: 5pt;
+    padding: 2pt 5pt;
+    white-space: nowrap;
+  }
+  .prompts {
+    position: absolute;
+    left: 12pt;
+    right: 14pt;
+    font-size: 15.5pt;
+    line-height: 1.28;
+    color: #4a5568;
+  }
+  .prompts ul { margin: 0; padding-left: 16pt; }
+  .prompts li { margin-bottom: 8pt; }
+  .tl .prompts, .tr .prompts { top: 52pt; }
+  .bl .prompts, .br .prompts { bottom: 54pt; }
+  .leader-circle { justify-content: flex-start; padding: 30pt 18pt 0; gap: 4pt; }
+  .leader-circle .circle-prompt {
+    font-size: 12.5pt;
+    font-style: italic;
+    line-height: 1.3;
+    color: #5b6878;
+    max-width: 190pt;
+  }
+  .leader-circle .label { margin-top: 2pt; }
+  .leader-circle .write-gap { height: 26pt; }
+
+  /* ---------- Section titles (big letter + key words) ---------- */
+  .tblock {
+    position: absolute;
+    top: 9pt;
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+    pointer-events: none;
+  }
+  .tblock.left { left: 12pt; }
+  .tblock.bottom { top: auto; bottom: 9pt; }
+  .tblock.right { right: 12pt; flex-direction: row-reverse; text-align: right; }
+  .tblock .big {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 30pt;
+    line-height: 1;
+  }
+  .tblock .tword { font-weight: 800; font-size: 12pt; color: #111111; line-height: 1.1; }
+  .tblock .kw { font-size: 9.5pt; color: #4a5568; line-height: 1.2; margin-top: 1pt; }
+  .tblock .big { color: #111111; }
+  .mini-box .tblock { top: 7pt; gap: 4pt; }
+  .mini-box .tblock.left { left: 9pt; }
+  .mini-box .tblock.bottom { top: auto; bottom: 7pt; }
+  .mini-box .tblock.right { right: 9pt; }
+  .mini-box .tblock .big { font-size: 22pt; }
+  .mini-box .tblock .tword { font-size: 9.5pt; }
+  .mini-box .tblock .kw { font-size: 8pt; }
+
+  /* ---------- Brand row (logo + passage/name) ---------- */
+  .brand-row { display: flex; align-items: center; gap: 30pt; margin-bottom: 16pt; }
+  .brand-logo { height: 64pt; width: auto; display: block; }
+  .brand-row .header { flex: 1; grid-template-columns: 1fr; gap: 14pt; margin-bottom: 0; }
+  .mini-brand { display: flex; align-items: center; gap: 22pt; margin-bottom: 8pt; }
+  .mini-brand .brand-logo { height: 36pt; }
+  .mini-brand .mini-header { flex: 1; grid-template-columns: 1fr; gap: 12pt; margin-bottom: 0; }
+  .brand-row .field > span:first-child { width: 74pt; flex: none; text-align: right; }
+  .mini-brand .mini-field > span:first-child { width: 58pt; flex: none; text-align: right; }
+
+  /* ---------- Fonts: rounded display font (matches logo) + DM Sans (text) ---------- */
+  :root { --display: 'Fredoka'; --w-big: 700; --w-head: 600; --w-label: 700; }
+  body, .prompts, .tblock .kw, .circle-prompt { font-family: 'DM Sans', Arial, Helvetica, sans-serif; }
+  .tblock .big { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-big); font-size: 34pt; }
+  .mini-box .tblock .big { font-size: 25pt; }
+  .tblock .tword { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-head); font-size: 12pt; letter-spacing: 0.2pt; }
+  .mini-box .tblock .tword { font-size: 9.5pt; }
+  .center-circle .label, .mini-label { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-label); }
+  .center-circle .label { font-size: 18pt; }
+  .mini-label { font-size: 14pt; }
+  .field > span:first-child, .mini-field > span:first-child { font-family: var(--display), Arial, sans-serif; font-weight: var(--w-head); letter-spacing: 0.5pt; }
+  .field > span:first-child { font-size: 11pt; }
+  .mini-field > span:first-child { font-size: 9pt; }
+
+  /* ---------- Leader guide 2-up prompts ---------- */
+  .mini-prompts {
+    position: absolute;
+    left: 8pt;
+    right: 9pt;
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.25;
+    color: #4a5568;
+  }
+  .mini-prompts ul { margin: 0; padding-left: 0; list-style: none; }
+  .mini-prompts li { margin-bottom: 4pt; padding-left: 11pt; position: relative; }
+  .mini-prompts li::before { content: ''; position: absolute; left: 1pt; top: 0.55em; width: 4pt; height: 4pt; border-radius: 50%; background: #4a5568; }
+  .mtl .mini-prompts, .mtr .mini-prompts { top: 40pt; }
+  .mbl .mini-prompts, .mbr .mini-prompts { bottom: 40pt; }
+  .mini-circle .mini-hint {
+    height: 50pt;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-size: 10pt;
+    font-style: italic;
+    line-height: 1.2;
+    color: #4a5568;
+    padding: 0 2pt;
+  }
+
+  /* ---------- Digital template ---------- */
+  #card .tl .notes, #card .tr .notes { top: 58pt; bottom: 10pt; }
+  #card .bl .notes, #card .br .notes { top: 10pt; bottom: 58pt; }
+  #card .tl .circle-exclude, #card .tr .circle-exclude { margin-top: 122pt; }
+  .digital-circle { justify-content: flex-start; padding: 40pt 22pt 0; gap: 4pt; }
+  .digital-circle .answer { min-height: 52pt; display: flex; align-items: center; justify-content: center; }
+  .digital-circle .therefore { margin-top: 0; }
+
+  .mini-circle .mini-hint.god-hint { padding-top: 12pt; }
+
+  /* ---------- Print / PDF export cleanup ---------- */
+  .exporting .notes:not(.has-text):before,
+  .exporting .answer:not(.has-text):before { content: none; }
+  .exporting .field input::placeholder { color: transparent; }
+  .exporting .notes:focus, .exporting .answer:focus { box-shadow: none; }
+
+  /* Passage/Name lines sit on the baseline of their labels */
+  .mini-field { align-items: flex-end; }
+  .mini-field > span:first-child { line-height: 1; }
+  .mini-line { margin-bottom: 1.5pt; }
+  .field { align-items: flex-end; }
+  .field > span:first-child { line-height: 1; padding-bottom: 2pt; }
+  .field input { line-height: 1; padding-bottom: 0; }
+
+  .mini-prompts .mini-intro { margin: 0 0 5pt; }
+  .mtl .mini-prompts, .mtr .mini-prompts { top: 36pt; }
+
+  /* ---------- Guided SOAR wordmark ---------- */
+  .gs-logo { height: 36pt; width: auto; display: block; flex: none; }
+  #card .gs-logo { height: 50pt; }
+  .gs-mark { display: flex; flex-direction: row; align-items: center; gap: 1.2pt; line-height: 1; width: 104pt; flex: none; }
+  .gs-mark .gs-main { font-family: var(--display), sans-serif; font-weight: 600; font-size: 34pt; letter-spacing: -0.6pt; color: #111; line-height: 0.8; display: flex; align-items: center; }
+  .gs-mark .gs-o { width: 0.94em; height: 0.94em; flex: none; margin: 0 -0.055em; position: relative; top: 0.055em; }
+  .gs-mark .gs-subwrap { position: relative; width: 9pt; height: 23.7pt; flex: none; background: #111; border-radius: 1.5pt; top: 1.9pt; margin-right: 0; }
+  .gs-mark .gs-sub { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); white-space: nowrap; font-family: var(--display), sans-serif; font-weight: 600; font-size: 5pt; letter-spacing: 0.5pt; text-transform: uppercase; color: #fff; padding-left: 0.5pt; line-height: 1; }
+  .mini-brand .gs-mark { margin-top: -4.5pt; margin-bottom: -4.5pt; }
+  #card .gs-mark { width: auto; gap: 1.7pt; }
+  #card .gs-mark .gs-main { font-size: 48pt; letter-spacing: -0.85pt; }
+  #card .gs-mark .gs-subwrap { width: 12.7pt; height: 33.4pt; border-radius: 2pt; top: 2.7pt; margin-right: 0; }
+  #card .gs-mark .gs-sub { font-size: 7pt; letter-spacing: 0.7pt; padding-left: 0.7pt; }
+
+
+  /* ================= Dwell Skills ================= */
+  /* wordmark: built like the Guided SOAR logo (black rounded box + small side word), side word after */
+  .ds-mark { display: flex; align-items: center; gap: 2.4pt; height: 36pt; flex: none; }
+  .ds-box { height: 100%; display: flex; align-items: center; justify-content: center; background: #111; color: #fff; border-radius: 6.5pt;
+            padding: 1pt 7pt 0; font-family: var(--display), sans-serif; font-weight: 700; font-size: 24pt; letter-spacing: 0.4pt; line-height: 1; }
+  .ds-sidewrap { position: relative; width: 6.5pt; height: 100%; flex: none; }
+  .ds-side { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(90deg); white-space: nowrap;
+             font-family: var(--display), sans-serif; font-weight: 700; font-size: 7.4pt; letter-spacing: 0.9pt; padding-left: 0.9pt;
+             text-transform: uppercase; color: #111; line-height: 1; }
+  #card .ds-mark { height: 50pt; gap: 3.3pt; }
+  #card .ds-box { font-size: 33pt; border-radius: 9pt; padding: 1.4pt 10pt 0; }
+  #card .ds-sidewrap { width: 9pt; }
+  #card .ds-side { font-size: 10.2pt; letter-spacing: 1.25pt; padding-left: 1.25pt; }
+
+  /* box labels sit in a gap in the border, centered (top boxes at the top, bottom boxes at the bottom) */
+  .mini-brand { margin-bottom: 15pt; }
+  .tblock.dtab { left: 50%; right: auto; top: -9pt; transform: translateX(-50%); gap: 0; }
+  .tblock.dtab.bottom { top: auto; bottom: -9pt; }
+  .dlabel { background: #fff; color: #111; font-family: var(--display), Arial, sans-serif; font-weight: 700; font-size: 11pt;
+            letter-spacing: 1.8pt; text-transform: uppercase; line-height: 1; white-space: nowrap; padding: 3pt 7pt 3pt 8.8pt; }
+  .box .tblock.dtab { top: -11pt; }
+  .box .tblock.dtab.bottom { top: auto; bottom: -11pt; }
+  .box .dlabel { font-size: 14pt; letter-spacing: 2.2pt; padding: 3pt 9pt 3pt 11.2pt; }
+  .brand-row { margin-bottom: 24pt; }
+  #card .tl .notes, #card .tr .notes { top: 22pt; bottom: 10pt; }
+  #card .bl .notes, #card .br .notes { top: 10pt; bottom: 22pt; }
+  #card .tl .circle-exclude, #card .tr .circle-exclude { margin-top: 158pt; }
+  /* leader prompts start just under the border label */
+  .mtl .mini-prompts, .mtr .mini-prompts { top: 20pt; }
+  .mbl .mini-prompts, .mbr .mini-prompts { bottom: 20pt; }
+
+  /* reflection page: Learn + Live, faces each template */
+  .reflect-card { width: 356pt; height: 572pt; display: flex; flex-direction: column; font-family: 'DM Sans', Arial, sans-serif; }
+  .reflect-head { height: 36pt; display: flex; align-items: center; margin-bottom: 15pt; }
+  .reflect-title { font-family: var(--display), sans-serif; font-weight: 700; font-size: 22pt; color: #111; line-height: 1; }
+  .reflect-grid { flex: 1; display: flex; flex-direction: column; gap: 17pt; }
+  .rbox { position: relative; flex: 1; border: 3pt solid #111; border-radius: 14pt; display: flex; flex-direction: column; padding: 15pt 12pt 10pt; }
+  .rbox .tblock.dtab { top: -9pt; }
+  .rprompt { margin: 0 0 2pt; text-align: center; font-size: 8.6pt; line-height: 1.3; color: #4a5568; }
+  .rrules { flex: 1; background-image: repeating-linear-gradient(180deg, transparent 0 21.4pt, #c9ccd2 21.4pt 22.2pt); background-position: 0 100%; }
+
+  @media print {
+    html, body { background: #ffffff; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .toolbar { display: none; }
+    .stage { padding: 0; }
+    .card, .mini-page { box-shadow: none; }
+    .notes:not(.has-text):before, .answer:not(.has-text):before { content: none; }
+    .field input::placeholder { color: transparent; }
+    .notes:focus, .answer:focus { box-shadow: none; }
+    .notes, .answer { overflow: visible; }
+  }
+</style>
+</head>
+<body>
+  <div class="toolbar">
+    <div class="tabs">
+      <button id="tabBlank" class="active">Blank Template</button>
+      <button id="tabLeader">Leader Guide</button>
+      <button id="tabEdit">Digital Template</button>
+    </div>
+    <div class="divider-v" id="formatDivider" style="display:none;"></div>
+    <div class="format-toolbar" id="formatToolbar" style="display:none;">
+      <button data-cmd="bold"><i class="fa-solid fa-bold"></i>Bold</button>
+      <button data-cmd="insertUnorderedList"><i class="fa-solid fa-list-ul"></i>Bullets</button>
+    </div>
+    <div class="divider-v"></div>
+    <button class="download-btn" id="downloadBtn"><i class="fa-solid fa-download"></i>Download PDF</button>
+    <div class="hint" id="hintText"></div>
+  </div>
+
+  <!-- ============ BLANK 2-UP PRINT STAGE ============ -->
+  <div class="stage visible" id="blankStage">
+    <div class="mini-page" id="blankPage">
+      <div class="mini-card"></div>
+      <div class="mini-divider"></div>
+      <div class="reflect-card"></div>
+    </div>
+  </div>
+
+  <!-- ============ EDIT & FILL STAGE ============ -->
+  <div class="stage" id="editStage">
+    <div class="card" id="card">
+      <div class="brand-row">
+        <div class="ds-mark" role="img" aria-label="Dwell Skills"><span class="ds-box">DWELL</span><span class="ds-sidewrap"><span class="ds-side">Skills</span></span></div>
+        <div class="header">
+          <div class="field">
+            <span>PASSAGE:</span>
+            <input type="text" placeholder="e.g. Mark 4:35&ndash;41">
+          </div>
+          <div class="field">
+            <span>NAME:</span>
+            <input type="text" placeholder="Your name">
+          </div>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="box tl">
+          <div class="tblock dtab"><div class="dlabel">Perspective</div></div>
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div></div>
+        </div>
+        <div class="box tr">
+          <div class="tblock dtab"><div class="dlabel">Words</div></div>
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div></div>
+        </div>
+        <div class="box bl">
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div></div>
+          <div class="tblock dtab bottom"><div class="dlabel">Connections</div></div>
+        </div>
+        <div class="box br">
+          <div class="notes" contenteditable="true" data-placeholder="Type here&hellip;"><div class="circle-exclude" contenteditable="false"></div></div>
+          <div class="tblock dtab bottom"><div class="dlabel">Questions</div></div>
+        </div>
+        <div class="center-circle digital-circle">
+          <div class="label">GOD IS&hellip;</div>
+          <div class="answer" contenteditable="true" data-placeholder="type here"></div>
+          <div class="label therefore">THEREFORE, I&hellip;</div>
+          <div class="answer" contenteditable="true" data-placeholder="type here"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ LEADER GUIDE 2-UP STAGE ============ -->
+  <div class="stage" id="leaderStage">
+    <div class="mini-page" id="leaderPage">
+      <div class="mini-card leader-slot"></div>
+      <div class="mini-divider"></div>
+      <div class="mini-card leader-slot"></div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- shared caption builder ----------
+    function captionHTML(prefix, letterClass, name, icon1, word1, icon2, word2) {
+      return '<div class="' + prefix + 'caption ' + letterClass + '">' +
+        '<span class="name">' + name + '</span>' +
+        '<div class="' + prefix + 'ind"><i class="fa-solid ' + icon1 + '"></i> <span>' + word1 + '</span></div>' +
+        '<span class="sep">&bull;</span>' +
+        '<div class="' + prefix + 'ind"><i class="fa-solid ' + icon2 + '"></i> <span>' + word2 + '</span></div>' +
+      '</div>';
+    }
+
+    function titleHTML(side, color, letter, word, kw) {
+      return '<div class="tblock ' + side + ' ' + color + '"><span class="big">' + letter + '</span>' +
+        '<div><div class="tword">' + word + '</div><div class="kw">' + kw + '</div></div></div>';
+    }
+
+    function dwellMarkHTML() {
+      return '<div class="ds-mark" role="img" aria-label="Dwell Skills"><span class="ds-box">DWELL</span><span class="ds-sidewrap"><span class="ds-side">Skills</span></span></div>';
+    }
+
+    function labelHTML(side, word) {
+      return '<div class="tblock dtab ' + side + '"><div class="dlabel">' + word + '</div></div>';
+    }
+
+    // facing page for each template: room to reflect on the Learn and Live steps
+    function buildReflectionCard() {
+      const el = document.createElement('div');
+      el.className = 'reflect-card';
+      el.innerHTML =
+        '<div class="reflect-head"><div class="reflect-title">Reflect</div></div>' +
+        '<div class="reflect-grid">' +
+          '<div class="rbox">' + labelHTML('', 'Learn') +
+            '<p class="rprompt">What was the takeaway for the first people who read this?<br>What does this teach us about who God is and how He works?</p>' +
+            '<div class="rrules"></div></div>' +
+          '<div class="rbox">' + labelHTML('', 'Live') +
+            '<p class="rprompt">What cultural or personal lies does this truth expose?<br>How will this shape your prayers, thoughts, words, or actions today?</p>' +
+            '<div class="rrules"></div></div>' +
+        '</div>';
+      return el;
+    }
+
+    function buildMiniCard() {
+      const el = document.createElement('div');
+      el.className = 'mini-card';
+      el.innerHTML =
+        '<div class="mini-brand">' + dwellMarkHTML() +
+        '<div class="mini-header">' +
+          '<div class="mini-field"><span>PASSAGE:</span><span class="mini-line"></span></div>' +
+          '<div class="mini-field"><span>NAME:</span><span class="mini-line"></span></div>' +
+        '</div></div>' +
+        '<div class="mini-grid">' +
+          '<div class="mini-box mtl">' + labelHTML('', 'Perspective') + '</div>' +
+          '<div class="mini-box mtr">' + labelHTML('', 'Words') + '</div>' +
+          '<div class="mini-box mbl">' + labelHTML('bottom', 'Connections') + '</div>' +
+          '<div class="mini-box mbr">' + labelHTML('bottom', 'Questions') + '</div>' +
+          '<div class="mini-circle">' +
+            '<div class="mini-label">GOD IS&hellip;</div>' +
+            '<div class="mini-write-space"><div class="mini-write-line"></div><div class="mini-write-line"></div></div>' +
+            '<div class="mini-label mini-therefore">THEREFORE, I&hellip;</div>' +
+            '<div class="mini-write-space"><div class="mini-write-line"></div><div class="mini-write-line"></div></div>' +
+          '</div>' +
+        '</div>';
+      return el;
+    }
+
+    function promptList(items, intro) {
+      return '<div class="mini-prompts">' + (intro ? '<p class="mini-intro">' + intro + '</p>' : '') + '<ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+    }
+
+    function buildLeaderCard() {
+      const el = buildMiniCard();
+      el.querySelector('.mtl').insertAdjacentHTML('beforeend', promptList([
+        'Author', 'Audience', 'Time', 'Purpose'], 'Use a study Bible to set the scene before you read:'));
+      el.querySelector('.mtr').insertAdjacentHTML('beforeend', promptList([
+        'Which words or phrases repeat or stand out?',
+        'Which words need clarity? Look them up or compare translations.',
+        'Sum it up in 1&ndash;2 sentences.'],
+        'Reread slowly:'));
+      el.querySelector('.mbl').insertAdjacentHTML('afterbegin', promptList([
+        'Read the surrounding chapters. How does this fit the whole book?',
+        'Follow cross-references. Where else does this theme show up in Scripture?']));
+      el.querySelector('.mbr').insertAdjacentHTML('afterbegin', promptList([
+        'What stood out or confused you as you read?',
+        'What questions do you still have?',
+        'Check your findings with your group, notes, or a commentary.']));
+      const spaces = el.querySelectorAll('.mini-circle .mini-write-space');
+      spaces[0].outerHTML = '<div class="mini-hint god-hint"><span>What does <b>this</b> passage<br>teach about who God is<br>and how He works?</span></div>';
+      spaces[1].outerHTML = '<div class="mini-hint"><span>How will this truth<br>shape my prayers, thoughts,<br>words, or actions?</span></div>';
+      return el;
+    }
+
+    document.querySelectorAll('#leaderPage .leader-slot').forEach(function (placeholder) {
+      placeholder.replaceWith(buildLeaderCard());
+    });
+
+    document.querySelectorAll('#blankPage .mini-card').forEach(function (placeholder) {
+      placeholder.replaceWith(buildMiniCard());
+    });
+    document.querySelectorAll('#blankPage .reflect-card').forEach(function (placeholder) {
+      placeholder.replaceWith(buildReflectionCard());
+    });
+
+    // ---------- placeholder toggling for editable areas ----------
+    document.querySelectorAll('.notes, .answer').forEach(function (el) {
+      function refresh() { el.classList.toggle('has-text', el.textContent.trim().length > 0); }
+      refresh();
+      el.addEventListener('input', refresh);
+    });
+
+    // ---------- simple formatting toolbar (bold / bullets) ----------
+    document.querySelectorAll('#formatToolbar button').forEach(function (btn) {
+      btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+      btn.addEventListener('click', function () {
+        document.execCommand(btn.dataset.cmd, false, null);
+      });
+    });
+
+    // ---------- mode switching ----------
+    const tabBlank = document.getElementById('tabBlank');
+    const tabEdit = document.getElementById('tabEdit');
+    const tabLeader = document.getElementById('tabLeader');
+    const leaderStage = document.getElementById('leaderStage');
+    const blankStage = document.getElementById('blankStage');
+    const editStage = document.getElementById('editStage');
+    const formatToolbar = document.getElementById('formatToolbar');
+    const formatDivider = document.getElementById('formatDivider');
+    const hintText = document.getElementById('hintText');
+    let currentMode = 'blank';
+
+    function setMode(mode) {
+      currentMode = mode;
+      tabBlank.classList.toggle('active', mode === 'blank');
+      tabEdit.classList.toggle('active', mode === 'edit');
+      tabLeader.classList.toggle('active', mode === 'leader');
+      leaderStage.classList.toggle('visible', mode === 'leader');
+      blankStage.classList.toggle('visible', mode === 'blank');
+      editStage.classList.toggle('visible', mode === 'edit');
+      formatToolbar.style.display = mode === 'edit' ? 'flex' : 'none';
+      formatDivider.style.display = mode === 'edit' ? 'block' : 'none';
+      hintText.textContent = mode === 'blank'
+        ? 'A blank card and its Reflect page — click Download PDF to save a landscape page for your printer.'
+        : mode === 'leader'
+        ? 'Two leader-guide half sheets with prompts for each section — click Download PDF to print a landscape page.'
+        : 'Click any box to type. Select text and use Bold / Bullets above to format. Content saves nowhere else, so download when you’re done.';
+    }
+    tabBlank.addEventListener('click', function () { setMode('blank'); });
+    tabEdit.addEventListener('click', function () { setMode('edit'); });
+    tabLeader.addEventListener('click', function () { setMode('leader'); });
+    setMode('blank');
+
+    // ---------- download (print-optimized PDF) ----------
+    // Lossless PNG at ~300 dpi, fonts fully loaded, editing hints hidden.
+    let exporting = false;
+    function exportPDF(el, filename, landscape) {
+      if (exporting) return;
+      exporting = true;
+      const btn = document.getElementById('downloadBtn');
+      btn.style.opacity = '0.6';
+      (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
+        document.body.classList.add('exporting');
+        el.querySelectorAll('input[placeholder]').forEach(function (i) { i.dataset.ph = i.placeholder; i.placeholder = ''; });
+        return html2pdf().set({
+          margin: 0,
+          filename: filename,
+          image: { type: 'png' },
+          html2canvas: { scale: 4.2, useCORS: true, scrollX: 0, scrollY: 0, backgroundColor: '#ffffff' },
+          jsPDF: { unit: 'pt', format: landscape ? [792, 612] : [612, 792], orientation: landscape ? 'landscape' : 'portrait', compress: true }
+        }).from(el).toPdf().get('pdf').then(function (pdf) {
+          // rounding at high resolution can spill a blank sliver onto page 2 — keep it to one page
+          while (pdf.internal.getNumberOfPages() > 1) pdf.deletePage(pdf.internal.getNumberOfPages());
+        }).save();
+      }).finally(function () {
+        document.body.classList.remove('exporting');
+        el.querySelectorAll('input[data-ph]').forEach(function (i) { i.placeholder = i.dataset.ph; delete i.dataset.ph; });
+        btn.style.opacity = '';
+        exporting = false;
+      });
+    }
+
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+      if (currentMode === 'blank') {
+        exportPDF(document.getElementById('blankPage'), 'Dwell Blank Template.pdf', true);
+      } else if (currentMode === 'leader') {
+        exportPDF(document.getElementById('leaderPage'), 'Dwell Leader Guide.pdf', true);
+      } else {
+        const card = document.getElementById('card');
+        const passage = card.querySelector('.field input').value.trim();
+        exportPDF(card, (passage ? 'Dwell - ' + passage : 'Dwell Card') + '.pdf', false);
+      }
+    });
+
+    // ---------- browser print (Ctrl/Cmd+P): right page orientation, no margins ----------
+    const pageStyle = document.createElement('style');
+    document.head.appendChild(pageStyle);
+    function updatePageStyle() {
+      pageStyle.textContent = '@page { size: letter ' + (currentMode === 'edit' ? 'portrait' : 'landscape') + '; margin: 0; }';
+    }
+    [tabBlank, tabLeader, tabEdit].forEach(function (t) { t.addEventListener('click', updatePageStyle); });
+    updatePageStyle();
+
+    // ---------- deep links: #blank, #leader, #digital open that tab ----------
+    const tabByHash = { blank: tabBlank, leader: tabLeader, digital: tabEdit };
+    const hashForMode = { blank: 'blank', leader: 'leader', edit: 'digital' };
+    function openFromHash() {
+      const t = tabByHash[location.hash.slice(1).toLowerCase()];
+      if (t) t.click();
+    }
+    [tabBlank, tabLeader, tabEdit].forEach(function (t) {
+      t.addEventListener('click', function () { history.replaceState(null, '', '#' + hashForMode[currentMode]); });
+    });
+    window.addEventListener('hashchange', openFromHash);
+    openFromHash();
+  </script>
+</body>
+</html>
