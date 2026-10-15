@@ -480,14 +480,14 @@ DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
   .cv-verse { display: flex; flex-direction: column; align-items: center; text-align: center; color: #111; transform: translateY(-17pt); }   /* clear the ridge */
   .cv-line { font-family: var(--display), sans-serif; font-weight: 600; font-size: 11.5pt; line-height: 1.1; }
-  .ds-box.cv-dwell { height: auto; font-size: 27pt; letter-spacing: 1pt; padding: 5pt 10pt 4pt 11pt; border-radius: 7pt; margin: 4pt 0; }
+  .cv-dwell { font-family: 'Caveat', cursive; font-weight: 600; font-size: 50pt; line-height: 0.8; margin: 3pt 0 4pt; color: #111; }
   .cv-ref { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 7.5pt; letter-spacing: 1.6pt; text-transform: uppercase; color: #4a5568; margin-top: 6pt; }
   .reflect-card { margin: 0; }
   .leader-page .ref-head { margin-bottom: 6pt; }
 """
-# Dwell cover: Colossians 3:16 (ESV) on the sun, with DWELL set in the wordmark's black box
+# Dwell cover: Colossians 3:16 (ESV) on the sun, with "dwell" set large in script (Caveat)
 COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word of Christ</span>'
-               '<span class="ds-box cv-dwell">DWELL</span><span class="cv-line">in you richly.</span>'
+               '<span class="cv-dwell">dwell</span><span class="cv-line">in you richly.</span>'
                '<span class="cv-ref">Colossians 3:16</span></div>')
 COVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}';" if DWELL else
     """c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">';""")
