@@ -493,6 +493,8 @@ DWELL_CSS = """
   .cv-ref { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; line-height: 1; margin-top: 6pt; }
   .reflect-card { margin: 0; }
   .leader-page .ref-head { margin-bottom: 6pt; }
+  /* every page background white (cover, inside covers, timeline spread, back) so it prints cleanly at home; the mountains and sun stay */
+  .cover.cover-light, .back.back-light, .inside-cover, .ref-page { background: #fff; }
   .ic-prayer { position: absolute; left: 34pt; right: 34pt; top: 20pt; bottom: 158pt; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 18pt; }
   .pr-h { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; margin-bottom: 7pt; }
   .pr-block p { margin: 0; font-family: 'DM Sans', sans-serif; font-style: italic; font-size: 13pt; line-height: 1.55; color: #111; }
