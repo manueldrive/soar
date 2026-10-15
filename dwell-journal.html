@@ -1022,7 +1022,7 @@
     }
 
 
-document.querySelectorAll('[data-card="leader"]').forEach(function (p) { var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'How to Dwell', 'Use the guided questions to help you fill out each section.'); p.appendChild(c); });
+document.querySelectorAll('[data-card="leader"]').forEach(function (p) { var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'How to Dwell', 'Pick a passage and work through each section to find its central truth.'); p.appendChild(c); });
 document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<div class="cv-verse"><span class="cv-line">Let the word</span><span class="cv-line">of Christ <b class="cv-dwell">dwell</b></span><span class="cv-line">in you richly.</span><span class="cv-ref">Colossians 3:16</span></div>'; p.appendChild(c); });
 function setRefHead(card, title, sub) {
   card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
