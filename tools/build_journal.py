@@ -399,7 +399,7 @@ JOURNAL_CSS = r"""
 # Dwell inside cover: the two prayers from dwellstudy.com joined into one
 PRAYERS = '''
   <div class="ic-prayer">
-    <div class="pr-block"><div class="pr-h">Prayer</div>
+    <div class="pr-block"><div class="pr-h">Pre-study prayer</div>
       <p>Lord, grant me the spirit of wisdom and revelation in the knowledge of who You are. Correct any lies I believe. Let my study increase my love for You and others, not my pride. Amen.</p></div>
   </div>'''
 pages = []
@@ -481,8 +481,6 @@ if RESOURCES_URL:   # inside back cover: the Resources QR code takes the place o
     pages[-1] = f'<section class="page inside-cover inside-back">{mountains_svg(light=True)}{resources_qr()}</section>'
 pages.append(f'<section class="page back{" back-light" if COVER_STYLE == "light" else ""}"></section>')
 assert len(pages) % 4 == 0, f"{len(pages)} pages is not a multiple of 4"
-# How to Dwell points to the Bible Timeline spread at the back: give its page number
-TIMELINE_PAGE = next(k for k, pg in enumerate(pages, 1) if 'data-mark="ot"' in pg)
 
 DWELL_CSS = """
   /* Dwell Skills wordmark sits in the cover circle where the Guided SOAR logo goes */
@@ -508,6 +506,10 @@ COVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}';" if D
     """c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">';""")
 REFLECT_JS = ("document.querySelectorAll('[data-card=\"reflect\"]').forEach(function (p) { p.appendChild(buildReflectionCard()); });\n"
               if DWELL else "")
+
+# Guided SOAR cards ask for the DATE where the site asks for a NAME; Dwell cards keep only PASSAGE (DATE is on the facing Reflect page)
+BLANK_FIELDS_JS = ("c.querySelectorAll('.mini-field').forEach(function (f) { if (f.firstElementChild.textContent.trim() === 'NAME:') f.remove(); });" if DWELL else
+                   "c.querySelectorAll('.mini-field > span:first-child').forEach(function (l) { if (l.textContent.trim() === 'NAME:') l.textContent = 'DATE:'; });")
 
 GUIDE_HEAD = ("'How to Dwell', 'What to look for in each box.'" if DWELL else
               "'Leader Guide', 'Questions to guide your prep in each section.'")
@@ -562,7 +564,7 @@ function buildResourceCard() {{
 document.querySelectorAll('[data-card="resources"]').forEach(function (p) {{ p.appendChild(buildResourceCard()); }});
 document.querySelectorAll('[data-card="blank"]').forEach(function (p) {{
   var c = buildMiniCard();
-  c.querySelectorAll('.mini-field > span:first-child').forEach(function (l) {{ if (l.textContent.trim() === 'NAME:') l.textContent = 'DATE:'; }});
+  {BLANK_FIELDS_JS}
   p.appendChild(c);
 }});
 {REFLECT_JS}</script>
@@ -570,7 +572,5 @@ document.querySelectorAll('[data-card="blank"]').forEach(function (p) {{
 </html>
 '''
 out = "dwell-journal.html" if DWELL else "journal.html"
-if DWELL:
-    html = html.replace("'Bible Timeline'", f"'Bible Timeline (p. {TIMELINE_PAGE})'", 1)
 (ROOT / out).write_text(html)
 print("wrote", out, "with", len(pages), "pages")

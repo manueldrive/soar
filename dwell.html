@@ -591,35 +591,21 @@
   .mtl .mini-prompts, .mtr .mini-prompts { top: 20pt; }
   .mbl .mini-prompts, .mbr .mini-prompts { bottom: 20pt; }
 
-  .mini-goal { margin: 0 0 5pt; font-family: var(--display), sans-serif; font-weight: 600; font-size: 10.4pt; line-height: 1.2; color: #111; }
-  .mini-tools { display: flex; align-items: flex-start; margin: 5pt 0 0; font-size: 8.4pt; line-height: 1.3; color: #4a5568; }
-  .mini-tools b { flex: none; display: inline-block; margin-right: 5pt; font-family: var(--display), sans-serif; font-weight: 600; font-size: 6.6pt; letter-spacing: 1.2pt; text-transform: uppercase; color: #111;
-                  border: 1.1pt solid #111; border-radius: 99pt; padding: 1.2pt 5pt 0.8pt 6.2pt; position: relative; top: -0.6pt; }
   /* How to Dwell layout */
   .g-block { position: absolute; left: 11pt; right: 11pt; }
   .mtl .g-block, .mtr .g-block { top: 22pt; }
   .mbl .g-block, .mbr .g-block { bottom: 22pt; }
   .g-goal { margin: 0 0 6pt; font-family: var(--display), sans-serif; font-weight: 600; font-size: 12pt; line-height: 1.18; color: #111; }
-  .g-chips { margin: 0; font-family: 'DM Sans', sans-serif; font-size: 9.4pt; line-height: 1.45; color: #5b6878; }
-  .g-chips i { font-style: normal; color: #a3abb6; margin: 0 1pt; }
   .g-list { margin: 0; padding: 0; list-style: none; font-family: 'DM Sans', sans-serif; font-size: 9.4pt; line-height: 1.3; color: #5b6878; }
   .g-list li { position: relative; padding-left: 9pt; margin-bottom: 3.5pt; }
   .g-list li::before { content: ''; position: absolute; left: 0.5pt; top: 0.5em; width: 3.2pt; height: 3.2pt; border-radius: 50%; background: #a3abb6; }
-  .g-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 3pt; font-family: 'DM Sans', sans-serif; }
-  .mtl .g-tools, .mtr .g-tools { margin-top: 9pt; }
-  .mbl .g-tools, .mbr .g-tools { margin-bottom: 9pt; }
-  .g-tools b { display: flex; align-items: center; gap: 3pt; margin-right: 2pt; font-family: var(--display), sans-serif; font-weight: 600; font-size: 6.6pt; letter-spacing: 1.3pt; text-transform: uppercase; color: #5b6878; }
-  .g-tools b svg { width: 7.5pt; height: 7.5pt; }
-  .g-tools.stack { flex-direction: column; align-items: flex-start; }
-  .mbr .g-tools.stack { flex-direction: row; justify-content: flex-end; }   /* outer (right) side, away from the circle */
-  .g-tools span { background: #eceef1; color: #2d3138; border-radius: 99pt; padding: 2pt 6pt 1.8pt; font-size: 7.6pt; line-height: 1.2; white-space: nowrap; }
   /* How to Dwell only: box labels as black pills on the border */
   .leader-card .dlabel { background: #111; color: #fff; border-radius: 99pt; padding: 4pt 11pt 3.6pt 12.8pt; font-size: 10pt; }
   .leader-card .tblock.dtab { top: -10pt; }
   .leader-card .tblock.dtab.bottom { top: auto; bottom: -10pt; }
   /* reflection page: Learn + Live, faces each template */
   .reflect-card { width: 356pt; height: 572pt; display: flex; flex-direction: column; font-family: 'DM Sans', Arial, sans-serif; }
-  .reflect-head { height: 36pt; display: flex; align-items: center; margin-bottom: 15pt; }
+  .reflect-head { height: 36pt; }
   .reflect-title { font-family: var(--display), sans-serif; font-weight: 700; font-size: 22pt; color: #111; line-height: 1; }
   .reflect-grid { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: 17pt; }
   .rbox { position: relative; flex: 1 1 0; min-height: 0; border: 3pt solid #111; border-radius: 14pt; display: flex; flex-direction: column; padding: 12pt 12pt 10pt; }
@@ -753,7 +739,8 @@
       el.className = 'reflect-card';
       const rules = new Array(31).join('<i></i>');
       el.innerHTML =
-        '<div class="reflect-head"><div class="ds-mark" role="img" aria-label="Dwell Reflect"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span><span class="ds-box">REFLECT</span></div></div>' +
+        '<div class="mini-brand reflect-head"><div class="ds-mark" role="img" aria-label="Dwell Reflect"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span><span class="ds-box">REFLECT</span></div>' +
+          '<div class="mini-header"><div class="mini-field"><span>DATE:</span><span class="mini-line"></span></div></div></div>' +
         '<div class="reflect-grid">' +
           '<div class="rbox">' +
             '<ul class="rprompt">' +
@@ -790,24 +777,14 @@
       return el;
     }
 
-    function promptList(items, intro, tools, goal) {
-      return '<div class="mini-prompts">' + (goal ? '<p class="mini-goal">' + goal + '</p>' : '') + (intro ? '<p class="mini-intro">' + intro + '</p>' : '') + '<ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>' +
-        (tools ? '<p class="mini-tools"><b>Tools</b><span>' + tools + '</span></p>' : '') + '</div>';
+    function promptList(items, intro) {
+      return '<div class="mini-prompts">' + (intro ? '<p class="mini-intro">' + intro + '</p>' : '') + '<ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
     }
 
-    // How to Dwell: same card, clear hierarchy. Goal first (bold), prompts lighter underneath,
-    // tools tucked into each box's outer corner so the space around the circle stays open.
-    function guideBlock(goal, items, chips, tools, toolsFirst) {
-      let t = tools ? guideTools(tools) : '';
-      if (toolsFirst) t = t.replace('class="g-tools"', 'class="g-tools stack"');   // under the circle: one chip per line, kept to the outer side
-      return '<div class="g-block">' + (toolsFirst ? t : '') + '<p class="g-goal">' + goal + '</p>' +
-        (chips ? '<p class="g-chips">' + chips.map(function (row) { return row.join(' <i>&middot;</i> '); }).join('<br>') + '</p>' : '') +
-        (items.length ? '<ul class="g-list">' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>' : '') + (toolsFirst ? '' : t) + '</div>';
-    }
-    function guideTools(lines) {
-      // a small wrench icon + label, then each tool as its own soft grey chip
-      var icon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.6 1.2a4 4 0 0 0-4.1 5.2L1.6 11.3a1.6 1.6 0 0 0 2.3 2.3l4.9-4.9a4 4 0 0 0 5.2-4.1l-2.3 2.3-2.2-.6-.6-2.2 2.3-2.3a4 4 0 0 0-.6-.2z" fill="currentColor"/></svg>';
-      return '<div class="g-tools"><b>' + icon + 'Tools</b>' + lines.map(function (t) { return '<span>' + t + '</span>'; }).join('') + '</div>';
+    // How to Dwell: same card, clear hierarchy. Goal first (bold), prompts lighter underneath.
+    function guideBlock(goal, items) {
+      return '<div class="g-block"><p class="g-goal">' + goal + '</p>' +
+        '<ul class="g-list">' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
     }
 
     function buildLeaderCard() {
@@ -818,25 +795,24 @@
           'Who wrote this book?',
           'Who was it written to?',
           'When was it written?',
-          'Why was it written?'], null, ['Study Bible', 'BibleProject overviews', 'BibleHub.com']));
+          'Why was it written?']));
       el.querySelector('.mtr').insertAdjacentHTML('beforeend',
         guideBlock('Put off assumptions and find the intended meaning.', [
           'What words are repeated or seem emphasized?',
           'What words need clarity?',
-          'How would you sum it up in 1&ndash;2 sentences?'], null, ['Highlighters &amp; pens', 'Dictionary', 'Other translations']));
+          'How would you sum it up in 1&ndash;2 sentences?']));
       el.querySelector('.mbl').insertAdjacentHTML('afterbegin',
         guideBlock('See how the Bible is one unified story.', [
           'Read the surrounding chapters. How does this fit the whole book?',
-          'Follow cross-references. Where else does this theme show up?'], null,
-          ['Bible Timeline', 'Bible Gateway cross-refs', 'BibleProject theme videos'], true));
+          'Follow cross-references. Where else does this theme show up?']));
       el.querySelector('.mbr').insertAdjacentHTML('afterbegin',
         guideBlock('Lean in. Don&rsquo;t be afraid to be curious.', [
           'What questions came up as you read?',
           'Did anything confuse or bother you? Why?',
-          'Who could help you find answers? (a leader, your group, a commentary)'], null, ['Your community'], true));
+          'Who could help you find answers? (a leader, your group, a commentary)']));
       const spaces = el.querySelectorAll('.mini-circle .mini-write-space');
       spaces[0].outerHTML = '<div class="mini-hint god-hint"><span>What does <b>this</b> passage<br>teach about who God is<br>and how He works?</span></div>';
-      spaces[1].outerHTML = '<div class="mini-hint"><span>How will this truth<br>shape my prayers, thoughts,<br>words, or actions?</span></div>';
+      spaces[1].outerHTML = '<div class="mini-hint"><span>What does this reveal<br>about who He made<br>me to be?</span></div>';
       return el;
     }
 
