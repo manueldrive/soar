@@ -504,6 +504,9 @@ DWELL_CSS = """
   .cv-ref { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; line-height: 1; margin-top: 6pt; }
   .reflect-card { margin: 0; }
   .leader-page .ref-head { margin-bottom: 6pt; }
+  .owner { border-width: 1.5pt; border-radius: 6pt; }
+  .case { border-width: 1.5pt; border-radius: 6pt; }
+  .owner-line i { border-bottom-width: 0.9pt; }
   /* inside pages stay white (inside covers, timeline spread) so they print cleanly at home; the covers take the teal tint */
   .inside-cover, .ref-page { background: #fff; }
   .ic-prayer { position: absolute; left: 34pt; right: 34pt; top: 20pt; bottom: 158pt; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 18pt; }
