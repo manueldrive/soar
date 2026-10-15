@@ -497,7 +497,7 @@ DWELL_CSS = """
   .cover-photo .cover-card .mini-circle { background: #fff; }   /* solid white center, like the blank circle on every study page */
   .cover-photo .cover-card .mini-box { visibility: visible; }
   .cover-photo .cover-card .mini-box .tblock { display: none; }
-  /* DWELL | JOURNAL mark in the dark lower-right window: the logo's build, no box, white type */
+  /* DWELL | STUDY mark in the dark lower-right window: the logo's build, no box, white type */
   .cv-mark { position: absolute; right: 13pt; bottom: 13pt; height: auto; align-items: flex-end; gap: 3pt; }
   .cv-mark .ds-box { height: auto; background: none; color: #fff; padding: 0; border-radius: 0; font-size: 28pt; line-height: 0.74; letter-spacing: 0.5pt; }
   .cv-mark .ds-sidewrap { width: 7pt; height: 20.5pt; }
@@ -523,8 +523,8 @@ COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word</span>'
                '<span class="cv-line">of Christ <b class="cv-dwell">dwell</b></span>'
                '<span class="cv-line">in you richly.</span>'
                '<span class="cv-ref">Colossians 3:16</span></div>')
-COVER_MARK = ('<div class="cv-mark ds-mark" role="img" aria-label="Dwell Journal"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span>'
-              '<span class="ds-box">JOURNAL</span></div>')
+COVER_MARK = ('<div class="cv-mark ds-mark" role="img" aria-label="Dwell Study"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span>'
+              '<span class="ds-box">STUDY</span></div>')
 COVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}'; c.querySelector('.mbr').insertAdjacentHTML('beforeend', '{COVER_MARK}');" if DWELL else
     """c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">';""")
 REFLECT_JS = ("document.querySelectorAll('[data-card=\"reflect\"]').forEach(function (p) { p.appendChild(buildReflectionCard()); });\n"

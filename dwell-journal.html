@@ -835,7 +835,7 @@
   .cover-photo .cover-card .mini-circle { background: #fff; }   /* solid white center, like the blank circle on every study page */
   .cover-photo .cover-card .mini-box { visibility: visible; }
   .cover-photo .cover-card .mini-box .tblock { display: none; }
-  /* DWELL | JOURNAL mark in the dark lower-right window: the logo's build, no box, white type */
+  /* DWELL | STUDY mark in the dark lower-right window: the logo's build, no box, white type */
   .cv-mark { position: absolute; right: 13pt; bottom: 13pt; height: auto; align-items: flex-end; gap: 3pt; }
   .cv-mark .ds-box { height: auto; background: none; color: #fff; padding: 0; border-radius: 0; font-size: 28pt; line-height: 0.74; letter-spacing: 0.5pt; }
   .cv-mark .ds-sidewrap { width: 7pt; height: 20.5pt; }
@@ -1028,7 +1028,7 @@
 
 
 document.querySelectorAll('[data-card="leader"]').forEach(function (p) { var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'How to Use This Journal', 'Pick a passage and work through each section to find its central truth.'); p.appendChild(c); });
-document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<div class="cv-verse"><span class="cv-line">Let the word</span><span class="cv-line">of Christ <b class="cv-dwell">dwell</b></span><span class="cv-line">in you richly.</span><span class="cv-ref">Colossians 3:16</span></div>'; c.querySelector('.mbr').insertAdjacentHTML('beforeend', '<div class="cv-mark ds-mark" role="img" aria-label="Dwell Journal"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span><span class="ds-box">JOURNAL</span></div>'); p.appendChild(c); });
+document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<div class="cv-verse"><span class="cv-line">Let the word</span><span class="cv-line">of Christ <b class="cv-dwell">dwell</b></span><span class="cv-line">in you richly.</span><span class="cv-ref">Colossians 3:16</span></div>'; c.querySelector('.mbr').insertAdjacentHTML('beforeend', '<div class="cv-mark ds-mark" role="img" aria-label="Dwell Study"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span><span class="ds-box">STUDY</span></div>'); p.appendChild(c); });
 function setRefHead(card, title, sub) {
   card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
 }
