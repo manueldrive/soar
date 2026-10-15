@@ -605,13 +605,16 @@
   .g-list { margin: 0; padding: 0; list-style: none; font-family: 'DM Sans', sans-serif; font-size: 9.4pt; line-height: 1.3; color: #5b6878; }
   .g-list li { position: relative; padding-left: 9pt; margin-bottom: 3.5pt; }
   .g-list li::before { content: ''; position: absolute; left: 0.5pt; top: 0.5em; width: 3.2pt; height: 3.2pt; border-radius: 50%; background: #a3abb6; }
-  .g-tools { position: absolute; display: flex; flex-direction: column; gap: 1.5pt; font-family: 'DM Sans', sans-serif; font-size: 8pt; line-height: 1.2; color: #5b6878; }
-  .g-tools b { align-self: flex-start; margin-bottom: 2.5pt; font-family: var(--display), sans-serif; font-weight: 600; font-size: 6.4pt; letter-spacing: 1.2pt; text-transform: uppercase; color: #111;
-               border: 1.1pt solid #111; border-radius: 99pt; padding: 1.2pt 5pt 0.8pt 6.2pt; }
+  .g-tools { position: absolute; display: flex; flex-direction: column; gap: 4pt; width: 86pt; font-family: 'DM Sans', sans-serif; }
+  .g-tools b { display: flex; align-items: center; gap: 3pt; font-family: var(--display), sans-serif; font-weight: 600; font-size: 6.6pt; letter-spacing: 1.3pt; text-transform: uppercase; color: #5b6878; }
+  .g-tools b svg { width: 7.5pt; height: 7.5pt; }
+  .g-chips-row { display: flex; flex-direction: column; align-items: flex-start; gap: 3pt; }   /* one chip per line, kept in the outer corner clear of the circle */
+  .g-chips-row span { background: #eceef1; color: #2d3138; border-radius: 6pt; padding: 2pt 6pt 1.8pt; font-size: 7.6pt; line-height: 1.2; }
+  .mtr .g-tools b { justify-content: flex-end; }
+  .mtr .g-chips-row { align-items: flex-end; }
   .mtl .g-tools { left: 11pt; bottom: 11pt; }
   .mtr .g-tools { right: 11pt; bottom: 11pt; align-items: flex-end; text-align: right; }
-  .mtr .g-tools b { align-self: flex-end; }
-  .mbl .g-tools { left: 11pt; top: 11pt; max-width: 84pt; }   /* stays clear of the circle */
+  .mbl .g-tools { left: 11pt; top: 16pt; }
   /* How to Dwell only: box labels as black pills on the border */
   .leader-card .dlabel { background: #111; color: #fff; border-radius: 99pt; padding: 4pt 11pt 3.6pt 12.8pt; font-size: 10pt; }
   .leader-card .tblock.dtab { top: -10pt; }
@@ -802,7 +805,9 @@
         (items.length ? '<ul class="g-list">' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>' : '') + '</div>';
     }
     function guideTools(lines) {
-      return '<div class="g-tools"><b>Tools</b>' + lines.map(function (t) { return '<span>' + t + '</span>'; }).join('') + '</div>';
+      // a small wrench icon + label, then each tool as its own soft grey chip
+      var icon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.6 1.2a4 4 0 0 0-4.1 5.2L1.6 11.3a1.6 1.6 0 0 0 2.3 2.3l4.9-4.9a4 4 0 0 0 5.2-4.1l-2.3 2.3-2.2-.6-.6-2.2 2.3-2.3a4 4 0 0 0-.6-.2z" fill="currentColor"/></svg>';
+      return '<div class="g-tools"><b>' + icon + 'Tools</b><div class="g-chips-row">' + lines.map(function (t) { return '<span>' + t + '</span>'; }).join('') + '</div></div>';
     }
 
     function buildLeaderCard() {
@@ -822,7 +827,7 @@
           'How would you sum it up in 1&ndash;2 sentences?']) +
         guideTools(['Bible dictionary', 'Other translations']));
       el.querySelector('.mbl').insertAdjacentHTML('afterbegin',
-        guideTools(['Bible Gateway', 'Cross-reference Bible', 'BibleProject theme videos']) +
+        guideTools(['Bible Gateway', 'Cross-ref Bible', 'BibleProject videos']) +
         guideBlock('See how the Bible is one unified story.', [
           'Read the surrounding chapters. How does this fit the whole book?',
           'Follow cross-references. Where else does this theme show up?']));
