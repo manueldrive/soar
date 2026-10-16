@@ -849,6 +849,10 @@
   /* home inkjets can't print the last ~0.12in of the sheet: keep page numbers clear of the edge */
   section.page:not(:first-of-type):not(:last-of-type)::after { bottom: 11pt; }
   .leader-page .ref-head { margin-bottom: 6pt; }
+  /* Dwell: the How To page wears the same logo mark as STUDY / REFLECT, with its one-line instruction beside it */
+  .leader-page .ref-head:has(.ds-mark) { display: flex; align-items: center; gap: 10pt; margin-bottom: 14pt; }
+  .leader-page .ref-head .ptitle:has(.ds-mark) { margin: 0; }
+  .leader-page .ref-head:has(.ds-mark) .psub { margin: 0; flex: 1; font-size: 9pt; line-height: 1.3; }
   .owner { border-width: 1.5pt; border-radius: 6pt; }
   .case { border-width: 1.5pt; border-radius: 6pt; }
   .owner-line i { border-bottom-width: 0.9pt; }
@@ -1030,7 +1034,7 @@
     }
 
 
-document.querySelectorAll('[data-card="leader"]').forEach(function (p) { var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, 'How to Use This Journal', 'Pick a passage and work through each section to find its central truth.'); p.appendChild(c); });
+document.querySelectorAll('[data-card="leader"]').forEach(function (p) { var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, '<div class="ds-mark" role="img" aria-label="Dwell How To"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span><span class="ds-box">HOW TO</span></div>', 'Pick a passage and work through each section to find its central truth.'); p.appendChild(c); });
 document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<div class="cv-verse"><span class="cv-line">Let the word</span><span class="cv-line">of Christ <b class="cv-dwell">dwell</b></span><span class="cv-line">in you richly.</span><span class="cv-ref">Colossians 3:16</span></div>'; c.querySelector('.mbr').insertAdjacentHTML('beforeend', '<div class="cv-mark ds-mark" role="img" aria-label="Dwell Study"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span><span class="ds-box">STUDY</span></div>'); p.appendChild(c); });
 function setRefHead(card, title, sub) {
   card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
