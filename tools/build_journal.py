@@ -557,7 +557,7 @@ BLANK_FIELDS_JS = ("c.querySelectorAll('.mini-field').forEach(function (f) { if 
                    "c.querySelectorAll('.mini-field > span:first-child').forEach(function (l) { if (l.textContent.trim() === 'NAME:') l.textContent = 'DATE:'; });")
 
 GUIDE_HEAD = ("'<div class=\"ds-mark\" role=\"img\" aria-label=\"Dwell How To\"><span class=\"ds-sidewrap\"><span class=\"ds-side\">Dwell</span></span><span class=\"ds-box\">HOW TO</span></div>', "
-              "'Pick a passage and work through each section to find its central truth.'" if DWELL else
+              "'Let these questions guide each corner. Then fill in the center with what you discover.'" if DWELL else
               "'Leader Guide', 'Questions to guide your prep in each section.'")
 
 t = TINTS.get(COVER_TINT)

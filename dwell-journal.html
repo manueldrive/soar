@@ -612,7 +612,7 @@
   .g-list li { position: relative; padding-left: 9pt; margin-bottom: 3.5pt; }
   .g-list li::before { content: ''; position: absolute; left: 0.5pt; top: 0.5em; width: 3.2pt; height: 3.2pt; border-radius: 50%; background: #a3abb6; }
   /* How to Dwell only: box labels as black pills on the border */
-  .leader-card .dlabel { background: #111; color: #fff; border-radius: 99pt; padding: 4pt 11pt 3.6pt 12.8pt; font-size: 10pt; }
+  .leader-card .dlabel { background: #e5e8ec; color: #111; border-radius: 99pt; padding: 4pt 11pt 3.6pt 12.8pt; font-size: 10pt; }
   .leader-card .tblock.dtab { top: -10pt; }
   .leader-card .tblock.dtab.bottom { top: auto; bottom: -10pt; }
   /* reflection page: Learn + Live, faces each template */
@@ -1034,7 +1034,7 @@
     }
 
 
-document.querySelectorAll('[data-card="leader"]').forEach(function (p) { var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, '<div class="ds-mark" role="img" aria-label="Dwell How To"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span><span class="ds-box">HOW TO</span></div>', 'Pick a passage and work through each section to find its central truth.'); p.appendChild(c); });
+document.querySelectorAll('[data-card="leader"]').forEach(function (p) { var c = buildLeaderCard(); c.classList.add('rev'); setRefHead(c, '<div class="ds-mark" role="img" aria-label="Dwell How To"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span><span class="ds-box">HOW TO</span></div>', 'Let these questions guide each corner. Then fill in the center with what you discover.'); p.appendChild(c); });
 document.querySelectorAll('[data-card="cover"]').forEach(function (p) { var c = buildMiniCard(); c.classList.add('cover-card'); c.querySelector('.mini-circle').innerHTML = '<div class="cv-verse"><span class="cv-line">Let the word</span><span class="cv-line">of Christ <b class="cv-dwell">dwell</b></span><span class="cv-line">in you richly.</span><span class="cv-ref">Colossians 3:16</span></div>'; c.querySelector('.mbr').insertAdjacentHTML('beforeend', '<div class="cv-mark ds-mark" role="img" aria-label="Dwell Study"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span><span class="ds-box">STUDY</span></div>'); p.appendChild(c); });
 function setRefHead(card, title, sub) {
   card.querySelector('.mini-brand').outerHTML = '<div class="ref-head"><div class="ptitle">' + title + '</div><div class="psub">' + sub + '</div></div>';
