@@ -10,6 +10,8 @@ import os, re, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DWELL = os.environ.get("BOOK", "soar").lower() == "dwell"
+# Guided SOAR with the Dwell-style photo cover (Mark 10:45 in the circle, Guided SOAR logo) and all-white inside pages
+PHOTO = (not DWELL) and os.environ.get("PHOTO_COVER", "") == "1"
 src = (ROOT / ("dwell.html" if DWELL else "index.html")).read_text()
 
 head_links = "\n".join(l for l in src.split("\n")[:9] if "fonts.g" in l or "preconnect" in l)
@@ -403,7 +405,7 @@ PRAYERS = '''
       <p>Lord, grant me the spirit of wisdom and revelation in the knowledge of who You are. Correct any lies I believe. Let my study increase my love for You and others, not my pride. Amen.</p></div>
   </div>'''
 pages = []
-if DWELL:   # Dwell cover: the mountain photo (assets/dwell-cover.jpg) is seen only through the four boxes and the verse circle
+if DWELL or PHOTO:   # Dwell cover: the mountain photo (assets/dwell-cover.jpg) is seen only through the four boxes and the verse circle
     pages.append('<section class="page cover cover-photo" data-card="cover"></section>')
 else:
     pages.append(f'<section class="page cover{" cover-light" if COVER_STYLE == "light" else ""}" data-card="cover">{mountains_svg(cover_light=COVER_STYLE == "light")}</section>')
@@ -475,7 +477,7 @@ if not INCLUDE_RESOURCES:
 
 # faint mountain range along the bottom of every grey reference page
 pages = [pg.replace('class="page ref-page"', 'class="page ref-page"', 1) for pg in pages]
-INSIDE_MTN = "" if DWELL else mountains_svg(light=True)   # Dwell inside pages stay plain white
+INSIDE_MTN = "" if (DWELL or PHOTO) else mountains_svg(light=True)   # Dwell inside pages stay plain white
 pages = [re.sub(r'(<section class="page ref-page[^>]*>)', lambda m: m.group(1) + INSIDE_MTN, pg, count=1)
          if 'ref-page' in pg else pg for pg in pages]
 pages = [re.sub(r'(<section class="page inside-cover"[^>]*>)', lambda m: m.group(1) + INSIDE_MTN, pg, count=1)
@@ -529,6 +531,20 @@ DWELL_CSS = """
   .pr-h { font-family: var(--display), sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; margin-bottom: 7pt; }
   .pr-block p { margin: 0; font-family: 'DM Sans', sans-serif; font-style: italic; font-size: 13pt; line-height: 1.55; color: #111; }
 """
+PHOTO_CSS = """
+  .cover.cover-photo, .back, .back.back-light, .inside-cover, .ref-page, .notes-page { background: #fff !important; }
+  .cover-photo .cover-card { transform: translateY(-25.5pt); }
+  .cover-photo .cover-card .mini-box, .cover-photo .cover-card .mini-circle { background-image: url(assets/dwell-cover.jpg); background-repeat: no-repeat; border-color: transparent; }
+  .cover-photo .cover-card .mini-circle { background: #fff; }
+  .cover-photo .cover-card .mini-box { visibility: visible; }
+  .cover-photo .cover-card .mini-box .tblock { display: none; }
+  .cv-verse { display: flex; flex-direction: column; align-items: center; gap: 4.5pt; text-align: center; color: #111; }
+  .cv-line { font-family: 'DM Sans', sans-serif; font-style: italic; font-weight: 400; font-size: 11.6pt; line-height: 1; white-space: nowrap; color: #111; }
+  .cv-line .cv-dwell { font-weight: 700; }
+  .cv-ref { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 7pt; letter-spacing: 2pt; padding-left: 2pt; text-transform: uppercase; color: #4a5568; line-height: 1; margin-top: 5pt; }
+  .cv-soar { position: absolute; right: 13pt; bottom: 13pt; height: 30pt; width: auto; }
+  section.page:not(:first-of-type):not(:last-of-type)::after { bottom: 11pt; }
+"""
 # Dwell cover: Colossians 3:16 (ESV) on the sun, set like the inside-cover prayer, with dwell in bold
 COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word</span>'
                '<span class="cv-line">of Christ <b class="cv-dwell">dwell</b></span>'
@@ -536,12 +552,18 @@ COVER_VERSE = ('<div class="cv-verse"><span class="cv-line">Let the word</span>'
                '<span class="cv-ref">Colossians 3:16</span></div>')
 COVER_MARK = ('<div class="cv-mark ds-mark" role="img" aria-label="Dwell Study"><span class="ds-sidewrap"><span class="ds-side">Dwell</span></span>'
               '<span class="ds-box">STUDY</span></div>')
-COVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}'; c.querySelector('.mbr').insertAdjacentHTML('beforeend', '{COVER_MARK}');" if DWELL else
+SOAR_VERSE = ('<div class="cv-verse sv"><span class="cv-line">For even the Son of Man</span><span class="cv-line">did not come to be served,</span>'
+              '<span class="cv-line">but <b class="cv-dwell">to serve</b>, and to give</span><span class="cv-line">his life as a ransom</span><span class="cv-line">for many.</span>'
+              '<span class="cv-ref">Mark 10:45</span></div>')
+SOAR_MARK = '<img class="cv-soar" src="guided-soar-logo-white.png" alt="Guided SOAR">'
+if PHOTO:
+    COVER_JS = f"c.querySelector('.mini-circle').innerHTML = '{SOAR_VERSE}'; c.querySelector('.mbr').insertAdjacentHTML('beforeend', '{SOAR_MARK}');"
+elCOVER_JS = (f"c.querySelector('.mini-circle').innerHTML = '{COVER_VERSE}'; c.querySelector('.mbr').insertAdjacentHTML('beforeend', '{COVER_MARK}');" if DWELL else
     """c.querySelector('.mini-circle').innerHTML = '<img class="cover-logo" src="' + (p.classList.contains('cover-light') ? 'guided-soar-logo.png' : 'guided-soar-logo-white.png') + '" alt="Guided SOAR">';""")
 REFLECT_JS = ("document.querySelectorAll('[data-card=\"reflect\"]').forEach(function (p) { p.appendChild(buildReflectionCard()); });\n"
               if DWELL else "")
 # cover windows: each shape shows the part of the photo that sits behind it, so together they read as one picture
-if DWELL:
+if DWELL or PHOTO:
     REFLECT_JS += """document.querySelectorAll('.cover-photo').forEach(function (page) {
   var pr = page.getBoundingClientRect();
   page.querySelectorAll('.mini-box, .mini-circle').forEach(function (el) {
@@ -570,7 +592,7 @@ html = f'''<!doctype html>
 <meta charset="utf-8">
 <title>{"Dwell Skills Journal" if DWELL else "Guided SOAR Journal"}</title>
 {head_links}
-<style>{style}{JOURNAL_CSS.replace('{tint_css}', tint_css)}{DWELL_CSS if DWELL else ""}</style>
+<style>{style}{JOURNAL_CSS.replace('{tint_css}', tint_css)}{DWELL_CSS if DWELL else ""}{PHOTO_CSS if PHOTO else ""}</style>
 </head>
 <body>
 {chr(10).join(pages)}
